@@ -10,17 +10,16 @@ namespace Soundboard
 {
 	public static class SettingsHelper
 	{
-		internal static Settings GetSettings()
+		internal static Settings Get()
 		{
 			return Settings.Default;
 		}
 
-		public static void ResetSettingsToDefault()
+		public static void ResetDeviceSettingsToDefault()
 		{
-			Settings _Settings = GetSettings();
+			Settings _Settings = Get();
 
 			_Settings.MuteMicWhilePlaying = true;
-			_Settings.FirstRun = true; // TODO(Salads): Should I leave this alone?
 			_Settings.SelectedPlaybackDevices = new StringCollection();
 			_Settings.SelectedRecordingDevice = String.Empty;
 			_Settings.Save();

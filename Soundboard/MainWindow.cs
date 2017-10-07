@@ -25,22 +25,26 @@ namespace Soundboard
 		{
 			InitializeComponent();
 
-			ReloadSettings();
-		}
-
-		private void ToolStripItem_Settings_Click(object sender, EventArgs e)
-		{
-			using(SettingsWindow SettingsDialog = new SettingsWindow())
+			ReloadDeviceSettings();
+			if(SettingsHelper.Get().FirstRun == true)
 			{
-				if(SettingsDialog.ShowDialog() == DialogResult.OK)
-				{
-					ReloadSettings();
-				}
-			}
+				DialogResult FirstResult = 
+					MessageBox.Show(
+					"Hi! Would you like to visit the \"How to\" webpage?", 
+					"Welcome!", 
+					MessageBoxButtons.YesNo);
 
+				if (FirstResult == DialogResult.Yes)
+				{
+					OpenHelpWebpage();
+				}
+
+				SettingsHelper.Get().FirstRun = false;
+				SettingsHelper.Get().Save();
+			}
 		}
 
-		private void ReloadSettings()
+		private void ReloadDeviceSettings()
 		{
 			m_PlaybackDevices.Clear();
 			m_RecordingDevice = null;
@@ -49,7 +53,7 @@ namespace Soundboard
 			{
 				foreach(MMDevice PlaybackDevice in ActivePlaybacks)
 				{
-					if(SettingsHelper.GetSettings().SelectedPlaybackDevices.Contains(PlaybackDevice.DeviceID))
+					if(SettingsHelper.Get().SelectedPlaybackDevices.Contains(PlaybackDevice.DeviceID))
 					{
 						m_PlaybackDevices.Add(new AudioDevice(PlaybackDevice));
 					}
@@ -60,14 +64,56 @@ namespace Soundboard
 			{
 				foreach(MMDevice RecordingDevice in ActiveRecorders)
 				{
-					if(SettingsHelper.GetSettings().SelectedRecordingDevice.Equals(RecordingDevice.DeviceID))
+					if(SettingsHelper.Get().SelectedRecordingDevice.Equals(RecordingDevice.DeviceID))
 					{
 						m_RecordingDevice = new AudioDevice(RecordingDevice);
+						break;
 					}
 				}
 			}
 
-			m_MuteMicWhilePlaying = SettingsHelper.GetSettings().MuteMicWhilePlaying;
+			m_MuteMicWhilePlaying = SettingsHelper.Get().MuteMicWhilePlaying;
+		}
+
+		private void Menu_DeviceSettings_Click(object sender, EventArgs e)
+		{
+			using(DeviceSettingsWindow SettingsDialog = new DeviceSettingsWindow())
+			{
+				if(SettingsDialog.ShowDialog() == DialogResult.OK)
+				{
+					ReloadDeviceSettings();
+				}
+			}
+		}
+
+		private void Menu_HowTo_Click(object sender, EventArgs e)
+		{
+			OpenHelpWebpage();
+		}
+
+		private void OpenHelpWebpage()
+		{
+			Process.Start("https://salads.github.io/Soundboard");
+		}
+
+		private void Menu_ResetDeviceSettings_Click(object sender, EventArgs e)
+		{
+			SettingsHelper.ResetDeviceSettingsToDefault();
+		}
+
+		private void Menu_ResetFiles_Click(object sender, EventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void Menu_ResetHotkeys_Click(object sender, EventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void Menu_ResetAllSettings_Click(object sender, EventArgs e)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

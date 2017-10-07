@@ -1,6 +1,6 @@
 ﻿namespace Soundboard
 {
-	partial class SettingsWindow
+	partial class DeviceSettingsWindow
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -105,7 +105,7 @@
 			this.GUI_LabelMicrophone.TabIndex = 5;
 			this.GUI_LabelMicrophone.Text = "Recording Device";
 			// 
-			// SettingsWindow
+			// DeviceSettingsWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -117,8 +117,13 @@
 			this.Controls.Add(this.GUI_RecordingDevices);
 			this.Controls.Add(this.GUI_PlaybackDevices);
 			this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.Name = "SettingsWindow";
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.Name = "DeviceSettingsWindow";
+			this.ShowInTaskbar = false;
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Device Settings";
 			this.Load += new System.EventHandler(this.SettingsWindow_Load);

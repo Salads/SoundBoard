@@ -13,9 +13,9 @@ using Soundboard.Properties;
 
 namespace Soundboard
 {
-	public partial class SettingsWindow : Form
+	public partial class DeviceSettingsWindow : Form
 	{
-		public SettingsWindow()
+		public DeviceSettingsWindow()
 		{
 			InitializeComponent();
 		}
@@ -29,7 +29,7 @@ namespace Soundboard
 					if(Device.DataFlow == DataFlow.Render)
 					{
 						bool IsSaved = false;
-						if(SettingsHelper.GetSettings().SelectedPlaybackDevices.Contains(Device.DeviceID))
+						if(SettingsHelper.Get().SelectedPlaybackDevices.Contains(Device.DeviceID))
 						{
 							IsSaved = true;
 						}
@@ -40,7 +40,7 @@ namespace Soundboard
 					{
 						GUI_RecordingDevices.Items.Add(Device);
 
-						if(SettingsHelper.GetSettings().SelectedRecordingDevice == Device.DeviceID)
+						if(SettingsHelper.Get().SelectedRecordingDevice == Device.DeviceID)
 						{
 							GUI_RecordingDevices.SelectedItem = Device;
 						}
@@ -53,18 +53,20 @@ namespace Soundboard
 				GUI_RecordingDevices.SelectedIndex = 0;
 			}
 
-			GUI_MicToggle.Checked = SettingsHelper.GetSettings().MuteMicWhilePlaying;
+			GUI_MicToggle.Checked = SettingsHelper.Get().MuteMicWhilePlaying;
 		}
 
 		private void Button_OK_Click(object sender, EventArgs e)
 		{
+
+			// TODO(Salads): Validate and implement behavior for settings
 			if(GUI_PlaybackDevices.CheckedItems.Count <= 0)
 			{
 				DialogResult = DialogResult.Abort;
 			}
 			else
 			{
-				Settings _Settings = SettingsHelper.GetSettings();
+				Settings _Settings = SettingsHelper.Get();
 				_Settings.SelectedPlaybackDevices.Clear();
 				foreach(MMDevice Device in GUI_PlaybackDevices.CheckedItems)
 				{
