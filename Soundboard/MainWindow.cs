@@ -30,7 +30,7 @@ namespace Soundboard
 			{
 				DialogResult FirstResult = 
 					MessageBox.Show(
-					"Hi! Would you like to visit the \"How to\" webpage?", 
+					"Would you like to visit the \"How to\" webpage?", 
 					"Welcome!", 
 					MessageBoxButtons.YesNo);
 
@@ -96,6 +96,7 @@ namespace Soundboard
 			Process.Start("https://salads.github.io/Soundboard");
 		}
 
+		// TODO(Salads): GUI sync for reset settings
 		private void Menu_ResetDeviceSettings_Click(object sender, EventArgs e)
 		{
 			SettingsHelper.ResetDeviceSettingsToDefault();
@@ -103,17 +104,17 @@ namespace Soundboard
 
 		private void Menu_ResetFiles_Click(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			SettingsHelper.ResetFileSettingsToDefault();
 		}
 
 		private void Menu_ResetHotkeys_Click(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			SettingsHelper.ResetHotkeySettingsToDefault();
 		}
 
 		private void Menu_ResetAllSettings_Click(object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			SettingsHelper.ResetAllSettingsToDefault();
 		}
 	}
 }

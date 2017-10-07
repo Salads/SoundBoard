@@ -58,27 +58,56 @@ namespace Soundboard
 
 		private void Button_OK_Click(object sender, EventArgs e)
 		{
+			/* Philosophy on validation
+			 * 
+			 * Normally, there could be
+			 * a situation where a certain combination of settings "wouldn't work" in the sense that
+			 * the point of the program would be defeated, or would be physically impossible. 
+			 * However, I don't want the user to become "stuck" on the options screen
+			 * if it happens that his computer is not capable of satisfying the requirements.
+			 * 
+			 * As such, I "validate" but don't force him to change settings, only notify him that 
+			 * the setup is incorrect.
+			 * 
+			 * Back in the Main Window I will just stop him from being able to do something if the settings
+			 * aren't right, and pop up a messagebox with the problem.
+			 */
 
-			// TODO(Salads): Validate and implement behavior for settings
 			if(GUI_PlaybackDevices.CheckedItems.Count <= 0)
 			{
-				DialogResult = DialogResult.Abort;
-			}
-			else
-			{
-				Settings _Settings = SettingsHelper.Get();
-				_Settings.SelectedPlaybackDevices.Clear();
-				foreach(MMDevice Device in GUI_PlaybackDevices.CheckedItems)
+				if(DialogResult.Cancel == 
+					MessageBox.Show(
+						"No playback devices were selected!\nYou will not be able to hear or play sounds!\nContinue?", 
+						"Error",
+						MessageBoxButtons.OKCancel, MessageBoxIcon.Warning))
 				{
-					_Settings.SelectedPlaybackDevices.Add(Device.DeviceID);
+					return;
 				}
-
-				_Settings.SelectedRecordingDevice = (GUI_RecordingDevices.SelectedItem as MMDevice).DeviceID;
-				_Settings.MuteMicWhilePlaying = GUI_MicToggle.Checked;
-				_Settings.Save();
-
-				DialogResult = DialogResult.OK;
 			}
+			else if(GUI_RecordingDevices.SelectedItem == null)
+			{
+				if(DialogResult.Cancel ==
+					MessageBox.Show(
+						"No microphone selected!\nYou will not be able to play sounds for others!\nContinue?",
+						"Error",
+						MessageBoxButtons.OKCancel, MessageBoxIcon.Warning))
+				{
+					return;
+				}
+			}
+
+			Settings _Settings = SettingsHelper.Get();
+			_Settings.SelectedPlaybackDevices.Clear();
+			foreach(MMDevice Device in GUI_PlaybackDevices.CheckedItems)
+			{
+				_Settings.SelectedPlaybackDevices.Add(Device.DeviceID);
+			}
+
+			_Settings.SelectedRecordingDevice = (GUI_RecordingDevices.SelectedItem as MMDevice).DeviceID;
+			_Settings.MuteMicWhilePlaying = GUI_MicToggle.Checked;
+			_Settings.Save();
+
+			DialogResult = DialogResult.OK;
 
 			Close();
 		}

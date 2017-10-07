@@ -24,5 +24,21 @@ namespace Soundboard
 			_Settings.SelectedRecordingDevice = String.Empty;
 			_Settings.Save();
 		}
+
+		// TODO(Salads): Reset settings functions
+		public static void ResetFileSettingsToDefault()
+		{
+			throw new NotImplementedException();
+		}
+
+		public static void ResetHotkeySettingsToDefault()
+		{
+			throw new NotImplementedException();
+		}
+
+		public static void ResetAllSettingsToDefault()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -11,25 +11,24 @@ namespace Soundboard
 	{
 		public static MMDeviceCollection GetActivePlaybackDevices()
 		{
-			using(MMDeviceEnumerator Enumerator = new MMDeviceEnumerator())
-			{
-				return Enumerator.EnumAudioEndpoints(DataFlow.Render, DeviceState.Active);
-			}
+			return GetAudioDevices(DataFlow.Render, DeviceState.Active);
 		}
 
 		public static MMDeviceCollection GetActiveRecordingDevices()
 		{
-			using(MMDeviceEnumerator Enumerator = new MMDeviceEnumerator())
-			{
-				return Enumerator.EnumAudioEndpoints(DataFlow.Capture, DeviceState.Active);
-			}
+			return GetAudioDevices(DataFlow.Capture, DeviceState.Active);
 		}
 
 		public static MMDeviceCollection GetAllActiveDevices()
 		{
+			return GetAudioDevices(DataFlow.All, DeviceState.Active);
+		}
+
+		public static MMDeviceCollection GetAudioDevices(DataFlow DataFlowFilter, DeviceState DeviceStateFilter)
+		{
 			using(MMDeviceEnumerator Enumerator = new MMDeviceEnumerator())
 			{
-				return Enumerator.EnumAudioEndpoints(DataFlow.All, DeviceState.Active);
+				return Enumerator.EnumAudioEndpoints(DataFlowFilter, DeviceStateFilter);
 			}
 		}
 	}
