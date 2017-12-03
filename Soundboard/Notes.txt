@@ -1,39 +1,16 @@
-﻿Summary
+﻿=====================
+=       TODO        =
+=====================
 
-The soundboard will be able to, with the help of a Virtual Audio Cable, 
-play sounds through the microphone so others can hear them.
+- Saving for audio files
+	- Hotkeys too
 
-=================
-=    Features   =
-=================
+- Custom draw volume control
 
-	+ Get device information for both Recording and Playback devices.
-	+ Keep track of specified sound files to play when requested.
-	+ Mix audio into one stream, and stop all sounds at the press of a button.
-	+ Change which playback devices to play the sound through. (Can be multiple devices)
-	+ Change chosed recording device, along with an option to mute the device while sound is playing. (One recording device)
-	+ Save device information in a save file, loaded on startup. 
-		: Must be validated and have default values somewhere.
-	+ Global hotkeys that do not block input from other programs. 
-		: Should have different functions available.
-			:: Play Sound
-			:: Mute
-			:: Stop
+- Keyboard / Mouse hook
 
-=================
-=      GUI      =
-=================
+- Think about binary save file
 
-	+ Main Window
-		: List currently chosen output devices.
-			:: Since this can be large, think of a way to make this compact. (Possibly a link to show the names of the devices.) "Output Devices: (2) show"
-			:: Button next to the label to open DevicePicker
-				::: A seperate window that returns any chosen devices
-				::: Should have a list view showing all devices (capture OR render)
-				::: Multiselect
-				::: OK / Cancel
-		: Label for capture device.
-			:: Single label showing selected device OR a dropdown with possible capture devices
-		: List of audio files added by the user.
-			:: Should show the filename, and hotkey if any.
-				::: VALIDATE and maybe notify user/remove if file isn't found.
+- Thumbnails for suppoerted audio files
+
+- Double click to play sound

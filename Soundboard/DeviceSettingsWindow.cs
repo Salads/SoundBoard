@@ -13,99 +13,74 @@ using Soundboard.Properties;
 
 namespace Soundboard
 {
+
+	/// <summary>
+	/// This form will let the user pick their audio devices.
+	/// </summary>
 	public partial class DeviceSettingsWindow : Form
 	{
-		public DeviceSettingsWindow()
+		private SoundboardSettings m_Settings;
+
+		public DeviceSettingsWindow(SoundboardSettings Settings)
 		{
 			InitializeComponent();
+			m_Settings = Settings;
 		}
 
 		private void SettingsWindow_Load(object sender, EventArgs e)
 		{
-			using(MMDeviceCollection AudioDevices = DeviceEnumHelper.GetAllActiveDevices())
+			GUI_RecordingDevices.Items.Add("None");
+			GUI_RecordingDevices.SelectedIndex = 0;
+
+			using(MMDeviceCollection Collection = DeviceHelper.GetAllActiveDevices())
+			foreach(MMDevice Device in Collection)
 			{
-				foreach(MMDevice Device in AudioDevices)
+				if(Device.DataFlow == DataFlow.Render)
 				{
-					if(Device.DataFlow == DataFlow.Render)
+					bool IsSaved = m_Settings.PlaybackDevices.Where(x => x.DeviceID == Device.DeviceID).Any();
+					GUI_PlaybackDevices.Items.Add(Device, IsSaved);
+				}
+				else if(Device.DataFlow == DataFlow.Capture)
+				{
+					GUI_RecordingDevices.Items.Add(Device);
+					if(m_Settings.RecordingDevice?.Info.DeviceID == Device.DeviceID)
 					{
-						bool IsSaved = false;
-						if(SettingsHelper.Get().SelectedPlaybackDevices.Contains(Device.DeviceID))
-						{
-							IsSaved = true;
-						}
-
-						GUI_PlaybackDevices.Items.Add(Device, IsSaved);
-					}
-					else if(Device.DataFlow == DataFlow.Capture)
-					{
-						GUI_RecordingDevices.Items.Add(Device);
-
-						if(SettingsHelper.Get().SelectedRecordingDevice == Device.DeviceID)
-						{
-							GUI_RecordingDevices.SelectedItem = Device;
-						}
+						GUI_RecordingDevices.SelectedItem = Device;
 					}
 				}
 			}
-
-			if(GUI_RecordingDevices.Items.Count > 0 && GUI_RecordingDevices.SelectedItem == null)
-			{
-				GUI_RecordingDevices.SelectedIndex = 0;
-			}
-
-			GUI_MicToggle.Checked = SettingsHelper.Get().MuteMicWhilePlaying;
 		}
 
 		private void Button_OK_Click(object sender, EventArgs e)
 		{
-			/* Philosophy on validation
-			 * 
-			 * Normally, there could be
-			 * a situation where a certain combination of settings "wouldn't work" in the sense that
-			 * the point of the program would be defeated, or would be physically impossible. 
-			 * However, I don't want the user to become "stuck" on the options screen
-			 * if it happens that his computer is not capable of satisfying the requirements.
-			 * 
-			 * As such, I "validate" but don't force him to change settings, only notify him that 
-			 * the setup is incorrect.
-			 * 
-			 * Back in the Main Window I will just stop him from being able to do something if the settings
-			 * aren't right, and pop up a messagebox with the problem.
-			 */
-
+			// Block if no playback devices are selected.
 			if(GUI_PlaybackDevices.CheckedItems.Count <= 0)
 			{
-				if(DialogResult.Cancel == 
-					MessageBox.Show(
-						"No playback devices were selected!\nYou will not be able to hear or play sounds!\nContinue?", 
-						"Error",
-						MessageBoxButtons.OKCancel, MessageBoxIcon.Warning))
-				{
-					return;
-				}
+				MessageBox.Show("No playback devices were selected!\nYou will not be able to hear or play sounds!",
+								"Error",
+								MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
 			}
-			else if(GUI_RecordingDevices.SelectedItem == null)
+			else if(GUI_RecordingDevices.SelectedIndex == 0)
 			{
-				if(DialogResult.Cancel ==
-					MessageBox.Show(
-						"No microphone selected!\nYou will not be able to play sounds for others!\nContinue?",
-						"Error",
-						MessageBoxButtons.OKCancel, MessageBoxIcon.Warning))
-				{
-					return;
-				}
+				// Warn the user that they have no mic selected, and the mute mic while setting wont do anything.
+				DialogResult Result = MessageBox.Show("No microphone selected!\nThe \"mute mic while playing\" checkbox wont do anything!\nContinue?",
+														"Warning",
+														MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+				if(Result == DialogResult.Cancel) {  return; }
 			}
 
-			Settings _Settings = SettingsHelper.Get();
-			_Settings.SelectedPlaybackDevices.Clear();
+			// Go ahead and apply the settings.
+			m_Settings.ResetDevices();
 			foreach(MMDevice Device in GUI_PlaybackDevices.CheckedItems)
 			{
-				_Settings.SelectedPlaybackDevices.Add(Device.DeviceID);
+				m_Settings.PlaybackDevices.Add(new AudioDevice(Device));
 			}
 
-			_Settings.SelectedRecordingDevice = (GUI_RecordingDevices.SelectedItem as MMDevice).DeviceID;
-			_Settings.MuteMicWhilePlaying = GUI_MicToggle.Checked;
-			_Settings.Save();
+			if(GUI_RecordingDevices.SelectedIndex != 0)
+			{
+				m_Settings.RecordingDevice = new AudioDevice(GUI_RecordingDevices.SelectedItem as MMDevice);
+			}
 
 			DialogResult = DialogResult.OK;
 

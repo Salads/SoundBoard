@@ -31,7 +31,6 @@
 			this.GUI_PlaybackDevices = new System.Windows.Forms.CheckedListBox();
 			this.GUI_RecordingDevices = new System.Windows.Forms.ComboBox();
 			this.Button_OK = new System.Windows.Forms.Button();
-			this.GUI_MicToggle = new System.Windows.Forms.CheckBox();
 			this.GUI_LabelPlayback = new System.Windows.Forms.Label();
 			this.GUI_LabelMicrophone = new System.Windows.Forms.Label();
 			this.SuspendLayout();
@@ -71,18 +70,6 @@
 			this.Button_OK.UseVisualStyleBackColor = true;
 			this.Button_OK.Click += new System.EventHandler(this.Button_OK_Click);
 			// 
-			// GUI_MicToggle
-			// 
-			this.GUI_MicToggle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.GUI_MicToggle.AutoSize = true;
-			this.GUI_MicToggle.Location = new System.Drawing.Point(13, 303);
-			this.GUI_MicToggle.Name = "GUI_MicToggle";
-			this.GUI_MicToggle.Size = new System.Drawing.Size(161, 21);
-			this.GUI_MicToggle.TabIndex = 3;
-			this.GUI_MicToggle.Text = "Mute Mic while playing";
-			this.GUI_MicToggle.UseVisualStyleBackColor = true;
-			// 
 			// GUI_LabelPlayback
 			// 
 			this.GUI_LabelPlayback.AutoSize = true;
@@ -112,7 +99,6 @@
 			this.ClientSize = new System.Drawing.Size(355, 347);
 			this.Controls.Add(this.GUI_LabelMicrophone);
 			this.Controls.Add(this.GUI_LabelPlayback);
-			this.Controls.Add(this.GUI_MicToggle);
 			this.Controls.Add(this.Button_OK);
 			this.Controls.Add(this.GUI_RecordingDevices);
 			this.Controls.Add(this.GUI_PlaybackDevices);
@@ -137,7 +123,6 @@
 		private System.Windows.Forms.CheckedListBox GUI_PlaybackDevices;
 		private System.Windows.Forms.ComboBox GUI_RecordingDevices;
 		private System.Windows.Forms.Button Button_OK;
-		private System.Windows.Forms.CheckBox GUI_MicToggle;
 		private System.Windows.Forms.Label GUI_LabelPlayback;
 		private System.Windows.Forms.Label GUI_LabelMicrophone;
 	}
