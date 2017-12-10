@@ -28,8 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.GUI_PlaybackDevices = new System.Windows.Forms.CheckedListBox();
-			this.GUI_RecordingDevices = new System.Windows.Forms.ComboBox();
+			this.ui_playbackDevices = new System.Windows.Forms.CheckedListBox();
+			this.ui_recordingDevices = new System.Windows.Forms.ComboBox();
 			this.Button_OK = new System.Windows.Forms.Button();
 			this.GUI_LabelPlayback = new System.Windows.Forms.Label();
 			this.GUI_LabelMicrophone = new System.Windows.Forms.Label();
@@ -37,25 +37,25 @@
 			// 
 			// GUI_PlaybackDevices
 			// 
-			this.GUI_PlaybackDevices.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.ui_playbackDevices.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.GUI_PlaybackDevices.FormattingEnabled = true;
-			this.GUI_PlaybackDevices.Location = new System.Drawing.Point(13, 33);
-			this.GUI_PlaybackDevices.Name = "GUI_PlaybackDevices";
-			this.GUI_PlaybackDevices.Size = new System.Drawing.Size(330, 204);
-			this.GUI_PlaybackDevices.TabIndex = 0;
+			this.ui_playbackDevices.FormattingEnabled = true;
+			this.ui_playbackDevices.Location = new System.Drawing.Point(13, 33);
+			this.ui_playbackDevices.Name = "GUI_PlaybackDevices";
+			this.ui_playbackDevices.Size = new System.Drawing.Size(330, 204);
+			this.ui_playbackDevices.TabIndex = 0;
 			// 
 			// GUI_RecordingDevices
 			// 
-			this.GUI_RecordingDevices.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			this.ui_recordingDevices.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.GUI_RecordingDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.GUI_RecordingDevices.FormattingEnabled = true;
-			this.GUI_RecordingDevices.Location = new System.Drawing.Point(12, 272);
-			this.GUI_RecordingDevices.Name = "GUI_RecordingDevices";
-			this.GUI_RecordingDevices.Size = new System.Drawing.Size(330, 25);
-			this.GUI_RecordingDevices.TabIndex = 1;
+			this.ui_recordingDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.ui_recordingDevices.FormattingEnabled = true;
+			this.ui_recordingDevices.Location = new System.Drawing.Point(12, 272);
+			this.ui_recordingDevices.Name = "GUI_RecordingDevices";
+			this.ui_recordingDevices.Size = new System.Drawing.Size(330, 25);
+			this.ui_recordingDevices.TabIndex = 1;
 			// 
 			// Button_OK
 			// 
@@ -68,7 +68,7 @@
 			this.Button_OK.TabStop = false;
 			this.Button_OK.Text = "OK";
 			this.Button_OK.UseVisualStyleBackColor = true;
-			this.Button_OK.Click += new System.EventHandler(this.Button_OK_Click);
+			this.Button_OK.Click += new System.EventHandler(this.EV_OK_Clicked);
 			// 
 			// GUI_LabelPlayback
 			// 
@@ -100,8 +100,8 @@
 			this.Controls.Add(this.GUI_LabelMicrophone);
 			this.Controls.Add(this.GUI_LabelPlayback);
 			this.Controls.Add(this.Button_OK);
-			this.Controls.Add(this.GUI_RecordingDevices);
-			this.Controls.Add(this.GUI_PlaybackDevices);
+			this.Controls.Add(this.ui_recordingDevices);
+			this.Controls.Add(this.ui_playbackDevices);
 			this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -112,7 +112,7 @@
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Device Settings";
-			this.Load += new System.EventHandler(this.SettingsWindow_Load);
+			this.Load += new System.EventHandler(this.EV_SettingsWindow_OnLoad);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -120,8 +120,8 @@
 
 		#endregion
 
-		private System.Windows.Forms.CheckedListBox GUI_PlaybackDevices;
-		private System.Windows.Forms.ComboBox GUI_RecordingDevices;
+		private System.Windows.Forms.CheckedListBox ui_playbackDevices;
+		private System.Windows.Forms.ComboBox ui_recordingDevices;
 		private System.Windows.Forms.Button Button_OK;
 		private System.Windows.Forms.Label GUI_LabelPlayback;
 		private System.Windows.Forms.Label GUI_LabelMicrophone;

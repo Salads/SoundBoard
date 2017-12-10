@@ -25,23 +25,18 @@ namespace Soundboard
 
 		public AudioDevice(string deviceID)
 		{
-			bool Found = false;
-
 			using(MMDeviceCollection Devices = DeviceHelper.GetAllActiveDevices())
 			{
-				foreach(MMDevice Device in Devices.Where(x => x.DeviceID == deviceID))
+				try
 				{
+					MMDevice Device = Devices.First(x => x.DeviceID == deviceID);
 					Info = Device;
 					Volume = AudioEndpointVolume.FromDevice(Device);
-					Found = true;
-
-					Debug.WriteLine("Found Device " + Device.FriendlyName);
 				}
-			}
-
-			if(!Found)
-			{
-				throw new DeviceNotFoundException(deviceID + " doesn't exist!");
+				catch(InvalidOperationException e)
+				{
+					throw new DeviceNotFoundException(deviceID + " doesn't exist!", e);
+				}
 			}
 		}
 

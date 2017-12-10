@@ -24,59 +24,61 @@ namespace Soundboard
 			InitializeComponent();
 		}
 
-		private void SettingsWindow_Load(object sender, EventArgs e)
+		private void EV_SettingsWindow_OnLoad(object sender, EventArgs e)
 		{
-			GUI_RecordingDevices.Items.Add("None");
-			GUI_RecordingDevices.SelectedIndex = 0;
+			ui_recordingDevices.Items.Add("None");
+			ui_recordingDevices.SelectedIndex = 0;
 
-			using(MMDeviceCollection Collection = DeviceHelper.GetAllActiveDevices())
-			foreach(MMDevice Device in Collection)
+			using(MMDeviceCollection deviceCollection = DeviceHelper.GetAllActiveDevices())
+			foreach(MMDevice device in deviceCollection)
 			{
-				if(Device.DataFlow == DataFlow.Render)
+				if(device.DataFlow == DataFlow.Render)
 				{
-					bool IsSaved = SoundboardSettings.PlaybackDevices.Where(x => x.DeviceID == Device.DeviceID).Any();
-					GUI_PlaybackDevices.Items.Add(Device, IsSaved);
+					bool isSaved = SoundboardSettings.PlaybackDevices.Where(x => x.DeviceID == device.DeviceID).Any();
+					ui_playbackDevices.Items.Add(device, isSaved);
 				}
-				else if(Device.DataFlow == DataFlow.Capture)
+				else if(device.DataFlow == DataFlow.Capture)
 				{
-					GUI_RecordingDevices.Items.Add(Device);
-					if(SoundboardSettings.RecordingDevice?.Info.DeviceID == Device.DeviceID)
+					ui_recordingDevices.Items.Add(device);
+					if(SoundboardSettings.RecordingDevice?.Info.DeviceID == device.DeviceID)
 					{
-						GUI_RecordingDevices.SelectedItem = Device;
+						ui_recordingDevices.SelectedItem = device;
 					}
 				}
 			}
 		}
 
-		private void Button_OK_Click(object sender, EventArgs e)
+		private void EV_OK_Clicked(object sender, EventArgs e)
 		{
+			// TODO(Salads): There may be a pretty clever way to do this.
 			// Block if no playback devices are selected.
-			if(GUI_PlaybackDevices.CheckedItems.Count <= 0)
+			if(ui_playbackDevices.CheckedItems.Count <= 0)
 			{
-				MessageBox.Show("No playback devices were selected!\nYou will not be able to hear or play sounds!",
-								"Error",
-								MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
-			}
-			else if(GUI_RecordingDevices.SelectedIndex == 0)
-			{
-				// Warn the user that they have no mic selected, and the mute mic while setting wont do anything.
-				DialogResult Result = MessageBox.Show("No microphone selected!\nThe \"mute mic while playing\" checkbox wont do anything!\nContinue?",
+				DialogResult result = MessageBox.Show("No playback devices were selected!\nYou will not be able to hear or play sounds!",
 														"Warning",
 														MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-				if(Result == DialogResult.Cancel) {  return; }
+				if(result == DialogResult.Cancel) { return; }
+			}
+
+			if(ui_recordingDevices.SelectedIndex == 0)
+			{
+				// Warn the user that they have no mic selected, and the mute mic while setting wont do anything.
+				DialogResult result = MessageBox.Show("No microphone selected!\nThe \"mute mic while playing\" checkbox wont do anything!\nContinue?",
+														"Warning",
+														MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+				if(result == DialogResult.Cancel) {  return; }
 			}
 
 			// Go ahead and apply the settings.
 			SoundboardSettings.ResetDevices();
-			foreach(MMDevice Device in GUI_PlaybackDevices.CheckedItems)
+			foreach(MMDevice Device in ui_playbackDevices.CheckedItems)
 			{
 				SoundboardSettings.PlaybackDevices.Add(new AudioDevice(Device));
 			}
 
-			if(GUI_RecordingDevices.SelectedIndex != 0)
+			if(ui_recordingDevices.SelectedIndex != 0)
 			{
-				SoundboardSettings.RecordingDevice = new AudioDevice(GUI_RecordingDevices.SelectedItem as MMDevice);
+				SoundboardSettings.RecordingDevice = new AudioDevice(ui_recordingDevices.SelectedItem as MMDevice);
 			}
 
 			DialogResult = DialogResult.OK;

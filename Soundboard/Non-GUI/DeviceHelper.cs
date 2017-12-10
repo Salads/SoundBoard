@@ -7,6 +7,10 @@ using CSCore.CoreAudioAPI;
 
 namespace Soundboard
 {
+
+	/// <summary>
+	/// Wraps the CSCore Device enumeration into easier functions. 
+	/// </summary>
 	public static class DeviceHelper
 	{
 		public static MMDeviceCollection GetActivePlaybackDevices()

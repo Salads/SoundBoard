@@ -24,6 +24,9 @@ namespace Soundboard
 		public static bool MuteMicrophoneWhilePlaying{ get; set; }
 
 		[JsonProperty]
+		public static uint GlobalVolume { get; set; }
+
+		[JsonProperty]
 		public static Dictionary<string, Sound> Sounds { get; set; }
 
 		[JsonProperty]
@@ -63,6 +66,7 @@ namespace Soundboard
 		{
 			FirstRun = true;
 			MuteMicrophoneWhilePlaying = false;
+			GlobalVolume = 20;
 			ResetSounds();
 			ResetDevices();
 		}
@@ -103,6 +107,7 @@ namespace Soundboard
 
 			FirstRun = bool.Parse((string)JsonObject[nameof(FirstRun)]);
 			MuteMicrophoneWhilePlaying = bool.Parse((string)JsonObject[nameof(MuteMicrophoneWhilePlaying)]);
+			GlobalVolume = uint.Parse((string)JsonObject[nameof(GlobalVolume)]);
 
 			List<string> SavedPlaybackIDs = JsonObject[nameof(PlaybackDevices)].Select(x => (string)x).ToList();
 			foreach(MMDevice Device in DeviceHelper.GetActivePlaybackDevices().Where(x => SavedPlaybackIDs.Contains(x.DeviceID)))
@@ -140,6 +145,9 @@ namespace Soundboard
 
 				writer.WritePropertyName(nameof(MuteMicrophoneWhilePlaying));
 				writer.WriteValue(MuteMicrophoneWhilePlaying);
+
+				writer.WritePropertyName(nameof(GlobalVolume));
+				writer.WriteValue(GlobalVolume);
 
 				writer.WritePropertyName(nameof(PlaybackDevices));
 				Serializer.Serialize(writer, PlaybackDevices.Select(x => x.DeviceID).ToList());

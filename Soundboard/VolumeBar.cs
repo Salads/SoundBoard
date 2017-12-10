@@ -110,7 +110,8 @@ namespace Soundboard
 					SpeakerIcon = Properties.Resources.__Volume_Low;
 				}
 
-				e.Graphics.DrawImage(SpeakerIcon, e.ClipRectangle.X, e.ClipRectangle.Y - 4, 25, 25);
+				int ImageDimension = FullBarHeight - 1;
+				e.Graphics.DrawImage(SpeakerIcon, e.ClipRectangle.X, e.ClipRectangle.Y - 4, ImageDimension, ImageDimension);
 
 				// Draw text
 				e.Graphics.DrawString("" + Volume + "%",

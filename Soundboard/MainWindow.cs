@@ -21,12 +21,14 @@ namespace Soundboard
 	{
 		public MainWindow()
 		{
+			SoundboardSettings.LoadFromFile();
+
 			InitializeComponent();
 			SoundList_SyncWidths();
 
-			ui_soundPanel.SelectedSounds = GUI_SoundList.SelectedItems;
 
-			SoundboardSettings.LoadFromFile();
+			// TODO(Salads): This is fuckin weird.
+			ui_soundPanel.SelectedSounds = GUI_SoundList.SelectedItems;
 
 			if(SoundboardSettings.FirstRun)
 			{

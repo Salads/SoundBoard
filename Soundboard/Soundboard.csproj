@@ -52,13 +52,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioDevice.cs" />
-    <Compile Include="DeviceHelper.cs" />
-    <Compile Include="Hotkey.cs" />
-    <Compile Include="MainWindow\MainWindow.cs">
+    <Compile Include="Non-GUI\AudioDevice.cs" />
+    <Compile Include="Non-GUI\DeviceHelper.cs" />
+    <Compile Include="Non-GUI\Hotkey.cs" />
+    <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainWindow\MainWindow.Designer.cs">
+    <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -69,22 +69,22 @@
     <Compile Include="DeviceSettingsWindow.Designer.cs">
       <DependentUpon>DeviceSettingsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sound.cs" />
-    <Compile Include="SoundboardSettings.cs" />
+    <Compile Include="Non-GUI\Sound.cs" />
+    <Compile Include="Non-GUI\SoundboardSettings.cs" />
     <Compile Include="SoundControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SoundControl.Designer.cs">
       <DependentUpon>SoundControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SoundPlayer.cs" />
+    <Compile Include="Non-GUI\SoundPlayer.cs" />
     <Compile Include="VolumeBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="VolumeBar.Designer.cs">
       <DependentUpon>VolumeBar.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="MainWindow\MainWindow.resx">
+    <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

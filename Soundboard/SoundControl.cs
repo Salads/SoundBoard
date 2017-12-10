@@ -26,6 +26,8 @@ namespace Soundboard
 		public SoundControl()
 		{
 			InitializeComponent();
+
+			ui_volumeBar.Volume = SoundboardSettings.GlobalVolume;
 		}
 
 		public void UpdateSelectedSound(bool playImmediately = false)
@@ -113,6 +115,7 @@ namespace Soundboard
 		private void EV_VolumeChanged(object sender, EventArgs e)
 		{
 			m_SoundPlayer.SetVolume(ui_volumeBar.VolumeNormalized);
+			SoundboardSettings.GlobalVolume = ui_volumeBar.Volume;
 		}
 
 		private void EV_MuteMicChanged(object sender, EventArgs e)
