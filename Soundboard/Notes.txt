@@ -2,15 +2,12 @@
 =       TODO        =
 =====================
 
-- Saving for audio files
-	- Hotkeys too
-
-- Custom draw volume control
-
 - Keyboard / Mouse hook
 
-- Think about binary save file
-
-- Thumbnails for suppoerted audio files
-
 - Double click to play sound
+
+- Download from youtube as MP3
+
+- Add Sound Window to set custom TimeSpans.
+
+- Validate all sounds on startup.

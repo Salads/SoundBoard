@@ -41,15 +41,8 @@
 			this.Header_Filenames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.Header_Hotkey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.GUI_AddFileButton = new System.Windows.Forms.Button();
-			this.GUI_PlayButton = new System.Windows.Forms.Button();
-			this.GUI_StopButton = new System.Windows.Forms.Button();
-			this.GUI_MuteMicCheckBox = new System.Windows.Forms.CheckBox();
-			this.GUI_VolumeBar = new Soundboard.VolumeBar();
-			this.GUI_SelectedSoundName = new System.Windows.Forms.Label();
-			this.GUI_TackbarTest = new System.Windows.Forms.TrackBar();
-			this.GUI_SlideTime = new System.Windows.Forms.Label();
+			this.ui_soundPanel = new Soundboard.SoundControl();
 			this.GUI_MenuStrip.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.GUI_TackbarTest)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// GUI_MenuStrip
@@ -79,7 +72,7 @@
 			this.Menu_DeviceSettings.Name = "Menu_DeviceSettings";
 			this.Menu_DeviceSettings.Size = new System.Drawing.Size(154, 22);
 			this.Menu_DeviceSettings.Text = "Device Settings";
-			this.Menu_DeviceSettings.Click += new System.EventHandler(this.Menu_DeviceSettings_Click);
+			this.Menu_DeviceSettings.Click += new System.EventHandler(this.EV_Menu_DeviceSettings_Clicked);
 			// 
 			// Menu_ResetSettings
 			// 
@@ -96,21 +89,21 @@
 			this.Menu_ResetDeviceSettings.Name = "Menu_ResetDeviceSettings";
 			this.Menu_ResetDeviceSettings.Size = new System.Drawing.Size(185, 22);
 			this.Menu_ResetDeviceSettings.Text = "Reset Device Settings";
-			this.Menu_ResetDeviceSettings.Click += new System.EventHandler(this.Menu_ResetDeviceSettings_Click);
+			this.Menu_ResetDeviceSettings.Click += new System.EventHandler(this.EV_Menu_ResetDeviceSettings_Clicked);
 			// 
 			// Menu_ResetFiles
 			// 
 			this.Menu_ResetFiles.Name = "Menu_ResetFiles";
 			this.Menu_ResetFiles.Size = new System.Drawing.Size(185, 22);
 			this.Menu_ResetFiles.Text = "Reset Files";
-			this.Menu_ResetFiles.Click += new System.EventHandler(this.Menu_ResetFiles_Click);
+			this.Menu_ResetFiles.Click += new System.EventHandler(this.EV_Menu_ResetSounds_Clicked);
 			// 
 			// Menu_ResetAllSettings
 			// 
 			this.Menu_ResetAllSettings.Name = "Menu_ResetAllSettings";
 			this.Menu_ResetAllSettings.Size = new System.Drawing.Size(185, 22);
 			this.Menu_ResetAllSettings.Text = "Reset All Settings";
-			this.Menu_ResetAllSettings.Click += new System.EventHandler(this.Menu_ResetAllSettings_Click);
+			this.Menu_ResetAllSettings.Click += new System.EventHandler(this.EV_Menu_ResetAllSettings_Clicked);
 			// 
 			// Menu_Help
 			// 
@@ -125,7 +118,7 @@
 			this.Menu_HowTo.Name = "Menu_HowTo";
 			this.Menu_HowTo.Size = new System.Drawing.Size(124, 22);
 			this.Menu_HowTo.Text = "How To...";
-			this.Menu_HowTo.Click += new System.EventHandler(this.Menu_HowTo_Click);
+			this.Menu_HowTo.Click += new System.EventHandler(this.EV_Menu_HowTo_Clicked);
 			// 
 			// GUI_SoundList
 			// 
@@ -143,15 +136,15 @@
 			this.GUI_SoundList.MultiSelect = false;
 			this.GUI_SoundList.Name = "GUI_SoundList";
 			this.GUI_SoundList.ShowGroups = false;
-			this.GUI_SoundList.Size = new System.Drawing.Size(425, 270);
+			this.GUI_SoundList.Size = new System.Drawing.Size(425, 309);
 			this.GUI_SoundList.TabIndex = 1;
 			this.GUI_SoundList.TabStop = false;
 			this.GUI_SoundList.UseCompatibleStateImageBehavior = false;
 			this.GUI_SoundList.View = System.Windows.Forms.View.Details;
-			this.GUI_SoundList.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.GUI_SoundList_ColumnWidthChanging);
-			this.GUI_SoundList.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.GUI_SoundList_DrawColumnHeader);
-			this.GUI_SoundList.SelectedIndexChanged += new System.EventHandler(this.GUI_SoundList_SelectedIndexChanged);
-			this.GUI_SoundList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GUI_SoundList_MouseDoubleClick);
+			this.GUI_SoundList.ColumnWidthChanging += new System.Windows.Forms.ColumnWidthChangingEventHandler(this.EV_SoundList_SizeChanging);
+			this.GUI_SoundList.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.EV_SoundList_OnDrawHeader);
+			this.GUI_SoundList.SelectedIndexChanged += new System.EventHandler(this.EV_SelectedSoundIndexChanged);
+			this.GUI_SoundList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.EV_SoundDoubleClicked);
 			// 
 			// Header_Filenames
 			// 
@@ -172,98 +165,26 @@
 			this.GUI_AddFileButton.TabIndex = 2;
 			this.GUI_AddFileButton.Text = "Add File";
 			this.GUI_AddFileButton.UseVisualStyleBackColor = true;
-			this.GUI_AddFileButton.Click += new System.EventHandler(this.GUI_AddFileButton_Click);
+			this.GUI_AddFileButton.Click += new System.EventHandler(this.EV_AddFile_Clicked);
 			// 
-			// GUI_PlayButton
+			// ui_soundPanel
 			// 
-			this.GUI_PlayButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.GUI_PlayButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.GUI_PlayButton.Location = new System.Drawing.Point(15, 450);
-			this.GUI_PlayButton.Name = "GUI_PlayButton";
-			this.GUI_PlayButton.Size = new System.Drawing.Size(25, 25);
-			this.GUI_PlayButton.TabIndex = 3;
-			this.GUI_PlayButton.Text = "Play";
-			this.GUI_PlayButton.UseVisualStyleBackColor = true;
-			this.GUI_PlayButton.Click += new System.EventHandler(this.GUI_PlayButton_Click);
-			// 
-			// GUI_StopButton
-			// 
-			this.GUI_StopButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.GUI_StopButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.GUI_StopButton.Location = new System.Drawing.Point(46, 450);
-			this.GUI_StopButton.Name = "GUI_StopButton";
-			this.GUI_StopButton.Size = new System.Drawing.Size(25, 25);
-			this.GUI_StopButton.TabIndex = 4;
-			this.GUI_StopButton.Text = "Stop";
-			this.GUI_StopButton.UseVisualStyleBackColor = true;
-			this.GUI_StopButton.Click += new System.EventHandler(this.GUI_StopButton_Click);
-			// 
-			// GUI_MuteMicCheckBox
-			// 
-			this.GUI_MuteMicCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.GUI_MuteMicCheckBox.AutoSize = true;
-			this.GUI_MuteMicCheckBox.Location = new System.Drawing.Point(12, 340);
-			this.GUI_MuteMicCheckBox.Name = "GUI_MuteMicCheckBox";
-			this.GUI_MuteMicCheckBox.Size = new System.Drawing.Size(160, 21);
-			this.GUI_MuteMicCheckBox.TabIndex = 6;
-			this.GUI_MuteMicCheckBox.Text = "Mute mic while playing";
-			this.GUI_MuteMicCheckBox.UseVisualStyleBackColor = true;
-			this.GUI_MuteMicCheckBox.CheckedChanged += new System.EventHandler(this.GUI_MuteMicCheckBox_CheckedChanged);
-			// 
-			// GUI_VolumeBar
-			// 
-			this.GUI_VolumeBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.GUI_VolumeBar.Location = new System.Drawing.Point(240, 397);
-			this.GUI_VolumeBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.GUI_VolumeBar.Name = "GUI_VolumeBar";
-			this.GUI_VolumeBar.Size = new System.Drawing.Size(197, 49);
-			this.GUI_VolumeBar.TabIndex = 7;
-			this.GUI_VolumeBar.Volume = ((uint)(50u));
-			this.GUI_VolumeBar.VolumeChanged += new System.EventHandler(this.VolumeBar_ValueChanged);
-			// 
-			// GUI_SelectedSoundName
-			// 
-			this.GUI_SelectedSoundName.Location = new System.Drawing.Point(12, 364);
-			this.GUI_SelectedSoundName.Name = "GUI_SelectedSoundName";
-			this.GUI_SelectedSoundName.Size = new System.Drawing.Size(425, 29);
-			this.GUI_SelectedSoundName.TabIndex = 8;
-			this.GUI_SelectedSoundName.Text = "Nothing Selected";
-			this.GUI_SelectedSoundName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// GUI_TackbarTest
-			// 
-			this.GUI_TackbarTest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.ui_soundPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.GUI_TackbarTest.Location = new System.Drawing.Point(15, 399);
-			this.GUI_TackbarTest.Maximum = 0;
-			this.GUI_TackbarTest.Name = "GUI_TackbarTest";
-			this.GUI_TackbarTest.Size = new System.Drawing.Size(219, 45);
-			this.GUI_TackbarTest.TabIndex = 9;
-			this.GUI_TackbarTest.TabStop = false;
-			this.GUI_TackbarTest.TickStyle = System.Windows.Forms.TickStyle.None;
-			this.GUI_TackbarTest.ValueChanged += new System.EventHandler(this.GUI_TackbarTest_ValueChanged);
-			// 
-			// GUI_SlideTime
-			// 
-			this.GUI_SlideTime.AutoSize = true;
-			this.GUI_SlideTime.Location = new System.Drawing.Point(78, 454);
-			this.GUI_SlideTime.Name = "GUI_SlideTime";
-			this.GUI_SlideTime.Size = new System.Drawing.Size(61, 17);
-			this.GUI_SlideTime.TabIndex = 10;
-			this.GUI_SlideTime.Text = "0:00/0:00";
+			this.ui_soundPanel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ui_soundPanel.Location = new System.Drawing.Point(12, 380);
+			this.ui_soundPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.ui_soundPanel.Name = "ui_soundPanel";
+			this.ui_soundPanel.SelectedSounds = null;
+			this.ui_soundPanel.Size = new System.Drawing.Size(425, 160);
+			this.ui_soundPanel.TabIndex = 3;
 			// 
 			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(449, 505);
-			this.Controls.Add(this.GUI_SlideTime);
-			this.Controls.Add(this.GUI_TackbarTest);
-			this.Controls.Add(this.GUI_SelectedSoundName);
-			this.Controls.Add(this.GUI_VolumeBar);
-			this.Controls.Add(this.GUI_MuteMicCheckBox);
-			this.Controls.Add(this.GUI_StopButton);
-			this.Controls.Add(this.GUI_PlayButton);
+			this.ClientSize = new System.Drawing.Size(449, 553);
+			this.Controls.Add(this.ui_soundPanel);
 			this.Controls.Add(this.GUI_AddFileButton);
 			this.Controls.Add(this.GUI_SoundList);
 			this.Controls.Add(this.GUI_MenuStrip);
@@ -274,11 +195,10 @@
 			this.Name = "MainWindow";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Soundboard";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
-			this.Resize += new System.EventHandler(this.MainWindow_Resize);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EV_FormClosing);
+			this.Resize += new System.EventHandler(this.EV_MainWindow_OnResize);
 			this.GUI_MenuStrip.ResumeLayout(false);
 			this.GUI_MenuStrip.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.GUI_TackbarTest)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -299,13 +219,7 @@
 		private System.Windows.Forms.ColumnHeader Header_Filenames;
 		private System.Windows.Forms.ColumnHeader Header_Hotkey;
 		private System.Windows.Forms.Button GUI_AddFileButton;
-		private System.Windows.Forms.Button GUI_PlayButton;
-		private System.Windows.Forms.Button GUI_StopButton;
-		private System.Windows.Forms.CheckBox GUI_MuteMicCheckBox;
-		private VolumeBar GUI_VolumeBar;
-		private System.Windows.Forms.Label GUI_SelectedSoundName;
-		private System.Windows.Forms.TrackBar GUI_TackbarTest;
-		private System.Windows.Forms.Label GUI_SlideTime;
+		private SoundControl ui_soundPanel;
 	}
 }
 

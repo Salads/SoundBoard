@@ -19,12 +19,9 @@ namespace Soundboard
 	/// </summary>
 	public partial class DeviceSettingsWindow : Form
 	{
-		private SoundboardSettings m_Settings;
-
-		public DeviceSettingsWindow(SoundboardSettings Settings)
+		public DeviceSettingsWindow()
 		{
 			InitializeComponent();
-			m_Settings = Settings;
 		}
 
 		private void SettingsWindow_Load(object sender, EventArgs e)
@@ -37,13 +34,13 @@ namespace Soundboard
 			{
 				if(Device.DataFlow == DataFlow.Render)
 				{
-					bool IsSaved = m_Settings.PlaybackDevices.Where(x => x.DeviceID == Device.DeviceID).Any();
+					bool IsSaved = SoundboardSettings.PlaybackDevices.Where(x => x.DeviceID == Device.DeviceID).Any();
 					GUI_PlaybackDevices.Items.Add(Device, IsSaved);
 				}
 				else if(Device.DataFlow == DataFlow.Capture)
 				{
 					GUI_RecordingDevices.Items.Add(Device);
-					if(m_Settings.RecordingDevice?.Info.DeviceID == Device.DeviceID)
+					if(SoundboardSettings.RecordingDevice?.Info.DeviceID == Device.DeviceID)
 					{
 						GUI_RecordingDevices.SelectedItem = Device;
 					}
@@ -71,15 +68,15 @@ namespace Soundboard
 			}
 
 			// Go ahead and apply the settings.
-			m_Settings.ResetDevices();
+			SoundboardSettings.ResetDevices();
 			foreach(MMDevice Device in GUI_PlaybackDevices.CheckedItems)
 			{
-				m_Settings.PlaybackDevices.Add(new AudioDevice(Device));
+				SoundboardSettings.PlaybackDevices.Add(new AudioDevice(Device));
 			}
 
 			if(GUI_RecordingDevices.SelectedIndex != 0)
 			{
-				m_Settings.RecordingDevice = new AudioDevice(GUI_RecordingDevices.SelectedItem as MMDevice);
+				SoundboardSettings.RecordingDevice = new AudioDevice(GUI_RecordingDevices.SelectedItem as MMDevice);
 			}
 
 			DialogResult = DialogResult.OK;

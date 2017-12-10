@@ -206,5 +206,10 @@ namespace Soundboard
 		{
 			return (TheRectangle.Width > 0 && TheRectangle.Height > 0);
 		}
+
+		private void EV_SizeChanged(object sender, EventArgs e)
+		{
+			Invalidate();
+		}
 	}
 }
