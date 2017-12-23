@@ -13,7 +13,7 @@ using Soundboard;
 
 namespace Soundboard
 {
-	public partial class VolumeBar : UserControl
+	public partial class VolumeBar : Control
 	{
 		private Rectangle m_VolumeBarRect = new Rectangle();
 		private Rectangle m_BarHitboxRect = new Rectangle();
@@ -66,10 +66,11 @@ namespace Soundboard
 			}
 		}
 
-		public VolumeBar()
+		public VolumeBar() : base()
 		{
-			InitializeComponent();
+			SetStyle(ControlStyles.ResizeRedraw, true);
 
+			InitializeComponent();
 			DoubleBuffered = true;
 		}
 
@@ -79,39 +80,37 @@ namespace Soundboard
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			base.OnPaint(e);
+			int fullBarWidth = e.ClipRectangle.Width - 1;
+			int fullBarHeight = e.ClipRectangle.Height / 2;
+			int fullBarStartX = e.ClipRectangle.Left;
+			int fullBarStartY = e.ClipRectangle.Top + fullBarHeight - 1;
 
-			int FullBarWidth = e.ClipRectangle.Width - 1;
-			int FullBarHeight = e.ClipRectangle.Height / 2;
-			int FullBarStartX = e.ClipRectangle.Left;
-			int FullBarStartY = e.ClipRectangle.Top + FullBarHeight - 1;
-
-			float NormalizedVolume = _GetNormalizedVolume();
-			int VolumeBarWidth = Convert.ToInt32(FullBarWidth * NormalizedVolume);
-			Rectangle VolumeBar = new Rectangle(FullBarStartX, FullBarStartY, VolumeBarWidth, FullBarHeight);
-			m_VolumeBarRect = new Rectangle(FullBarStartX, FullBarStartY, FullBarWidth, FullBarHeight);
+			float normalizedVolume = _GetNormalizedVolume();
+			int volumeBarWidth = Convert.ToInt32(fullBarWidth * normalizedVolume);
+			Rectangle VolumeBar = new Rectangle(fullBarStartX, fullBarStartY, volumeBarWidth, fullBarHeight);
+			m_VolumeBarRect = new Rectangle(fullBarStartX, fullBarStartY, fullBarWidth, fullBarHeight);
 			m_BarHitboxRect = m_VolumeBarRect;
 			m_BarHitboxRect.Width++;
 
 			if(_IsSizeValid(Size) && _IsRectangleValid(m_VolumeBarRect))
 			{
 				// Draw volume icon thing
-				Bitmap SpeakerIcon = Properties.Resources.__Volume_Mute;
+				Bitmap iconSpeaker = Properties.Resources.__Volume_Mute;
 				if(Volume > 65)
 				{
-					SpeakerIcon = Properties.Resources.__Volume_High;
+					iconSpeaker = Properties.Resources.__Volume_High;
 				}
 				else if(Volume > 30)
 				{
-					SpeakerIcon = Properties.Resources.__Volume_Medium;
+					iconSpeaker = Properties.Resources.__Volume_Medium;
 				}
 				else if(Volume > 0)
 				{
-					SpeakerIcon = Properties.Resources.__Volume_Low;
+					iconSpeaker = Properties.Resources.__Volume_Low;
 				}
 
-				int ImageDimension = FullBarHeight - 1;
-				e.Graphics.DrawImage(SpeakerIcon, e.ClipRectangle.X, e.ClipRectangle.Y - 4, ImageDimension, ImageDimension);
+				int ImageDimension = fullBarHeight - 1;
+				e.Graphics.DrawImage(iconSpeaker, e.ClipRectangle.X, e.ClipRectangle.Y - 4, ImageDimension, ImageDimension);
 
 				// Draw text
 				e.Graphics.DrawString("" + Volume + "%",
@@ -120,27 +119,29 @@ namespace Soundboard
 					new Point(e.ClipRectangle.X + 30, e.ClipRectangle.Y));
 
 				// Draw bar graphic
-				if(VolumeBarWidth > 0)
+				if(volumeBarWidth > 0)
 				{
-					LinearGradientBrush Gradient = new LinearGradientBrush(m_VolumeBarRect, Color.Empty, Color.Empty, LinearGradientMode.Horizontal);
-					ColorBlend GradientColorBlend = new ColorBlend
+					LinearGradientBrush gradient = new LinearGradientBrush(m_VolumeBarRect, Color.Empty, Color.Empty, LinearGradientMode.Horizontal);
+					ColorBlend gradientColorBlend = new ColorBlend
 					{
 						Colors = m_FullInterpColors,
 						Positions = m_FullInterpPositions
 					};
 
-					Gradient.InterpolationColors = GradientColorBlend;
-					e.Graphics.FillRectangle(Gradient, m_VolumeBarRect);
+					gradient.InterpolationColors = gradientColorBlend;
+					e.Graphics.FillRectangle(gradient, m_VolumeBarRect);
 
 					// Cheat a bit a just draw a rect.
-					int BarEndX = FullBarStartX + VolumeBarWidth;
-					int RemainingWidth = e.ClipRectangle.Width - VolumeBarWidth;
-					e.Graphics.FillRectangle(new SolidBrush(BackColor), BarEndX, FullBarStartY, RemainingWidth, FullBarHeight);
+					int barEndX = fullBarStartX + volumeBarWidth;
+					int remainingWidth = e.ClipRectangle.Width - volumeBarWidth;
+					e.Graphics.FillRectangle(new SolidBrush(BackColor), barEndX, fullBarStartY, remainingWidth, fullBarHeight);
 				}
 				
 				// Draw border
 				e.Graphics.DrawRectangle(m_VolumeBorderPen, m_VolumeBarRect);
 			}
+
+			base.OnPaint(e);
 		}
 
 		private float _GetNormalizedVolume()
@@ -175,37 +176,37 @@ namespace Soundboard
 
 		private void _UpdateVolumeFromMouse()
 		{
-			Point ClientMousePos = PointToClient(Cursor.Position);
-			if(!m_BarHitboxRect.Contains(ClientMousePos) && !m_IsBeingDragged)
+			Point clientMousePos = PointToClient(Cursor.Position);
+			if(!m_BarHitboxRect.Contains(clientMousePos) && !m_IsBeingDragged)
 			{
 				return;
 			}
 
-			if(ClientMousePos.X < 0)
+			if(clientMousePos.X < 0)
 			{
 				Volume = VOLUME_MIN;
 				return;
 			}
-			else if(ClientMousePos.X >= m_VolumeBarRect.Width)
+			else if(clientMousePos.X >= m_VolumeBarRect.Width)
 			{
 				Volume = VOLUME_MAX;
 				return;
 			}
 			else
 			{
-				float NormalizedMousePos = Convert.ToSingle(ClientMousePos.X) / Convert.ToSingle(m_VolumeBarRect.Width);
-				Volume = Convert.ToUInt32(NormalizedMousePos * Convert.ToSingle(VOLUME_MAX));
+				float normalizedMousePos = Convert.ToSingle(clientMousePos.X) / Convert.ToSingle(m_VolumeBarRect.Width);
+				Volume = Convert.ToUInt32(normalizedMousePos * Convert.ToSingle(VOLUME_MAX));
 			}
 		}
 
-		private bool _IsSizeValid(Size TheSize)
+		private bool _IsSizeValid(Size size)
 		{
-			return (TheSize.Width > 0 && TheSize.Height > 0);
+			return (size.Width > 0 && size.Height > 0);
 		}
 
-		private bool _IsRectangleValid(Rectangle TheRectangle)
+		private bool _IsRectangleValid(Rectangle rectangle)
 		{
-			return (TheRectangle.Width > 0 && TheRectangle.Height > 0);
+			return (rectangle.Width > 0 && rectangle.Height > 0);
 		}
 
 		private void EV_SizeChanged(object sender, EventArgs e)

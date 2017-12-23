@@ -21,6 +21,7 @@ namespace Soundboard
 	{
 		public MainWindow()
 		{
+			//SoundboardSettings.LoadFromFile();
 			SoundboardSettings.LoadFromFile();
 
 			InitializeComponent();

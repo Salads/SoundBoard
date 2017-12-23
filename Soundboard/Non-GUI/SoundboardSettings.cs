@@ -13,6 +13,16 @@ using System.Diagnostics;
 
 namespace Soundboard
 {
+	public enum SettingTags : int
+	{
+		TAG_FirstRun,
+		TAG_MuteMicWhilePlaying,
+		TAG_GlobalVolume,
+		TAG_Sounds,
+		TAG_PlaybackDeviceGUIDs,
+		TAG_RecordingDeviceGUID
+	}
+
 	public static class SoundboardSettings
 	{
 		private const string _DEFAULT_LOCATION = "default.soundboard";
@@ -85,83 +95,120 @@ namespace Soundboard
 			RecordingDevice = null;
 		}
 
-		public static bool LoadFromFile(string Filename = _DEFAULT_LOCATION, bool CreateIfDoesntExist = true)
+		public static void LoadFromFile(string Filename = _DEFAULT_LOCATION)
 		{
+			// REMARK(Salads): If we want to load from a file, that means we want to get rid of our old settings.
+			//					If the file doesn't exist might as well set to default the save the file.
 			if(!File.Exists(Filename))
 			{
-				if(CreateIfDoesntExist)
-				{
-					ResetToDefault();
-					SaveToFile(Filename);
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				ResetToDefault();
+				SaveToFile(Filename);
+				return;
 			}
 
 			ResetToDefault();
 
-			JObject JsonObject = JObject.Parse(File.ReadAllText(Filename));
-
-			FirstRun = bool.Parse((string)JsonObject[nameof(FirstRun)]);
-			MuteMicrophoneWhilePlaying = bool.Parse((string)JsonObject[nameof(MuteMicrophoneWhilePlaying)]);
-			GlobalVolume = uint.Parse((string)JsonObject[nameof(GlobalVolume)]);
-
-			List<string> SavedPlaybackIDs = JsonObject[nameof(PlaybackDevices)].Select(x => (string)x).ToList();
-			foreach(MMDevice Device in DeviceHelper.GetActivePlaybackDevices().Where(x => SavedPlaybackIDs.Contains(x.DeviceID)))
+			using(BinaryReader reader = new BinaryReader(File.OpenRead(Filename)))
 			{
-				PlaybackDevices.Add(new AudioDevice(Device));
+				while(reader.BaseStream.Position != reader.BaseStream.Length)
+				{
+					SettingTags Tag = (SettingTags)(reader.ReadInt32());
+					switch(Tag)
+					{
+						case SettingTags.TAG_FirstRun:
+							FirstRun = reader.ReadBoolean();
+							break;
+
+						case SettingTags.TAG_MuteMicWhilePlaying:
+							MuteMicrophoneWhilePlaying = reader.ReadBoolean();
+							break;
+
+						case SettingTags.TAG_GlobalVolume:
+							GlobalVolume = reader.ReadUInt32();
+							break;
+
+						case SettingTags.TAG_PlaybackDeviceGUIDs:
+							{
+								int Count = reader.ReadInt32();
+								List<string> savedGUIDs = new List<string>();
+								for(int x = 0; x < Count; ++x)
+								{
+									savedGUIDs.Add(reader.ReadString());
+								}
+
+								foreach(MMDevice Device in DeviceHelper.GetActivePlaybackDevices().Where(x => savedGUIDs.Contains(x.DeviceID)))
+								{
+									PlaybackDevices.Add(new AudioDevice(Device));
+								}
+							} break;
+
+						case SettingTags.TAG_RecordingDeviceGUID:
+							{
+								string recordingDeviceGUID = reader.ReadString();
+								if(Guid.Empty.ToString() == recordingDeviceGUID)
+								{
+									RecordingDevice = null;
+								}
+								else
+								{
+									foreach(MMDevice Device in DeviceHelper.GetActiveRecordingDevices().Where(x => recordingDeviceGUID.Equals(x.DeviceID)))
+									{
+										RecordingDevice = new AudioDevice(Device);
+										break;
+									}
+								}
+							} break;
+
+						case SettingTags.TAG_Sounds:
+							{
+								int soundsCount = reader.ReadInt32();
+								for(int x = 0; x < soundsCount; ++x)
+								{
+									string savedSound = reader.ReadString();
+									Sounds.Add(savedSound, new Sound(savedSound, new Hotkey()));
+								}
+							} break;
+					}
+				}
 			}
-
-			string SavedMicID = (string)JsonObject[nameof(RecordingDevice)];
-			foreach(MMDevice Device in DeviceHelper.GetActiveRecordingDevices().Where(x => SavedMicID.Equals(x.DeviceID)))
-			{
-				RecordingDevice = new AudioDevice(Device);
-				break;
-			}
-
-			Sounds = JsonObject[nameof(Sounds)].ToObject<Dictionary<string, Sound>>();
-
-			return true;
 		}
 
 		public static void SaveToFile(string Filename = _DEFAULT_LOCATION)
 		{
-			StringBuilder sb = new StringBuilder();
-			using(StringWriter sw = new StringWriter(sb))
-			using(JsonWriter writer = new JsonTextWriter(sw))
+			using(BinaryWriter writer = new BinaryWriter(File.Create(Filename)))
 			{
-				JsonSerializer Serializer = new JsonSerializer
+				writer.Write((int)SettingTags.TAG_FirstRun);
+				writer.Write(FirstRun);
+
+				writer.Write((int)SettingTags.TAG_MuteMicWhilePlaying);
+				writer.Write(MuteMicrophoneWhilePlaying);
+
+				writer.Write((int)SettingTags.TAG_GlobalVolume);
+				writer.Write(GlobalVolume);
+
+				writer.Write((int)SettingTags.TAG_PlaybackDeviceGUIDs);
+				writer.Write(PlaybackDevices.Count);
+				foreach(AudioDevice device in PlaybackDevices)
 				{
-					Formatting = Formatting.Indented
-				};
-				writer.Formatting = Formatting.Indented;
+					writer.Write(device.DeviceID);
+				}
 
-				writer.WriteStartObject();
-				writer.WritePropertyName(nameof(FirstRun));
-				writer.WriteValue(FirstRun);
+				writer.Write((int)SettingTags.TAG_RecordingDeviceGUID);
+				if(RecordingDevice == null)
+				{
+					writer.Write(Guid.Empty.ToString());
+				}
+				else
+				{
+					writer.Write(RecordingDevice.DeviceID);
+				}
 
-				writer.WritePropertyName(nameof(MuteMicrophoneWhilePlaying));
-				writer.WriteValue(MuteMicrophoneWhilePlaying);
-
-				writer.WritePropertyName(nameof(GlobalVolume));
-				writer.WriteValue(GlobalVolume);
-
-				writer.WritePropertyName(nameof(PlaybackDevices));
-				Serializer.Serialize(writer, PlaybackDevices.Select(x => x.DeviceID).ToList());
-
-				writer.WritePropertyName(nameof(RecordingDevice));
-				writer.WriteValue(RecordingDevice != null ? RecordingDevice.DeviceID : Guid.Empty.ToString());
-
-				writer.WritePropertyName(nameof(Sounds));
-
-				Serializer.Serialize(writer, Sounds);
-
-				writer.WriteEndObject();
-
-				File.WriteAllText(Filename, sb.ToString());
+				writer.Write((int)SettingTags.TAG_Sounds);
+				writer.Write(Sounds.Count);
+				foreach(Sound sound in Sounds.Values)
+				{
+					writer.Write(sound.FullFilepath);
+				}
 			}
 		}
 	}

@@ -55,36 +55,36 @@
     <Compile Include="Non-GUI\AudioDevice.cs" />
     <Compile Include="Non-GUI\DeviceHelper.cs" />
     <Compile Include="Non-GUI\Hotkey.cs" />
-    <Compile Include="MainWindow.cs">
+    <Compile Include="GUI\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainWindow.Designer.cs">
+    <Compile Include="GUI\MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DeviceSettingsWindow.cs">
+    <Compile Include="GUI\DeviceSettingsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DeviceSettingsWindow.Designer.cs">
+    <Compile Include="GUI\DeviceSettingsWindow.Designer.cs">
       <DependentUpon>DeviceSettingsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Non-GUI\Sound.cs" />
     <Compile Include="Non-GUI\SoundboardSettings.cs" />
-    <Compile Include="SoundControl.cs">
+    <Compile Include="GUI\SoundControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SoundControl.Designer.cs">
+    <Compile Include="GUI\SoundControl.Designer.cs">
       <DependentUpon>SoundControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Non-GUI\SoundPlayer.cs" />
-    <Compile Include="VolumeBar.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="GUI\VolumeBar.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="VolumeBar.Designer.cs">
+    <Compile Include="GUI\VolumeBar.Designer.cs">
       <DependentUpon>VolumeBar.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="MainWindow.resx">
+    <EmbeddedResource Include="GUI\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -97,13 +97,13 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="DeviceSettingsWindow.resx">
+    <EmbeddedResource Include="GUI\DeviceSettingsWindow.resx">
       <DependentUpon>DeviceSettingsWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SoundControl.resx">
+    <EmbeddedResource Include="GUI\SoundControl.resx">
       <DependentUpon>SoundControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="VolumeBar.resx">
+    <EmbeddedResource Include="GUI\VolumeBar.resx">
       <DependentUpon>VolumeBar.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />

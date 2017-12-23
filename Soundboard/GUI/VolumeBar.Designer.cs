@@ -32,9 +32,6 @@
 			// 
 			// VolumeBar
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Name = "VolumeBar";
 			this.Size = new System.Drawing.Size(154, 50);
 			this.SizeChanged += new System.EventHandler(this.EV_SizeChanged);
 			this.ResumeLayout(false);

@@ -137,6 +137,7 @@
 			this.GUI_SoundList.Name = "GUI_SoundList";
 			this.GUI_SoundList.ShowGroups = false;
 			this.GUI_SoundList.Size = new System.Drawing.Size(425, 309);
+			this.GUI_SoundList.Sorting = System.Windows.Forms.SortOrder.Ascending;
 			this.GUI_SoundList.TabIndex = 1;
 			this.GUI_SoundList.TabStop = false;
 			this.GUI_SoundList.UseCompatibleStateImageBehavior = false;

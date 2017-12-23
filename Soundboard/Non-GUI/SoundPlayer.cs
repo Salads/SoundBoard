@@ -13,7 +13,7 @@ namespace Soundboard
 	{
 		private List<ISoundOut> m_PlayingSounds = new List<ISoundOut>();
 
-		public bool IsPlaying{ get { return m_PlayingSounds.Any(); } }
+		public bool IsPlaying { get { return m_PlayingSounds.Any(); } }
 
 		public SoundPlayer() {}
 
@@ -24,8 +24,8 @@ namespace Soundboard
 			string filename = sound.FullFilepath;
 			foreach(AudioDevice device in SoundboardSettings.PlaybackDevices)
 			{
-				// NOTE(Salads): Need to create one for every output because the stream is handled in WaveSource.
-				//				 This means multiple outputs will advance stream position if we don't seperate them.
+				// REMARK(Salads): Need to create one for every output because the stream is handled in WaveSource.
+				//					This means multiple outputs will advance stream position if we don't seperate them.
 				IWaveSource waveSource = CodecFactory.Instance.GetCodec(filename)
 					.ToSampleSource()
 					.ToStereo()
@@ -56,7 +56,7 @@ namespace Soundboard
 		{
 			foreach(ISoundOut PlayingSound in m_PlayingSounds)
 			{
-				// NOTE(Salads): I run a task here to make sounds stop more in time with each other.
+				// (Salads): I run a task here to make sounds stop more in time with each other.
 				Task.Run(() => _StopSound(PlayingSound));
 			}
 

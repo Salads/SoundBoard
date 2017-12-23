@@ -28,6 +28,7 @@ namespace Soundboard
 			InitializeComponent();
 
 			ui_volumeBar.Volume = SoundboardSettings.GlobalVolume;
+			ui_muteMicWhilePlaying.Checked = SoundboardSettings.MuteMicrophoneWhilePlaying;
 		}
 
 		public void UpdateSelectedSound(bool playImmediately = false)
