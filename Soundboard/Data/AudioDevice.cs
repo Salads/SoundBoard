@@ -23,23 +23,6 @@ namespace Soundboard
 			Volume = AudioEndpointVolume.FromDevice(NewDevice);
 		}
 
-		public AudioDevice(string deviceID)
-		{
-			using(MMDeviceCollection Devices = DeviceHelper.GetAllActiveDevices())
-			{
-				try
-				{
-					MMDevice Device = Devices.First(x => x.DeviceID == deviceID);
-					Info = Device;
-					Volume = AudioEndpointVolume.FromDevice(Device);
-				}
-				catch(InvalidOperationException e)
-				{
-					throw new DeviceNotFoundException(deviceID + " doesn't exist!", e);
-				}
-			}
-		}
-
 		public string DeviceID
 		{
 			get { return Info.DeviceID; }

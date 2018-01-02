@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +31,51 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WIN64</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;WIN64</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;WIN32</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;WIN32</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CSCore, Version=1.2.1.2, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
@@ -52,40 +98,76 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Non-GUI\AudioDevice.cs" />
-    <Compile Include="Non-GUI\DeviceHelper.cs" />
-    <Compile Include="Non-GUI\Hotkey.cs" />
-    <Compile Include="GUI\MainWindow.cs">
+    <Compile Include="Data\AudioDevice.cs" />
+    <Compile Include="Data\Static\DeviceHelper.cs" />
+    <Compile Include="Data\Hotkey.cs" />
+    <Compile Include="Data\Static\RawInputHandler.cs" />
+    <Compile Include="Data\Static\RawInputTypes.cs" />
+    <Compile Include="GUI\Controls\Components\PlaybackDeviceSelector.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GUI\Controls\Components\RecordingDeviceSelector.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GUI\Controls\Components\RecordingDeviceSelector.Designer.cs">
+      <DependentUpon>RecordingDeviceSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Controls\MediaControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Controls\MediaControl.Designer.cs">
+      <DependentUpon>MediaControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Forms\AddSoundForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\MainWindow.Designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
+    <Compile Include="GUI\Forms\AddSoundForm.Designer.cs">
+      <DependentUpon>AddSoundForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Controls\DevicesSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Controls\DevicesSelector.Designer.cs">
+      <DependentUpon>DevicesSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Static\RawInput.cs" />
+    <Compile Include="GUI\Controls\SoundList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Controls\SoundList.Designer.cs">
+      <DependentUpon>SoundList.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GUI\DeviceSettingsWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\DeviceSettingsWindow.Designer.cs">
-      <DependentUpon>DeviceSettingsWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Non-GUI\Sound.cs" />
-    <Compile Include="Non-GUI\SoundboardSettings.cs" />
-    <Compile Include="GUI\SoundControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\SoundControl.Designer.cs">
-      <DependentUpon>SoundControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Non-GUI\SoundPlayer.cs" />
-    <Compile Include="GUI\VolumeBar.cs">
+    <Compile Include="Data\Sound.cs" />
+    <Compile Include="Data\Static\SoundboardSettings.cs" />
+    <Compile Include="Data\SoundPlayer.cs" />
+    <Compile Include="GUI\Controls\Components\VolumeBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\VolumeBar.Designer.cs">
+    <Compile Include="GUI\Controls\Components\VolumeBar.Designer.cs">
       <DependentUpon>VolumeBar.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="GUI\MainWindow.resx">
-      <DependentUpon>MainWindow.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\Controls\DevicesSelector.resx">
+      <DependentUpon>DevicesSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Controls\MediaControl.resx">
+      <DependentUpon>MediaControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Forms\AddSoundForm.resx">
+      <DependentUpon>AddSoundForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Controls\SoundList.resx">
+      <DependentUpon>SoundList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -97,13 +179,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="GUI\DeviceSettingsWindow.resx">
-      <DependentUpon>DeviceSettingsWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\SoundControl.resx">
-      <DependentUpon>SoundControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\VolumeBar.resx">
+    <EmbeddedResource Include="GUI\Controls\Components\VolumeBar.resx">
       <DependentUpon>VolumeBar.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />

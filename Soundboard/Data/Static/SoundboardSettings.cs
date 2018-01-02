@@ -10,6 +10,8 @@ using Newtonsoft.Json.Linq;
 using CSCore;
 using CSCore.CoreAudioAPI;
 using System.Diagnostics;
+using System.Windows.Forms;
+using System.Collections.ObjectModel;
 
 namespace Soundboard
 {
@@ -23,41 +25,31 @@ namespace Soundboard
 		TAG_RecordingDeviceGUID
 	}
 
+	// TODO: OnChanged events for these settings.
+
 	public static class SoundboardSettings
 	{
 		private const string _DEFAULT_LOCATION = "default.soundboard";
 
-		[JsonProperty]
 		public static bool FirstRun { get; set; }
 
-		[JsonProperty]
 		public static bool MuteMicrophoneWhilePlaying{ get; set; }
 
-		[JsonProperty]
 		public static uint GlobalVolume { get; set; }
 
-		[JsonProperty]
-		public static Dictionary<string, Sound> Sounds { get; set; }
-
-		[JsonProperty]
-		public static List<AudioDevice> PlaybackDevices { get; set; }
-
-		[JsonProperty]
-		public static AudioDevice RecordingDevice { get; set; }
-
-		/// <summary>
-		/// Default constructor that does nothing.
-		/// </summary>
-		static SoundboardSettings()
+		public static float VolumeNormalized
 		{
-			_Initialize();
+			get
+			{
+				return GlobalVolume / (100.0f);
+			}
 		}
 
-		private static void _Initialize()
-		{
-			Sounds = new Dictionary<string, Sound>();
-			PlaybackDevices = new List<AudioDevice>();
-		}
+		public static ObservableCollection<Sound> Sounds { get; set; } = new ObservableCollection<Sound>();
+
+		public static ObservableCollection<AudioDevice> PlaybackDevices { get; set; } = new ObservableCollection<AudioDevice>();
+
+		public static AudioDevice RecordingDevice { get; set; } = null;
 
 		public static bool ShouldSerializeRecordingDevice()
 		{
@@ -88,7 +80,7 @@ namespace Soundboard
 
 		public static void ResetDevices()
 		{
-			PlaybackDevices.ForEach(x => x?.Dispose());
+			foreach(AudioDevice device in PlaybackDevices) { device.Dispose(); }
 			PlaybackDevices.Clear();
 
 			RecordingDevice?.Dispose();
@@ -97,8 +89,8 @@ namespace Soundboard
 
 		public static void LoadFromFile(string Filename = _DEFAULT_LOCATION)
 		{
-			// REMARK(Salads): If we want to load from a file, that means we want to get rid of our old settings.
-			//					If the file doesn't exist might as well set to default the save the file.
+			//	If we want to load from a file, that means we want to get rid of our old settings.
+			//	If the file doesn't exist might as well set to default then save the file.
 			if(!File.Exists(Filename))
 			{
 				ResetToDefault();
@@ -106,6 +98,9 @@ namespace Soundboard
 				return;
 			}
 
+			Debug.WriteLine("Loading from default");
+
+			// Just to be sanitary. (safeguard in case settings are loaded again somewhere)
 			ResetToDefault();
 
 			using(BinaryReader reader = new BinaryReader(File.OpenRead(Filename)))
@@ -164,8 +159,24 @@ namespace Soundboard
 								int soundsCount = reader.ReadInt32();
 								for(int x = 0; x < soundsCount; ++x)
 								{
-									string savedSound = reader.ReadString();
-									Sounds.Add(savedSound, new Sound(savedSound, new Hotkey()));
+									string savedSoundPath = reader.ReadString();
+									string rawStartTime = reader.ReadString();
+									string nickname = reader.ReadString();
+
+									Sound newSound = new Sound(savedSoundPath)
+									{
+										StartTime = TimeSpan.Parse(rawStartTime),
+										Nickname = nickname
+									};
+
+									int hotkeyKeysCount = reader.ReadInt32();
+									for(int i = 0; i < hotkeyKeysCount; ++i)
+									{
+										newSound.HotKey.Add((Keys)reader.ReadInt32());
+									}
+
+									Debug.WriteLine("Loaded: " + newSound.Nickname + " : " + newSound.HotKey.ToString());
+									Sounds.Add(newSound);
 								}
 							} break;
 					}
@@ -205,9 +216,17 @@ namespace Soundboard
 
 				writer.Write((int)SettingTags.TAG_Sounds);
 				writer.Write(Sounds.Count);
-				foreach(Sound sound in Sounds.Values)
+				foreach(Sound sound in Sounds)
 				{
 					writer.Write(sound.FullFilepath);
+					writer.Write(sound.StartTime.ToString());
+					writer.Write(sound.Nickname);
+
+					writer.Write(sound.HotKey.Count);
+					foreach(Keys key in sound.HotKey)
+					{
+						writer.Write((int)key);
+					}
 				}
 			}
 		}

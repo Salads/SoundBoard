@@ -1,41 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.ListView;
 using System.IO;
 using CSCore.Codecs;
 using CSCore;
+using Soundboard.GUI;
 
 namespace Soundboard
 {
-	public partial class SoundControl : UserControl
+	public partial class MediaControl : UserControl
 	{
-		private SoundPlayer m_SoundPlayer = new SoundPlayer();
+		public SoundPlayer SoundPlayer { get; set; }
+
+		private Sound m_selectedSound;
 		private TimeSpan m_selectedSoundLength;
-		
-		public SelectedListViewItemCollection SelectedSounds { get; set; }
 
 		public bool MuteMicrophoneWhilePlaying { get { return ui_muteMicWhilePlaying.Checked; } }
 
-		public SoundControl()
+		public int StartSeconds
+		{
+			get { return ui_trackBar.Value; }
+		}
+
+		public MediaControl()
 		{
 			InitializeComponent();
 
+			Load += MediaControl_Load;
+		}
+
+		private void MediaControl_Load(object sender, EventArgs e)
+		{
 			ui_volumeBar.Volume = SoundboardSettings.GlobalVolume;
 			ui_muteMicWhilePlaying.Checked = SoundboardSettings.MuteMicrophoneWhilePlaying;
 		}
 
-		public void UpdateSelectedSound(bool playImmediately = false)
+		public void HookListView(ListView soundList)
 		{
-			if(SelectedSounds.Count == 0) { return; }
+			soundList.ItemSelectionChanged += SoundList_ItemSelectionChanged;
+		}
 
-			Sound selectedSound = SelectedSounds[0].Tag as Sound;
+		private void SoundList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+		{
+			if(e.IsSelected)
+			{
+				SetSelectedSound(e.Item.Tag as Sound);
+			}
+		}
+
+		public void SetSelectedSound(Sound selectedSound)
+		{
+			if(selectedSound == null) return;
+
 			ui_selectedSoundLabel.Text = Path.GetFileName(selectedSound.Filename);
 
 			// TODO(Salads): Perhaps theres a less expensive way to get audio length?
@@ -43,27 +58,59 @@ namespace Soundboard
 
 			m_selectedSoundLength = waveSource.GetLength();
 			ui_timeLabel.Text = _GetTimeSpanFormatString(TimeSpan.Zero) + "/" + _GetTimeSpanFormatString(m_selectedSoundLength);
-
-			ui_trackBar.Value = 0;
+			
 			ui_trackBar.Minimum = 0;
 			ui_trackBar.Maximum = (int)m_selectedSoundLength.TotalSeconds;
-
-			if(playImmediately)
-			{
-				m_SoundPlayer.Play(selectedSound, ui_volumeBar.VolumeNormalized, TimeSpan.FromSeconds(ui_trackBar.Value));
-			}
+			ui_trackBar.Value = selectedSound.StartTime == TimeSpan.Zero ? 0 : (int)selectedSound.StartTime.TotalSeconds;
+			m_selectedSound = selectedSound;
 		}
 
-		public void StopAllSounds()
+		public void SetSelectedSound(string filename)
 		{
-			m_SoundPlayer.StopAllSounds();
+			SetSelectedSound(new Sound(filename));
 		}
+
+		#region Event Handlers
 
 		private void EV_SliderChanged(object sender, EventArgs e)
 		{
 			ui_timeLabel.Text = _GetTimeSpanFormatString(TimeSpan.FromSeconds(ui_trackBar.Value)) + "/" + _GetTimeSpanFormatString(m_selectedSoundLength);
 		}
 
+		private void EV_PlayClicked(object sender, MouseEventArgs e)
+		{
+			if(m_selectedSound == null) return;
+
+			SoundPlayer.Play(m_selectedSound, TimeSpan.FromSeconds(ui_trackBar.Value));
+		}
+
+		private void EV_StopClicked(object sender, MouseEventArgs e)
+		{
+			SoundPlayer.StopAllSounds();
+		}
+
+		private void EV_VolumeChanged(object sender, EventArgs e)
+		{
+			SoundPlayer.SetVolume(ui_volumeBar.VolumeNormalized);
+			SoundboardSettings.GlobalVolume = ui_volumeBar.Volume;
+		}
+
+		private void EV_MuteMicChanged(object sender, EventArgs e)
+		{
+			SoundboardSettings.MuteMicrophoneWhilePlaying = ui_muteMicWhilePlaying.Checked;
+
+			if(SoundPlayer.IsPlaying)
+			{
+				SoundboardSettings.SetMicMuted(SoundboardSettings.MuteMicrophoneWhilePlaying);
+			}
+			else
+			{
+				SoundboardSettings.SetMicMuted(false);
+			}
+		}
+		#endregion
+
+		// TODO: Look into better methods for this.
 		private string _GetTimeSpanFormatString(TimeSpan TheTimeSpan)
 		{
 			string Result = string.Empty;
@@ -93,40 +140,6 @@ namespace Soundboard
 			Result += string.Empty.PadLeft(SecondLength, 's');
 
 			return TheTimeSpan.ToString(Result);
-		}
-
-		private void EV_PlayClicked(object sender, MouseEventArgs e)
-		{
-			if(SelectedSounds.Count == 0)
-			{
-				return;
-			}
-
-			Sound selectedSound = SelectedSounds[0].Tag as Sound;
-			if(selectedSound == null) return;
-
-			m_SoundPlayer.Play(selectedSound, ui_volumeBar.VolumeNormalized, TimeSpan.FromSeconds(ui_trackBar.Value));
-		}
-
-		private void EV_StopClicked(object sender, MouseEventArgs e)
-		{
-			m_SoundPlayer.StopAllSounds();
-		}
-
-		private void EV_VolumeChanged(object sender, EventArgs e)
-		{
-			m_SoundPlayer.SetVolume(ui_volumeBar.VolumeNormalized);
-			SoundboardSettings.GlobalVolume = ui_volumeBar.Volume;
-		}
-
-		private void EV_MuteMicChanged(object sender, EventArgs e)
-		{
-			SoundboardSettings.MuteMicrophoneWhilePlaying = ui_muteMicWhilePlaying.Checked;
-
-			if(m_SoundPlayer.IsPlaying)
-			{
-				SoundboardSettings.SetMicMuted(SoundboardSettings.MuteMicrophoneWhilePlaying);
-			}
 		}
 	}
 }
