@@ -7,51 +7,57 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Soundboard.Data.Static;
 
 namespace Soundboard.GUI.Controls.Components
 {
-	public partial class RecordingDeviceSelector : ComboBox
+	public class RecordingDeviceSelector : ComboBox
 	{
-		public RecordingDeviceSelector() : base()
-		{
-			InitializeComponent();
-		}
-
-		/// <summary>
-		/// Initializes the Control. Not in constructor to be designer friendly.
-		/// </summary>
-		public void Initialize()
+		public RecordingDeviceSelector()
 		{
 			_InitializeDevices();
-			SelectedIndexChanged += RecordingDeviceSelector_SelectedIndexChanged;
 
-			DropDownStyle = ComboBoxStyle.DropDownList;
+			SelectedIndexChanged += RecordingDeviceSelector_SelectedIndexChanged;
+			Devices.ActiveRecordingDevices.ListChanged += ActiveRecordingDevices_ListChanged;
 		}
 
-		private void RecordingDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
+		~RecordingDeviceSelector()
 		{
-			if(SelectedIndex == 0) return; // "None" 
-
-			SoundboardSettings.RecordingDevice = SelectedItem as AudioDevice;
+			Devices.ActiveRecordingDevices.ListChanged -= ActiveRecordingDevices_ListChanged;
 		}
 
 		private void _InitializeDevices()
 		{
 			Items.Clear();
-			Items.Add("None");
+			Items.Add("Select Microphone (None)");
 			SelectedIndex = 0;
 
-			string savedDeviceID = SoundboardSettings.RecordingDevice?.DeviceID;
-			foreach (MMDevice device in DeviceHelper.GetActiveRecordingDevices())
+			foreach(AudioDevice recordingDevice in Devices.ActiveRecordingDevices)
 			{
-				AudioDevice newAudioDevice = new AudioDevice(device);
-				Items.Add(newAudioDevice);
+				Items.Add(recordingDevice);
 
-				if(savedDeviceID == newAudioDevice.DeviceID)
+				if(ReferenceEquals(recordingDevice, SoundboardSettings.SelectedRecordingDevice))
 				{
-					SelectedItem = newAudioDevice;
+					SelectedItem = recordingDevice;
 				}
 			}
+		}
+
+		private void ActiveRecordingDevices_ListChanged(object sender, ListChangedEventArgs e)
+		{
+			if(e.ListChangedType == ListChangedType.ItemAdded)
+			{
+				Items.Insert(1, Devices.ActiveRecordingDevices[e.NewIndex]);
+			}
+			else if(e.ListChangedType == ListChangedType.ItemDeleted)
+			{
+				_InitializeDevices();
+			}
+		}
+
+		private void RecordingDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			SoundboardSettings.SelectedRecordingDevice = SelectedItem as AudioDevice;
 		}
 	}
 }

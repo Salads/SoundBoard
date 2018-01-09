@@ -1,6 +1,6 @@
 ﻿namespace Soundboard.GUI
 {
-	partial class SoundList
+	partial class SoundViewer
 	{
 		/// <summary> 
 		/// Required designer variable.
@@ -28,11 +28,16 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.ui_soundList = new System.Windows.Forms.ListView();
 			this.Header_Filenames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.Header_Hotkey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.ui_textboxSearch = new System.Windows.Forms.TextBox();
 			this.ui_buttonAdd = new System.Windows.Forms.Button();
+			this.ui_contextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.ui_contextStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// ui_soundList
@@ -62,6 +67,7 @@
 			this.ui_soundList.TabStop = false;
 			this.ui_soundList.UseCompatibleStateImageBehavior = false;
 			this.ui_soundList.View = System.Windows.Forms.View.Details;
+			this.ui_soundList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SoundList_MouseClick);
 			this.ui_soundList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.EV_ListView_MouseDoubleClick);
 			this.ui_soundList.Resize += new System.EventHandler(this.EV_SoundList_Resize);
 			// 
@@ -101,6 +107,27 @@
 			this.ui_buttonAdd.UseVisualStyleBackColor = true;
 			this.ui_buttonAdd.MouseClick += new System.Windows.Forms.MouseEventHandler(this.EV_Button_AddSound_MouseClick);
 			// 
+			// ui_contextStrip
+			// 
+			this.ui_contextStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+			this.ui_contextStrip.Name = "ui_contextStrip";
+			this.ui_contextStrip.Size = new System.Drawing.Size(153, 70);
+			// 
+			// editToolStripMenuItem
+			// 
+			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+			this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.editToolStripMenuItem.Text = "Edit";
+			// 
+			// deleteToolStripMenuItem
+			// 
+			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deleteToolStripMenuItem.Text = "Delete";
+			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			// 
 			// SoundList
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -112,6 +139,7 @@
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.Name = "SoundList";
 			this.Size = new System.Drawing.Size(473, 402);
+			this.ui_contextStrip.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -122,6 +150,9 @@
 		private System.Windows.Forms.ColumnHeader Header_Hotkey;
 		private System.Windows.Forms.TextBox ui_textboxSearch;
 		private System.Windows.Forms.Button ui_buttonAdd;
-		public System.Windows.Forms.ListView ui_soundList;
+		private System.Windows.Forms.ListView ui_soundList;
+		private System.Windows.Forms.ContextMenuStrip ui_contextStrip;
+		private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 	}
 }

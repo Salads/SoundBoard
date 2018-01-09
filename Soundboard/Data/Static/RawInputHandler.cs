@@ -1,5 +1,6 @@
 ﻿using RawInput;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -18,7 +19,7 @@ namespace Soundboard.Data
 			get { return !m_pressedKeys.Any(); }
 		}
 
-		public static bool HotkeysEnabled { get; set; } = true;
+		public static bool ExecuteHotkeys { get; set; } = true;
 
 		private static Hotkey m_pressedKeys = new Hotkey();
 		private static Dictionary<Hotkey, Sound> m_hotkeyMap = new Dictionary<Hotkey, Sound>();
@@ -79,9 +80,9 @@ namespace Soundboard.Data
 
 		private static void _CheckHotkeys()
 		{
-			_PrintHotkeys();
+			//_PrintHotkeys();
 
-			if(HotkeysEnabled && m_hotkeyMap.Keys.Contains(m_pressedKeys))
+			if(ExecuteHotkeys && m_hotkeyMap.Keys.Contains(m_pressedKeys))
 			{
 				HotkeyPressed?.Invoke(null, new HotkeyPressedArgs(m_hotkeyMap[m_pressedKeys]));
 			}
@@ -89,15 +90,7 @@ namespace Soundboard.Data
 
 		private static void _PrintHotkeys()
 		{
-			Debug.WriteLine(Environment.NewLine + Environment.NewLine + Environment.NewLine);
-			Debug.WriteLine("= Hotkeymap =");
-			foreach(Hotkey hk in m_hotkeyMap.Keys)
-			{
-				Debug.WriteLine("Sound: " + m_hotkeyMap[hk].Filename + ", " + "HotKey: " + hk.ToString() + ", " + "HashCode: " + hk.GetHashCode());
-			}
-
-			Debug.WriteLine("= Pressed Keys =");
-			Debug.WriteLine("HotKey: " + m_pressedKeys.ToString() + ", " + "HashCode: " + m_pressedKeys.GetHashCode() + ", " + "Contains: " + m_hotkeyMap.ContainsKey(m_pressedKeys));
+			Debug.WriteLine("HotKey: " + m_pressedKeys.ToString() + ", " + "Contains: " + m_hotkeyMap.ContainsKey(m_pressedKeys));
 		}
 
 		public static void HandleRawInput(ref Message message)
@@ -116,8 +109,21 @@ namespace Soundboard.Data
 				{
 					RKeyboardFlags flags = (RKeyboardFlags)input->keyboard.Flags;
 					Keys key = (Keys)input->keyboard.VKey;
+
+					Application.OpenForms[0].Text = "ExtraInformation: " + input->keyboard.ExtraInformation;
+
 					if(flags.HasFlag(RKeyboardFlags.RI_KEY_MAKE) && !m_pressedKeys.Contains(key))
 					{
+						// DEBUG
+						byte scanCode = (byte)input->keyboard.MakeCode;
+						Int32 reconstructedMessage = 0;
+						reconstructedMessage |= (scanCode << 16);
+
+						StringBuilder str = new StringBuilder();
+						RI.GetKeyNameText(reconstructedMessage, str, 64);
+						Debug.WriteLine("\"" + str + "\"" + " : " + key + " : " + new KeysConverter().ConvertToString(key));
+						//
+
 						_LastKeyWasDown = true;
 						_KeysChanged = true;
 						m_pressedKeys.Add(key);
@@ -135,10 +141,14 @@ namespace Soundboard.Data
 				{
 					ProcessMouseEvents(input->mouse.usButtonFlags);
 				}
+				else
+				{
+					Debug.WriteLine("HID Device detected");
+				}
 
 				if(m_pressedKeys.Any() && _LastKeyWasDown && _KeysChanged)
 				{
-					_PrintKeysToOutput();
+					// _PrintKeysToOutput();
 
 					_CheckHotkeys();
 				}

@@ -4,6 +4,8 @@ using CSCore.CoreAudioAPI;
 using CSCore.SoundOut;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +14,57 @@ namespace Soundboard
 {
 	public class SoundPlayer
 	{
+		private float m_Volume;
 		private List<ISoundOut> m_PlayingSounds = new List<ISoundOut>();
+		private ObservableCollection<AudioDevice> m_playbackDevices;
 
 		public bool IsPlaying { get { return m_PlayingSounds.Any(); } }
 
+		public float VolumeNormalized
+		{
+			get { return m_Volume; }
+			set
+			{
+				if(value > 1.0f) { value = 1.0f; }
+				if(value < 0.0f) { value = 0.0f; }
+
+				m_Volume = value;
+				foreach(ISoundOut PlayingSound in m_PlayingSounds)
+				{
+					PlayingSound.Volume = value;
+				}
+			}
+		}
+
+		public SoundPlayer()
+		{
+			m_playbackDevices = SoundboardSettings.SelectedPlaybackDevices;
+		}
+
+		public void SetPlaybackDevices(IEnumerable<AudioDevice> devices)
+		{
+			// If we want to set it back to default for some reason
+			if(ReferenceEquals(devices, SoundboardSettings.SelectedPlaybackDevices))
+			{
+				m_playbackDevices = SoundboardSettings.SelectedPlaybackDevices;
+				return;
+			}
+			else
+			{
+				m_playbackDevices = new ObservableCollection<AudioDevice>(devices);
+			}
+		}
+
 		public void Play(Sound sound, TimeSpan? startTime = null)
 		{
+			Debug.WriteLine("Playing new sound");
 			TimeSpan soundStartTime = ((startTime == null) ? sound.StartTime : startTime.Value);
 
 			string filename = sound.FullFilepath;
-			foreach(AudioDevice device in SoundboardSettings.PlaybackDevices)
+			foreach(AudioDevice device in m_playbackDevices)
 			{
+				if(device == null) continue;
+
 				//	Need to create one for every output because the stream is handled in WaveSource.
 				//	This means multiple outputs will advance stream position if we don't seperate them.
 				IWaveSource waveSource = CodecFactory.Instance.GetCodec(filename)
@@ -31,22 +73,14 @@ namespace Soundboard
 					.ToWaveSource();
 				waveSource.SetPosition(soundStartTime);
 
-				ISoundOut newSoundOut = new WasapiOut() { Latency = 33, Device = device.Info };
+				ISoundOut newSoundOut = new WasapiOut() { Latency = 20, Device = device.Info };
 				newSoundOut.Initialize(waveSource);
 				newSoundOut.Stopped += EV_OnSoundStopped;
-				newSoundOut.Volume = SoundboardSettings.VolumeNormalized;
+				newSoundOut.Volume = VolumeNormalized;
 				newSoundOut.Play();
 
 				m_PlayingSounds.Add(newSoundOut);
 				SoundboardSettings.SetMicMuted(SoundboardSettings.MuteMicrophoneWhilePlaying);
-			}
-		}
-
-		public void SetVolume(float normalizedVolume)
-		{
-			foreach(ISoundOut PlayingSound in m_PlayingSounds)
-			{
-				PlayingSound.Volume = normalizedVolume;
 			}
 		}
 
@@ -79,6 +113,8 @@ namespace Soundboard
 
 		private void _StopSound(ISoundOut Sound)
 		{
+			Debug.WriteLine("Stop Sound Called");
+
 			if(Sound.PlaybackState != PlaybackState.Stopped)
 			{
 				Sound.Stop();

@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.GUI_MenuStrip = new System.Windows.Forms.MenuStrip();
 			this.ToolStripItem_Settings = new System.Windows.Forms.ToolStripMenuItem();
 			this.Menu_ResetSettings = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,14 +38,16 @@
 			this.Menu_Help = new System.Windows.Forms.ToolStripMenuItem();
 			this.Menu_HowTo = new System.Windows.Forms.ToolStripMenuItem();
 			this.ui_tabControl = new System.Windows.Forms.TabControl();
-			this.ui_tabSoundControl = new System.Windows.Forms.TabPage();
+			this.ui_tabMediaControl = new System.Windows.Forms.TabPage();
 			this.ui_mediaControl = new Soundboard.MediaControl();
 			this.ui_tabPageDevices = new System.Windows.Forms.TabPage();
 			this.ui_deviceControl = new Soundboard.GUI.DevicesSelector();
-			this.ui_soundList = new Soundboard.GUI.SoundList();
+			this.ui_tabPlaybackOptions = new System.Windows.Forms.TabPage();
+			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.ui_soundList = new Soundboard.GUI.SoundViewer();
 			this.GUI_MenuStrip.SuspendLayout();
 			this.ui_tabControl.SuspendLayout();
-			this.ui_tabSoundControl.SuspendLayout();
+			this.ui_tabMediaControl.SuspendLayout();
 			this.ui_tabPageDevices.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -57,7 +60,7 @@
 			this.GUI_MenuStrip.Location = new System.Drawing.Point(0, 0);
 			this.GUI_MenuStrip.Name = "GUI_MenuStrip";
 			this.GUI_MenuStrip.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-			this.GUI_MenuStrip.Size = new System.Drawing.Size(466, 24);
+			this.GUI_MenuStrip.Size = new System.Drawing.Size(462, 24);
 			this.GUI_MenuStrip.TabIndex = 0;
 			this.GUI_MenuStrip.Text = "menuStrip1";
 			// 
@@ -117,37 +120,41 @@
 			// 
 			// ui_tabControl
 			// 
-			this.ui_tabControl.Controls.Add(this.ui_tabSoundControl);
+			this.ui_tabControl.Controls.Add(this.ui_tabMediaControl);
 			this.ui_tabControl.Controls.Add(this.ui_tabPageDevices);
+			this.ui_tabControl.Controls.Add(this.ui_tabPlaybackOptions);
 			this.ui_tabControl.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.ui_tabControl.HotTrack = true;
-			this.ui_tabControl.Location = new System.Drawing.Point(0, 344);
+			this.ui_tabControl.Location = new System.Drawing.Point(0, 339);
+			this.ui_tabControl.Multiline = true;
 			this.ui_tabControl.Name = "ui_tabControl";
 			this.ui_tabControl.SelectedIndex = 0;
-			this.ui_tabControl.Size = new System.Drawing.Size(466, 207);
+			this.ui_tabControl.Size = new System.Drawing.Size(462, 180);
 			this.ui_tabControl.TabIndex = 5;
 			this.ui_tabControl.TabStop = false;
+			this.ui_tabControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ui_tabControl_KeyDown);
 			// 
-			// ui_tabSoundControl
+			// ui_tabMediaControl
 			// 
-			this.ui_tabSoundControl.BackColor = System.Drawing.SystemColors.Control;
-			this.ui_tabSoundControl.Controls.Add(this.ui_mediaControl);
-			this.ui_tabSoundControl.Location = new System.Drawing.Point(4, 24);
-			this.ui_tabSoundControl.Name = "ui_tabSoundControl";
-			this.ui_tabSoundControl.Padding = new System.Windows.Forms.Padding(3);
-			this.ui_tabSoundControl.Size = new System.Drawing.Size(458, 179);
-			this.ui_tabSoundControl.TabIndex = 0;
-			this.ui_tabSoundControl.Text = "Manual Sound";
+			this.ui_tabMediaControl.BackColor = System.Drawing.SystemColors.Control;
+			this.ui_tabMediaControl.Controls.Add(this.ui_mediaControl);
+			this.ui_tabMediaControl.Location = new System.Drawing.Point(4, 24);
+			this.ui_tabMediaControl.Name = "ui_tabMediaControl";
+			this.ui_tabMediaControl.Padding = new System.Windows.Forms.Padding(3);
+			this.ui_tabMediaControl.Size = new System.Drawing.Size(454, 152);
+			this.ui_tabMediaControl.TabIndex = 0;
+			this.ui_tabMediaControl.Text = "Manual Sound";
 			// 
-			// ui_soundControl
+			// ui_mediaControl
 			// 
 			this.ui_mediaControl.BackColor = System.Drawing.SystemColors.Control;
 			this.ui_mediaControl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ui_mediaControl.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.ui_mediaControl.Location = new System.Drawing.Point(3, 3);
 			this.ui_mediaControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.ui_mediaControl.Name = "ui_soundControl";
-			this.ui_mediaControl.Size = new System.Drawing.Size(452, 173);
+			this.ui_mediaControl.Name = "ui_mediaControl";
+			this.ui_mediaControl.ShowName = true;
+			this.ui_mediaControl.Size = new System.Drawing.Size(448, 146);
 			this.ui_mediaControl.TabIndex = 0;
 			// 
 			// ui_tabPageDevices
@@ -156,7 +163,7 @@
 			this.ui_tabPageDevices.Location = new System.Drawing.Point(4, 24);
 			this.ui_tabPageDevices.Name = "ui_tabPageDevices";
 			this.ui_tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-			this.ui_tabPageDevices.Size = new System.Drawing.Size(458, 179);
+			this.ui_tabPageDevices.Size = new System.Drawing.Size(454, 152);
 			this.ui_tabPageDevices.TabIndex = 1;
 			this.ui_tabPageDevices.Text = "Devices";
 			this.ui_tabPageDevices.UseVisualStyleBackColor = true;
@@ -168,10 +175,25 @@
 			this.ui_deviceControl.Location = new System.Drawing.Point(3, 3);
 			this.ui_deviceControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.ui_deviceControl.Name = "ui_deviceControl";
-			this.ui_deviceControl.Size = new System.Drawing.Size(452, 173);
+			this.ui_deviceControl.Size = new System.Drawing.Size(448, 146);
 			this.ui_deviceControl.TabIndex = 0;
 			// 
-			// ui_soundBank
+			// ui_tabPlaybackOptions
+			// 
+			this.ui_tabPlaybackOptions.Location = new System.Drawing.Point(4, 24);
+			this.ui_tabPlaybackOptions.Name = "ui_tabPlaybackOptions";
+			this.ui_tabPlaybackOptions.Padding = new System.Windows.Forms.Padding(3);
+			this.ui_tabPlaybackOptions.Size = new System.Drawing.Size(454, 152);
+			this.ui_tabPlaybackOptions.TabIndex = 2;
+			this.ui_tabPlaybackOptions.Text = "Playback Options";
+			this.ui_tabPlaybackOptions.UseVisualStyleBackColor = true;
+			// 
+			// contextMenuStrip1
+			// 
+			this.contextMenuStrip1.Name = "contextMenuStrip1";
+			this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+			// 
+			// ui_soundList
 			// 
 			this.ui_soundList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -180,16 +202,16 @@
 			this.ui_soundList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.ui_soundList.Location = new System.Drawing.Point(0, 21);
 			this.ui_soundList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.ui_soundList.Name = "ui_soundBank";
-			this.ui_soundList.Size = new System.Drawing.Size(466, 316);
+			this.ui_soundList.Name = "ui_soundList";
+			this.ui_soundList.Size = new System.Drawing.Size(462, 311);
 			this.ui_soundList.TabIndex = 4;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.SystemColors.ControlDark;
-			this.ClientSize = new System.Drawing.Size(466, 551);
+			this.BackColor = System.Drawing.SystemColors.ScrollBar;
+			this.ClientSize = new System.Drawing.Size(462, 519);
 			this.Controls.Add(this.ui_tabControl);
 			this.Controls.Add(this.ui_soundList);
 			this.Controls.Add(this.GUI_MenuStrip);
@@ -202,10 +224,11 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Soundboard";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EV_FormClosing);
+			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.GUI_MenuStrip.ResumeLayout(false);
 			this.GUI_MenuStrip.PerformLayout();
 			this.ui_tabControl.ResumeLayout(false);
-			this.ui_tabSoundControl.ResumeLayout(false);
+			this.ui_tabMediaControl.ResumeLayout(false);
 			this.ui_tabPageDevices.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -222,12 +245,14 @@
 		private System.Windows.Forms.ToolStripMenuItem Menu_ResetDeviceSettings;
 		private System.Windows.Forms.ToolStripMenuItem Menu_ResetAllSettings;
 		private System.Windows.Forms.ToolStripMenuItem Menu_ResetFiles;
-		private GUI.SoundList ui_soundList;
+		private GUI.SoundViewer ui_soundList;
 		private System.Windows.Forms.TabControl ui_tabControl;
-		private System.Windows.Forms.TabPage ui_tabSoundControl;
+		private System.Windows.Forms.TabPage ui_tabMediaControl;
 		private MediaControl ui_mediaControl;
 		private System.Windows.Forms.TabPage ui_tabPageDevices;
 		public GUI.DevicesSelector ui_deviceControl;
+		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+		private System.Windows.Forms.TabPage ui_tabPlaybackOptions;
 	}
 }
 

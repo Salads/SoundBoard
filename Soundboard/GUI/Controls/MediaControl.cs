@@ -3,43 +3,62 @@ using System.Windows.Forms;
 using System.IO;
 using CSCore.Codecs;
 using CSCore;
-using Soundboard.GUI;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace Soundboard
 {
 	public partial class MediaControl : UserControl
 	{
-		public SoundPlayer SoundPlayer { get; set; }
-
 		private Sound m_selectedSound;
 		private TimeSpan m_selectedSoundLength;
+		private SoundPlayer m_soundPlayer;
+		private ObservableCollection<AudioDevice> m_playbackDevices;
 
-		public bool MuteMicrophoneWhilePlaying { get { return ui_muteMicWhilePlaying.Checked; } }
-
-		public int StartSeconds
+		public bool ShowName
 		{
-			get { return ui_trackBar.Value; }
+			get { return ui_selectedSoundLabel.Visible; }
+			set { ui_selectedSoundLabel.Visible = value; }
 		}
 
+		public TimeSpan Position { get { return TimeSpan.FromSeconds(ui_trackBar.Value); } }
+
+		/// <summary>
+		/// Creates a new MediaControl, creating a new instance of a <see cref="SoundPlayer"/> to play sounds.
+		/// </summary>wdaads
 		public MediaControl()
 		{
 			InitializeComponent();
-
-			Load += MediaControl_Load;
-		}
-
-		private void MediaControl_Load(object sender, EventArgs e)
-		{
 			ui_volumeBar.Volume = SoundboardSettings.GlobalVolume;
-			ui_muteMicWhilePlaying.Checked = SoundboardSettings.MuteMicrophoneWhilePlaying;
+			m_playbackDevices = SoundboardSettings.SelectedPlaybackDevices;
+
+			// I set this here because initialization would cause some issues.
+			ui_volumeBar.VolumeChanged += new EventHandler(EV_VolumeChanged);
+			ui_volumeBar.Invalidate();
 		}
 
-		public void HookListView(ListView soundList)
+		public void SetPlaybackDevices(IEnumerable<AudioDevice> devices)
 		{
-			soundList.ItemSelectionChanged += SoundList_ItemSelectionChanged;
+			m_soundPlayer?.SetPlaybackDevices(devices);
 		}
 
-		private void SoundList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+		public void SetPlaybackDevices(AudioDevice device)
+		{
+			List<AudioDevice> devices = new List<AudioDevice>
+			{
+				device
+			};
+
+			SetPlaybackDevices(devices);
+		}
+
+		public void SetSoundPlayer(SoundPlayer soundPlayer)
+		{
+			m_soundPlayer = soundPlayer;
+			ui_volumeBar.VolumeNormalized = m_soundPlayer.VolumeNormalized;
+		}
+
+		public void SoundList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			if(e.IsSelected)
 			{
@@ -51,7 +70,7 @@ namespace Soundboard
 		{
 			if(selectedSound == null) return;
 
-			ui_selectedSoundLabel.Text = Path.GetFileName(selectedSound.Filename);
+			ui_selectedSoundLabel.Text = Path.GetFileName(selectedSound.Nickname != null ? selectedSound.Nickname : selectedSound.Filename);
 
 			// TODO(Salads): Perhaps theres a less expensive way to get audio length?
 			var waveSource = CodecFactory.Instance.GetCodec(selectedSound.FullFilepath);
@@ -81,32 +100,18 @@ namespace Soundboard
 		{
 			if(m_selectedSound == null) return;
 
-			SoundPlayer.Play(m_selectedSound, TimeSpan.FromSeconds(ui_trackBar.Value));
+			m_soundPlayer?.Play(m_selectedSound, TimeSpan.FromSeconds(ui_trackBar.Value));
 		}
 
 		private void EV_StopClicked(object sender, MouseEventArgs e)
 		{
-			SoundPlayer.StopAllSounds();
+			m_soundPlayer?.StopAllSounds();
 		}
 
 		private void EV_VolumeChanged(object sender, EventArgs e)
 		{
-			SoundPlayer.SetVolume(ui_volumeBar.VolumeNormalized);
+			m_soundPlayer.VolumeNormalized = ui_volumeBar.VolumeNormalized;
 			SoundboardSettings.GlobalVolume = ui_volumeBar.Volume;
-		}
-
-		private void EV_MuteMicChanged(object sender, EventArgs e)
-		{
-			SoundboardSettings.MuteMicrophoneWhilePlaying = ui_muteMicWhilePlaying.Checked;
-
-			if(SoundPlayer.IsPlaying)
-			{
-				SoundboardSettings.SetMicMuted(SoundboardSettings.MuteMicrophoneWhilePlaying);
-			}
-			else
-			{
-				SoundboardSettings.SetMicMuted(false);
-			}
 		}
 		#endregion
 

@@ -6,7 +6,6 @@ using System.Drawing.Drawing2D;
 
 namespace Soundboard
 {
-
 	public partial class VolumeBar : Control
 	{
 		private Rectangle m_VolumeBarRect = new Rectangle();
@@ -30,7 +29,14 @@ namespace Soundboard
 		{
 			get
 			{
-				return (Volume - (float)VOLUME_MIN) / ((float)VOLUME_MAX - VOLUME_MIN);
+				return ((float)Volume / VOLUME_MAX);
+			}
+			set
+			{
+				if(value > 1.0f) { value = 1.0f; }
+				if(value < 0.0f) { value = 0.0f; }
+
+				Volume = (uint)(value * VOLUME_MAX);
 			}
 		}
 
@@ -60,7 +66,7 @@ namespace Soundboard
 			}
 		}
 
-		public VolumeBar() : base()
+		public VolumeBar()
 		{
 			SetStyle(ControlStyles.ResizeRedraw, true);
 
@@ -72,6 +78,7 @@ namespace Soundboard
 		[Description("Fires when Volume is changed.")]
 		public event EventHandler VolumeChanged;
 
+		#region Event Handlers
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			int fullBarWidth = e.ClipRectangle.Width - 1;
@@ -79,7 +86,7 @@ namespace Soundboard
 			int fullBarStartX = e.ClipRectangle.Left;
 			int fullBarStartY = e.ClipRectangle.Top + fullBarHeight - 1;
 
-			float normalizedVolume = _GetNormalizedVolume();
+			float normalizedVolume = VolumeNormalized;
 			int volumeBarWidth = Convert.ToInt32(fullBarWidth * normalizedVolume);
 			Rectangle VolumeBar = new Rectangle(fullBarStartX, fullBarStartY, volumeBarWidth, fullBarHeight);
 			m_VolumeBarRect = new Rectangle(fullBarStartX, fullBarStartY, fullBarWidth, fullBarHeight);
@@ -138,11 +145,6 @@ namespace Soundboard
 			base.OnPaint(e);
 		}
 
-		private float _GetNormalizedVolume()
-		{
-			return Volume / Convert.ToSingle(VOLUME_MAX);
-		}
-
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			base.OnMouseDown(e);
@@ -167,6 +169,12 @@ namespace Soundboard
 				_UpdateVolumeFromMouse();
 			}
 		}
+
+		private void EV_SizeChanged(object sender, EventArgs e)
+		{
+			Invalidate();
+		}
+		#endregion
 
 		private void _UpdateVolumeFromMouse()
 		{
@@ -201,11 +209,6 @@ namespace Soundboard
 		private bool _IsRectangleValid(Rectangle rectangle)
 		{
 			return (rectangle.Width > 0 && rectangle.Height > 0);
-		}
-
-		private void EV_SizeChanged(object sender, EventArgs e)
-		{
-			Invalidate();
 		}
 	}
 }

@@ -17,9 +17,6 @@ namespace Soundboard.GUI
 		public DevicesSelector()
 		{
 			InitializeComponent();
-
-			ui_playbackDeviceSelector.Initialize();
-			ui_recordingDeviceSelector.Initialize();
 		}
 	}
 }

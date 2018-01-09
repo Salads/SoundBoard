@@ -23,6 +23,8 @@ namespace Soundboard
 			Volume = AudioEndpointVolume.FromDevice(NewDevice);
 		}
 
+		public string FriendlyName { get { return Info.FriendlyName; } }
+
 		public string DeviceID
 		{
 			get { return Info.DeviceID; }

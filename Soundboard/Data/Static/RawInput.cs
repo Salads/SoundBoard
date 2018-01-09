@@ -12,6 +12,9 @@ namespace RawInput
 {
 	public static partial class RI
 	{
+		[DllImport("user32.dll")]
+		public static extern int GetKeyNameText(Int32 lParam, [Out] StringBuilder lpString, int nSize);
+
 		public static void RegisterDevices(IntPtr windowHandle)
 		{
 			RAWINPUTDEVICE[] devices = new RAWINPUTDEVICE[2];

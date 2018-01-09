@@ -12,6 +12,7 @@ using CSCore.CoreAudioAPI;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
+using Soundboard.Data.Static;
 
 namespace Soundboard
 {
@@ -22,7 +23,8 @@ namespace Soundboard
 		TAG_GlobalVolume,
 		TAG_Sounds,
 		TAG_PlaybackDeviceGUIDs,
-		TAG_RecordingDeviceGUID
+		TAG_RecordingDeviceGUID,
+		TAG_PreviewDeviceGUID
 	}
 
 	// TODO: OnChanged events for these settings.
@@ -47,20 +49,17 @@ namespace Soundboard
 
 		public static ObservableCollection<Sound> Sounds { get; set; } = new ObservableCollection<Sound>();
 
-		public static ObservableCollection<AudioDevice> PlaybackDevices { get; set; } = new ObservableCollection<AudioDevice>();
+		public static ObservableCollection<AudioDevice> SelectedPlaybackDevices { get; set; } = new ObservableCollection<AudioDevice>();
 
-		public static AudioDevice RecordingDevice { get; set; } = null;
+		public static AudioDevice SelectedRecordingDevice { get; set; } = null;
 
-		public static bool ShouldSerializeRecordingDevice()
-		{
-			return RecordingDevice != null;
-		}
+		public static AudioDevice SelectedPreviewDevice { get; set; } = null;
 
 		public static void SetMicMuted(bool mute)
 		{
-			if(RecordingDevice != null)
+			if(SelectedRecordingDevice != null)
 			{
-				RecordingDevice.Volume.IsMuted = mute;
+				SelectedRecordingDevice.Volume.IsMuted = mute;
 			}
 		}
 
@@ -80,11 +79,11 @@ namespace Soundboard
 
 		public static void ResetDevices()
 		{
-			foreach(AudioDevice device in PlaybackDevices) { device.Dispose(); }
-			PlaybackDevices.Clear();
+			foreach(AudioDevice device in SelectedPlaybackDevices) { device.Dispose(); }
+			SelectedPlaybackDevices.Clear();
 
-			RecordingDevice?.Dispose();
-			RecordingDevice = null;
+			SelectedRecordingDevice?.Dispose();
+			SelectedRecordingDevice = null;
 		}
 
 		public static void LoadFromFile(string Filename = _DEFAULT_LOCATION)
@@ -131,26 +130,24 @@ namespace Soundboard
 									savedGUIDs.Add(reader.ReadString());
 								}
 
-								foreach(MMDevice Device in DeviceHelper.GetActivePlaybackDevices().Where(x => savedGUIDs.Contains(x.DeviceID)))
+								foreach(AudioDevice device in Devices.ActivePlaybackDevices.Where(x => savedGUIDs.Contains(x.DeviceID)))
 								{
-									PlaybackDevices.Add(new AudioDevice(Device));
+									SelectedPlaybackDevices.Add(device);
 								}
 							} break;
 
 						case SettingTags.TAG_RecordingDeviceGUID:
 							{
 								string recordingDeviceGUID = reader.ReadString();
-								if(Guid.Empty.ToString() == recordingDeviceGUID)
+
+								var matchingRecordingDevices = Devices.ActiveRecordingDevices.Where(x => recordingDeviceGUID == x.DeviceID);
+								if(Guid.Empty.ToString() == recordingDeviceGUID || !matchingRecordingDevices.Any())
 								{
-									RecordingDevice = null;
+									SelectedRecordingDevice = null;
 								}
 								else
 								{
-									foreach(MMDevice Device in DeviceHelper.GetActiveRecordingDevices().Where(x => recordingDeviceGUID.Equals(x.DeviceID)))
-									{
-										RecordingDevice = new AudioDevice(Device);
-										break;
-									}
+									SelectedRecordingDevice = matchingRecordingDevices.First();
 								}
 							} break;
 
@@ -179,6 +176,21 @@ namespace Soundboard
 									Sounds.Add(newSound);
 								}
 							} break;
+						case SettingTags.TAG_PreviewDeviceGUID:
+							{
+								string previewDeviceGUID = reader.ReadString();
+
+								var matchingRecordingDevices = Devices.ActivePlaybackDevices.Where(x => previewDeviceGUID == x.DeviceID);
+								if(Guid.Empty.ToString() == previewDeviceGUID || !matchingRecordingDevices.Any())
+								{
+									SelectedPreviewDevice = null;
+								}
+								else
+								{
+									SelectedPreviewDevice = matchingRecordingDevices.First();
+								}
+
+							} break;
 					}
 				}
 			}
@@ -198,20 +210,20 @@ namespace Soundboard
 				writer.Write(GlobalVolume);
 
 				writer.Write((int)SettingTags.TAG_PlaybackDeviceGUIDs);
-				writer.Write(PlaybackDevices.Count);
-				foreach(AudioDevice device in PlaybackDevices)
+				writer.Write(SelectedPlaybackDevices.Count);
+				foreach(AudioDevice device in SelectedPlaybackDevices)
 				{
 					writer.Write(device.DeviceID);
 				}
 
 				writer.Write((int)SettingTags.TAG_RecordingDeviceGUID);
-				if(RecordingDevice == null)
+				if(SelectedRecordingDevice == null)
 				{
 					writer.Write(Guid.Empty.ToString());
 				}
 				else
 				{
-					writer.Write(RecordingDevice.DeviceID);
+					writer.Write(SelectedRecordingDevice.DeviceID);
 				}
 
 				writer.Write((int)SettingTags.TAG_Sounds);
@@ -227,6 +239,16 @@ namespace Soundboard
 					{
 						writer.Write((int)key);
 					}
+				}
+
+				writer.Write((int)SettingTags.TAG_PreviewDeviceGUID);
+				if(SelectedPreviewDevice == null)
+				{
+					writer.Write(Guid.Empty.ToString());
+				}
+				else
+				{
+					writer.Write(SelectedPreviewDevice.DeviceID);
 				}
 			}
 		}

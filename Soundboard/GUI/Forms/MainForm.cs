@@ -13,19 +13,18 @@ namespace Soundboard
 {
 	public partial class MainForm : Form
 	{
-		private SoundPlayer m_MainSoundPlayer = new SoundPlayer();
+		private SoundPlayer m_MainSoundPlayer = new SoundPlayer()
+		{
+			VolumeNormalized = SoundboardSettings.VolumeNormalized
+		};
 
 		public MainForm()
 		{
 			InitializeComponent();
 
 			RI.RegisterDevices(Handle);
-			ui_soundList.SoundPlayer = ui_mediaControl.SoundPlayer = m_MainSoundPlayer;
-			ui_mediaControl.HookListView(ui_soundList.ui_soundList);
-			ui_soundList.RefreshSoundsInList();
-
-			RawInputHandler.HotkeyPressed += EV_HotkeyPressed;
-			SoundboardSettings.PlaybackDevices.CollectionChanged += PlaybackDevices_CollectionChanged;
+			ui_mediaControl.SetSoundPlayer(m_MainSoundPlayer);
+			ui_soundList.SetSoundPlayer(m_MainSoundPlayer);
 
 			if(SoundboardSettings.FirstRun)
 			{
@@ -36,7 +35,7 @@ namespace Soundboard
 
 				if(FirstResult == DialogResult.Yes)
 				{
-					OpenHelpWebpage();
+					_OpenHelpWebsite();
 				}
 
 				SoundboardSettings.FirstRun = false;
@@ -49,7 +48,7 @@ namespace Soundboard
 
 		private void EV_Menu_HowTo_Clicked(object sender, EventArgs e)
 		{
-			OpenHelpWebpage();
+			_OpenHelpWebsite();
 		}
 
 		private void EV_Menu_ResetDeviceSettings_Clicked(object sender, EventArgs e)
@@ -95,7 +94,17 @@ namespace Soundboard
 
 		private void EV_HotkeyPressed(object sender, HotkeyPressedArgs e)
 		{
+			Debug.WriteLine("Hotkey Pressed");
 			m_MainSoundPlayer.Play(e.Sound);
+		}
+
+		private void ui_tabControl_KeyDown(object sender, KeyEventArgs e)
+		{
+			if(e.KeyCode == Keys.Left || e.KeyCode == Keys.Right ||
+				e.KeyCode == Keys.Home || e.KeyCode == Keys.End)
+			{
+				e.Handled = true;
+			}
 		}
 		#endregion
 
@@ -110,9 +119,22 @@ namespace Soundboard
 			base.WndProc(ref m);
 		}
 
-		private void OpenHelpWebpage()
+		private void _OpenHelpWebsite()
 		{
 			Process.Start("https://salads.github.io/Soundboard");
+		}
+
+		// This is needed to force the tab control to initialize it's containing controls. 
+		// It was causing an event to fire which would stop playing sounds when a device is unselected.
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			ui_tabControl.SelectedIndex = 1;
+			ui_tabControl.SelectedIndex = 2;
+			ui_tabControl.SelectedIndex = 0;
+
+			ui_soundList.ItemSelectionChanged += ui_mediaControl.SoundList_ItemSelectionChanged;
+			RawInputHandler.HotkeyPressed += EV_HotkeyPressed;
+			SoundboardSettings.SelectedPlaybackDevices.CollectionChanged += PlaybackDevices_CollectionChanged;
 		}
 	}
 }

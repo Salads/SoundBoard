@@ -13,56 +13,43 @@ using System.Runtime.InteropServices;
 
 namespace Soundboard.GUI
 {
+	// TODO: Use DataGridView instead for built-in filtering and data binding.
+
 	/// <summary>
 	/// Handles adding/deleting/editing sounds. <para/>
 	/// Contains ListView (Sounds), Textbox (Search), and Button(Add Sound)
 	/// </summary>
-	public partial class SoundList : UserControl
+	public partial class SoundViewer : UserControl
 	{
 		// TODO: Make a derived Textbox control and put this Win32 malarky in there instead.
 		private const int EM_SETCUEBANNER = 0x1501;
-		public SoundPlayer SoundPlayer { get; set; }
+		private SoundPlayer m_SoundPlayer;
 
-		public SoundList()
+		public event ListViewItemSelectionChangedEventHandler ItemSelectionChanged
+		{
+			add { ui_soundList.ItemSelectionChanged += value; }
+			remove { ui_soundList.ItemSelectionChanged -= value; }
+		}
+
+		public SoundViewer()
 		{
 			InitializeComponent();
-
 			SendMessage(ui_textboxSearch.Handle, EM_SETCUEBANNER, 0, "Search...");
+			RefreshSoundsInList();
+		}
+
+		public void SetSoundPlayer(SoundPlayer soundPlayer)
+		{
+			m_SoundPlayer = soundPlayer;
 		}
 
 		/// <summary>
 		/// Imported, lParam is a string because we only use it for ghost text of textbox.
 		/// </summary>
-		[DllImport("User32.dll")]
+		[DllImport("User32.dll")] // TODO: Move this to somewhere proper.
 		private static extern Int32 SendMessage(IntPtr hWnd, UInt32 Msg, UInt32 wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
-		public void RefreshSoundsInList(string filter = null)
-		{
-			ui_soundList.Items.Clear();
-			List<Sound> sounds = new List<Sound>();
-
-			if(filter != null)
-			{
-				filter = filter.ToLower();
-				sounds = SoundboardSettings.Sounds.Where(x => x.FullFilepath.ToLower().Contains(filter) || x.Nickname.ToLower().Contains(filter)).ToList();
-			}
-			else
-			{
-				sounds = SoundboardSettings.Sounds.ToList();
-			}
-
-			foreach(Sound sound in sounds)
-			{
-				ListViewItem newItem = new ListViewItem
-				{
-					Text = (string.IsNullOrEmpty(sound.Nickname) ? sound.FilenameWithFolder : sound.Nickname),
-					Tag = sound
-				};
-
-				newItem.SubItems.Add(sound.HotKey.ToString());
-				ui_soundList.Items.Add(newItem);
-			}
-		}
+		#region Event Handlers
 
 		private void EV_Button_AddSound_MouseClick(object sender, MouseEventArgs e)
 		{
@@ -79,7 +66,7 @@ namespace Soundboard.GUI
 		{
 			if(ui_soundList.SelectedItems[0] != null)
 			{
-				SoundPlayer.Play(ui_soundList.SelectedItems[0].Tag as Sound);
+				m_SoundPlayer.Play(ui_soundList.SelectedItems[0].Tag as Sound);
 			}
 		}
 
@@ -93,6 +80,41 @@ namespace Soundboard.GUI
 			int FullWidth = Width - 4 - SystemInformation.VerticalScrollBarWidth;
 			ui_soundList.Columns[0].Width = (int)(0.70f * FullWidth);
 			ui_soundList.Columns[1].Width = (int)(0.30f * FullWidth);
+		}
+
+		private void SoundList_MouseClick(object sender, MouseEventArgs e)
+		{
+			if(e.Button == MouseButtons.Right)
+			{
+				ui_contextStrip.Show(Cursor.Position);
+			}
+		}
+
+		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if(ui_soundList.SelectedItems.Count < 1) return;
+			SoundboardSettings.Sounds.Remove(ui_soundList.SelectedItems[0].Tag as Sound);
+			RefreshSoundsInList();
+		}
+		#endregion
+
+		public void RefreshSoundsInList(string filter = "")
+		{
+			ui_soundList.Items.Clear();
+			List<Sound> sounds = SoundboardSettings.Sounds.Where(x => x.FullFilepath.ToLower().Contains(filter) || x.Nickname.ToLower().Contains(filter)).ToList();
+
+			foreach(Sound sound in sounds)
+			{
+				ListViewItem newItem = new ListViewItem
+				{
+					// TODO: Add options for default text.
+					Text = (string.IsNullOrEmpty(sound.Nickname) ? sound.FilenameWithFolder : sound.Nickname),
+					Tag = sound
+				};
+
+				newItem.SubItems.Add(sound.HotKey.ToString());
+				ui_soundList.Items.Add(newItem);
+			}
 		}
 	}
 }
