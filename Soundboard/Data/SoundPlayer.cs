@@ -16,7 +16,7 @@ namespace Soundboard
 	{
 		private float m_Volume;
 		private List<ISoundOut> m_PlayingSounds = new List<ISoundOut>();
-		private ObservableCollection<AudioDevice> m_playbackDevices;
+		private IList<AudioDevice> m_playbackDevices;
 
 		public bool IsPlaying { get { return m_PlayingSounds.Any(); } }
 
@@ -39,31 +39,41 @@ namespace Soundboard
 		public SoundPlayer()
 		{
 			m_playbackDevices = SoundboardSettings.SelectedPlaybackDevices;
+			VolumeNormalized = SoundboardSettings.VolumeNormalized;
 		}
 
-		public void SetPlaybackDevices(IEnumerable<AudioDevice> devices)
+		public void SetPlaybackDevices(IList<AudioDevice> devices)
 		{
 			// If we want to set it back to default for some reason
 			if(ReferenceEquals(devices, SoundboardSettings.SelectedPlaybackDevices))
 			{
 				m_playbackDevices = SoundboardSettings.SelectedPlaybackDevices;
-				return;
 			}
 			else
 			{
-				m_playbackDevices = new ObservableCollection<AudioDevice>(devices);
+				m_playbackDevices = devices;
 			}
+		}
+
+		public void SetPlaybackDevice(AudioDevice device)
+		{
+			m_playbackDevices = new List<AudioDevice>
+			{
+				device
+			};
 		}
 
 		public void Play(Sound sound, TimeSpan? startTime = null)
 		{
-			Debug.WriteLine("Playing new sound");
 			TimeSpan soundStartTime = ((startTime == null) ? sound.StartTime : startTime.Value);
+
+			Debug.WriteLine("Playing new sound on devices: ");
 
 			string filename = sound.FullFilepath;
 			foreach(AudioDevice device in m_playbackDevices)
 			{
 				if(device == null) continue;
+				Debug.WriteLine(device.FriendlyName);
 
 				//	Need to create one for every output because the stream is handled in WaveSource.
 				//	This means multiple outputs will advance stream position if we don't seperate them.

@@ -23,8 +23,7 @@ namespace Soundboard
 		}
 
 		/// <summary>
-		/// From https://codereview.stackexchange.com/questions/139411/hash-calculation-for-array-of-long-values-in-c <para/>
-		/// 
+		/// From https://codereview.stackexchange.com/questions/139411/hash-calculation-for-array-of-long-values-in-c
 		/// </summary>
 		public override int GetHashCode()
 		{

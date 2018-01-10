@@ -48,17 +48,6 @@ namespace Soundboard
 		/// </summary>
 		public string FilenameWithFolder { get; private set; }
 
-		/// <summary>
-		/// Returns true if the file the Sound is using exists.
-		/// </summary>
-		public bool IsValid
-		{
-			get
-			{
-				return File.Exists(FullFilepath);
-			}
-		}
-
 		public Sound(string filepath)
 		{
 			FullFilepath = filepath;

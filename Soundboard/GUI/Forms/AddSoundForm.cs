@@ -30,7 +30,7 @@ namespace Soundboard.GUI
 		public AddSoundForm()
 		{
 			InitializeComponent();
-			ui_mediaControl.SetSoundPlayer(m_soundPlayer);
+			ui_mediaControl.SoundPlayer = m_soundPlayer;
 			ui_mediaControl.ShowName = false;
 			RawInputHandler.ExecuteHotkeys = false;
 
@@ -61,6 +61,7 @@ namespace Soundboard.GUI
 				if(ReferenceEquals(device, SoundboardSettings.SelectedPreviewDevice))
 				{
 					ui_combobox_PreviewDevice.SelectedItem = device;
+					m_soundPlayer.SetPlaybackDevice(device);
 				}
 			}
 		}
@@ -86,7 +87,7 @@ namespace Soundboard.GUI
 		private void ui_button_clearHotkey_MouseClick(object sender, MouseEventArgs e)
 		{
 			m_currentKeys.Clear();
-			ui_button_hotkey.Text = string.Empty;
+			ui_button_hotkey.Text = "No Hotkey Set (Click To Set)";
 		}
 
 		private void Ui_combobox_PreviewDevice_SelectedIndexChanged(object sender, EventArgs e)
@@ -96,7 +97,7 @@ namespace Soundboard.GUI
 
 			if(SoundboardSettings.SelectedPreviewDevice != null)
 			{
-				ui_mediaControl.SetPlaybackDevices(SoundboardSettings.SelectedPreviewDevice);
+				m_soundPlayer.SetPlaybackDevice(SoundboardSettings.SelectedPreviewDevice);
 			}
 		}
 

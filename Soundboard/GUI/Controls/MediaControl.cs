@@ -5,15 +5,17 @@ using CSCore.Codecs;
 using CSCore;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using Soundboard.Data.Interfaces;
 
 namespace Soundboard
 {
-	public partial class MediaControl : UserControl
+	public partial class MediaControl : UserControl, ISoundPlayerUser
 	{
 		private Sound m_selectedSound;
 		private TimeSpan m_selectedSoundLength;
-		private SoundPlayer m_soundPlayer;
 		private ObservableCollection<AudioDevice> m_playbackDevices;
+
+		public SoundPlayer SoundPlayer { get; set; }
 
 		public bool ShowName
 		{
@@ -35,27 +37,6 @@ namespace Soundboard
 			// I set this here because initialization would cause some issues.
 			ui_volumeBar.VolumeChanged += new EventHandler(EV_VolumeChanged);
 			ui_volumeBar.Invalidate();
-		}
-
-		public void SetPlaybackDevices(IEnumerable<AudioDevice> devices)
-		{
-			m_soundPlayer?.SetPlaybackDevices(devices);
-		}
-
-		public void SetPlaybackDevices(AudioDevice device)
-		{
-			List<AudioDevice> devices = new List<AudioDevice>
-			{
-				device
-			};
-
-			SetPlaybackDevices(devices);
-		}
-
-		public void SetSoundPlayer(SoundPlayer soundPlayer)
-		{
-			m_soundPlayer = soundPlayer;
-			ui_volumeBar.VolumeNormalized = m_soundPlayer.VolumeNormalized;
 		}
 
 		public void SoundList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -100,17 +81,17 @@ namespace Soundboard
 		{
 			if(m_selectedSound == null) return;
 
-			m_soundPlayer?.Play(m_selectedSound, TimeSpan.FromSeconds(ui_trackBar.Value));
+			SoundPlayer?.Play(m_selectedSound, TimeSpan.FromSeconds(ui_trackBar.Value));
 		}
 
 		private void EV_StopClicked(object sender, MouseEventArgs e)
 		{
-			m_soundPlayer?.StopAllSounds();
+			SoundPlayer?.StopAllSounds();
 		}
 
 		private void EV_VolumeChanged(object sender, EventArgs e)
 		{
-			m_soundPlayer.VolumeNormalized = ui_volumeBar.VolumeNormalized;
+			SoundPlayer.VolumeNormalized = ui_volumeBar.VolumeNormalized;
 			SoundboardSettings.GlobalVolume = ui_volumeBar.Volume;
 		}
 		#endregion

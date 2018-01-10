@@ -48,7 +48,10 @@ namespace Soundboard.Data
 				foreach(var item in e.NewItems)
 				{
 					Sound newSound = item as Sound;
-					m_hotkeyMap.Add(newSound.HotKey, newSound);
+					if(newSound.HotKey.Any()) // Only add to the hotkey map if there is a hotkey. 
+					{
+						m_hotkeyMap.Add(newSound.HotKey, newSound);
+					}
 				}
 			}
 			else if(e.Action == NotifyCollectionChangedAction.Remove)
@@ -56,7 +59,10 @@ namespace Soundboard.Data
 				foreach(var item in e.OldItems)
 				{
 					Sound oldSound = item as Sound;
-					m_hotkeyMap.Remove(oldSound.HotKey);
+					if(oldSound.HotKey.Any())
+					{
+						m_hotkeyMap.Remove(oldSound.HotKey);
+					}
 				}
 			}
 			else if(e.Action == NotifyCollectionChangedAction.Reset)

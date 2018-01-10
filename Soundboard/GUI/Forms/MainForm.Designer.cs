@@ -44,7 +44,7 @@
 			this.ui_deviceControl = new Soundboard.GUI.DevicesSelector();
 			this.ui_tabPlaybackOptions = new System.Windows.Forms.TabPage();
 			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.ui_soundList = new Soundboard.GUI.SoundViewer();
+			this.ui_soundViewer = new Soundboard.GUI.SoundViewer();
 			this.GUI_MenuStrip.SuspendLayout();
 			this.ui_tabControl.SuspendLayout();
 			this.ui_tabMediaControl.SuspendLayout();
@@ -195,16 +195,16 @@
 			// 
 			// ui_soundList
 			// 
-			this.ui_soundList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.ui_soundViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.ui_soundList.BackColor = System.Drawing.SystemColors.Control;
-			this.ui_soundList.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.ui_soundList.Location = new System.Drawing.Point(0, 21);
-			this.ui_soundList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.ui_soundList.Name = "ui_soundList";
-			this.ui_soundList.Size = new System.Drawing.Size(462, 311);
-			this.ui_soundList.TabIndex = 4;
+			this.ui_soundViewer.BackColor = System.Drawing.SystemColors.Control;
+			this.ui_soundViewer.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ui_soundViewer.Location = new System.Drawing.Point(0, 21);
+			this.ui_soundViewer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.ui_soundViewer.Name = "ui_soundList";
+			this.ui_soundViewer.Size = new System.Drawing.Size(462, 311);
+			this.ui_soundViewer.TabIndex = 4;
 			// 
 			// MainForm
 			// 
@@ -213,7 +213,7 @@
 			this.BackColor = System.Drawing.SystemColors.ScrollBar;
 			this.ClientSize = new System.Drawing.Size(462, 519);
 			this.Controls.Add(this.ui_tabControl);
-			this.Controls.Add(this.ui_soundList);
+			this.Controls.Add(this.ui_soundViewer);
 			this.Controls.Add(this.GUI_MenuStrip);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.KeyPreview = true;
@@ -245,7 +245,7 @@
 		private System.Windows.Forms.ToolStripMenuItem Menu_ResetDeviceSettings;
 		private System.Windows.Forms.ToolStripMenuItem Menu_ResetAllSettings;
 		private System.Windows.Forms.ToolStripMenuItem Menu_ResetFiles;
-		private GUI.SoundViewer ui_soundList;
+		private GUI.SoundViewer ui_soundViewer;
 		private System.Windows.Forms.TabControl ui_tabControl;
 		private System.Windows.Forms.TabPage ui_tabMediaControl;
 		private MediaControl ui_mediaControl;

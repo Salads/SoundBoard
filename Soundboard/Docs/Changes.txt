@@ -1,1 +1,7 @@
 ﻿
+1/9/2018 4:34PM
+==============================================================================================================================================
+- Added ISoundPlayerUser interface to force implementation of SoundPlayer property. Added to SoundViewer, MediaControl
+- Removed IsValid property from Sound as it was useless.
+- Removed SetDevice(s) functions from MediaControl as SoundPlayer already has them.
+- Renamed ui_soundList to the more proper ui_soundViewer in MainForm

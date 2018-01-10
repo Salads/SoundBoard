@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using CSCore.Codecs;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Soundboard.Data.Interfaces;
 
 namespace Soundboard.GUI
 {
@@ -19,11 +20,12 @@ namespace Soundboard.GUI
 	/// Handles adding/deleting/editing sounds. <para/>
 	/// Contains ListView (Sounds), Textbox (Search), and Button(Add Sound)
 	/// </summary>
-	public partial class SoundViewer : UserControl
+	public partial class SoundViewer : UserControl, ISoundPlayerUser
 	{
 		// TODO: Make a derived Textbox control and put this Win32 malarky in there instead.
 		private const int EM_SETCUEBANNER = 0x1501;
-		private SoundPlayer m_SoundPlayer;
+		
+		public SoundPlayer SoundPlayer { get; set; }
 
 		public event ListViewItemSelectionChangedEventHandler ItemSelectionChanged
 		{
@@ -36,11 +38,6 @@ namespace Soundboard.GUI
 			InitializeComponent();
 			SendMessage(ui_textboxSearch.Handle, EM_SETCUEBANNER, 0, "Search...");
 			RefreshSoundsInList();
-		}
-
-		public void SetSoundPlayer(SoundPlayer soundPlayer)
-		{
-			m_SoundPlayer = soundPlayer;
 		}
 
 		/// <summary>
@@ -66,7 +63,7 @@ namespace Soundboard.GUI
 		{
 			if(ui_soundList.SelectedItems[0] != null)
 			{
-				m_SoundPlayer.Play(ui_soundList.SelectedItems[0].Tag as Sound);
+				SoundPlayer.Play(ui_soundList.SelectedItems[0].Tag as Sound);
 			}
 		}
 

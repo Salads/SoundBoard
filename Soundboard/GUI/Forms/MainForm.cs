@@ -23,8 +23,7 @@ namespace Soundboard
 			InitializeComponent();
 
 			RI.RegisterDevices(Handle);
-			ui_mediaControl.SetSoundPlayer(m_MainSoundPlayer);
-			ui_soundList.SetSoundPlayer(m_MainSoundPlayer);
+			ui_mediaControl.SoundPlayer = ui_soundViewer.SoundPlayer = m_MainSoundPlayer;
 
 			if(SoundboardSettings.FirstRun)
 			{
@@ -61,14 +60,14 @@ namespace Soundboard
 		{
 			SoundboardSettings.ResetSounds();
 			SoundboardSettings.SaveToFile();
-			ui_soundList.RefreshSoundsInList();
+			ui_soundViewer.RefreshSoundsInList();
 		}
 
 		private void EV_Menu_ResetAllSettings_Clicked(object sender, EventArgs e)
 		{
 			SoundboardSettings.ResetToDefault();
 			SoundboardSettings.SaveToFile();
-			ui_soundList.RefreshSoundsInList();
+			ui_soundViewer.RefreshSoundsInList();
 		}
 		#endregion
 
@@ -132,7 +131,7 @@ namespace Soundboard
 			ui_tabControl.SelectedIndex = 2;
 			ui_tabControl.SelectedIndex = 0;
 
-			ui_soundList.ItemSelectionChanged += ui_mediaControl.SoundList_ItemSelectionChanged;
+			ui_soundViewer.ItemSelectionChanged += ui_mediaControl.SoundList_ItemSelectionChanged;
 			RawInputHandler.HotkeyPressed += EV_HotkeyPressed;
 			SoundboardSettings.SelectedPlaybackDevices.CollectionChanged += PlaybackDevices_CollectionChanged;
 		}
