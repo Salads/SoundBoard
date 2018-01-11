@@ -18,14 +18,17 @@ namespace Soundboard.GUI
 {
 	public partial class AddSoundForm : Form
 	{
-		private bool IsCapturingHotkey { get; set; }
-		private string m_selectedFilepath;
+		private string SoundFullFilename { get; set; }
+		private string SoundNickName { get { return ui_textboxNickname.Text; } set { ui_textboxNickname.Text = value; } }
+		private Hotkey SoundHotkey { get; set; } = new Hotkey();
+		private TimeSpan SoundStartTime { get { return ui_mediaControl.Position; } }
 
-		private Hotkey m_currentKeys = new Hotkey();
-		private SoundPlayer m_soundPlayer = new SoundPlayer()
-		{
-			VolumeNormalized = SoundboardSettings.VolumeNormalized
-		};
+		public bool EditMode { get; private set;} = false;
+		private bool IsCapturingHotkey { get; set; }
+		
+		private SoundPlayer m_soundPlayer = new SoundPlayer();
+
+		public Sound SoundResult { get; set; }
 
 		public AddSoundForm()
 		{
@@ -38,13 +41,22 @@ namespace Soundboard.GUI
 
 			ui_combobox_PreviewDevice.SelectedIndexChanged += Ui_combobox_PreviewDevice_SelectedIndexChanged;
 			ui_button_hotkey.MouseClick += Ui_button_hotkey_MouseClick;
-			RawInputHandler.KeysChanged += OnKeyAdded;
+			RawInputHandler.KeysChanged += RawInput_KeysChanged;
+		}
+
+		public AddSoundForm(Sound sound) : this()
+		{
+			EditMode = true;
+			Text = "Edit Sound";
+			SoundResult = sound;
+			_PopulateControls(SoundResult);
 		}
 
 		private void Ui_button_hotkey_MouseClick(object sender, MouseEventArgs e)
 		{
 			ui_button_hotkey.BackColor = Color.OrangeRed;
-			m_currentKeys.Clear();
+			ui_button_hotkey.FlatAppearance.MouseOverBackColor = ui_button_hotkey.BackColor;
+			SoundHotkey.Clear();
 			IsCapturingHotkey = true;
 		}
 
@@ -67,26 +79,27 @@ namespace Soundboard.GUI
 		}
 
 		#region Event Handlers
-		private void OnKeyAdded(object sender, KeysChangedArgs e)
+		private void RawInput_KeysChanged(object sender, KeysChangedArgs e)
 		{
 			if(!IsCapturingHotkey) return;
 
 			if(e.Action == KeysChangedAction.Added)
 			{
-				m_currentKeys.Add(e.Key);
+				SoundHotkey.Add(e.Key);
 			}
 			else if(e.Action == KeysChangedAction.Removed)
 			{
 				IsCapturingHotkey = false;
 				ui_button_hotkey.BackColor = SystemColors.ControlDark;
+				ui_button_hotkey.FlatAppearance.MouseOverBackColor = Color.Goldenrod;
 			}
 
-			ui_button_hotkey.Text = m_currentKeys.ToString();
+			ui_button_hotkey.Text = SoundHotkey.ToString();
 		}
 
 		private void ui_button_clearHotkey_MouseClick(object sender, MouseEventArgs e)
 		{
-			m_currentKeys.Clear();
+			SoundHotkey.Clear();
 			ui_button_hotkey.Text = "No Hotkey Set (Click To Set)";
 		}
 
@@ -108,7 +121,7 @@ namespace Soundboard.GUI
 				diag.Filter = CodecFactory.SupportedFilesFilterEn;
 				if(diag.ShowDialog() == DialogResult.OK && diag.FileNames.Any())
 				{
-					_PopulateControlsFromFilename(diag.FileNames.First());
+					_PopulateControls(diag.FileNames.First());
 					ui_tooltip.SetToolTip(ui_labelFile, ui_labelFile.Text);
 				}
 			}
@@ -117,16 +130,34 @@ namespace Soundboard.GUI
 		private void EV_OK_MouseClick(object sender, MouseEventArgs e)
 		{
 			Debug.WriteLine(ui_labelFile.Text);
-			Sound newSound = new Sound(m_selectedFilepath)
+			
+			if(EditMode)
 			{
-				Nickname = ui_textboxNickname.Text,
-				StartTime = ui_mediaControl.Position
-			};
+				SoundResult.FullFilepath = SoundFullFilename;
+				SoundResult.Nickname = SoundNickName;
+				SoundResult.StartTime = SoundStartTime;
 
-			// Copy by value into the actual hotkey.
-			newSound.HotKey.CopyFrom(m_currentKeys);
+				if(SoundResult.HotKey != SoundHotkey)
+				{
+					SoundboardSettings.HotkeyMap.Remove(SoundResult.HotKey);
+					SoundResult.HotKey.CopyFrom(SoundHotkey);
 
-			SoundboardSettings.Sounds.Add(newSound);
+					if(SoundResult.HotKey.Any())
+					{
+						SoundboardSettings.HotkeyMap.Add(SoundResult.HotKey, SoundResult);
+					}
+				}
+			}
+			else
+			{
+				SoundResult = new Sound(SoundFullFilename)
+				{
+					Nickname = SoundNickName,
+					StartTime = SoundStartTime
+				};
+				SoundResult.HotKey.CopyFrom(SoundHotkey);
+			}
+			
 			DialogResult = DialogResult.OK;
 			Close();
 		}
@@ -138,11 +169,31 @@ namespace Soundboard.GUI
 		}
 		#endregion
 
-		private void _PopulateControlsFromFilename(string filename)
+		private void _PopulateControls(string filename)
 		{
-			m_selectedFilepath = filename;
+			SoundFullFilename = filename;
 			ui_labelFile.Text = Path.GetFileName(filename);
 			ui_mediaControl.SetSelectedSound(filename);
+		}
+
+		private void _PopulateControls(Sound sound)
+		{
+			SoundFullFilename = sound.FullFilepath;
+			ui_labelFile.Text = sound.Filename;
+			SoundNickName = sound.Nickname;
+			SoundHotkey.CopyFrom(sound.HotKey);
+			ui_mediaControl.SetSelectedSound(sound); // Also sets StartTime
+
+			if(sound.HotKey.Any())
+			{
+				ui_button_hotkey.Text = sound.HotKey.ToString();
+			}
+		}
+
+		private void ui_button_cancel_MouseClick(object sender, MouseEventArgs e)
+		{
+			DialogResult = DialogResult.Abort;
+			Close();
 		}
 	}
 }

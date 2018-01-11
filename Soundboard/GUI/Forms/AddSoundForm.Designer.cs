@@ -39,6 +39,7 @@
 			this.ui_button_clearHotkey = new System.Windows.Forms.Button();
 			this.ui_mediaControl = new Soundboard.MediaControl();
 			this.ui_button_hotkey = new System.Windows.Forms.Button();
+			this.ui_button_cancel = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// ui_buttonBrowse
@@ -144,6 +145,7 @@
 			this.ui_mediaControl.Name = "ui_mediaControl";
 			this.ui_mediaControl.ShowName = true;
 			this.ui_mediaControl.Size = new System.Drawing.Size(349, 155);
+			this.ui_mediaControl.SoundPlayer = null;
 			this.ui_mediaControl.TabIndex = 4;
 			// 
 			// ui_button_hotkey
@@ -162,11 +164,23 @@
 			this.ui_button_hotkey.UseMnemonic = false;
 			this.ui_button_hotkey.UseVisualStyleBackColor = false;
 			// 
+			// ui_button_cancel
+			// 
+			this.ui_button_cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.ui_button_cancel.Location = new System.Drawing.Point(192, 357);
+			this.ui_button_cancel.Name = "ui_button_cancel";
+			this.ui_button_cancel.Size = new System.Drawing.Size(75, 23);
+			this.ui_button_cancel.TabIndex = 10;
+			this.ui_button_cancel.Text = "Cancel";
+			this.ui_button_cancel.UseVisualStyleBackColor = true;
+			this.ui_button_cancel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ui_button_cancel_MouseClick);
+			// 
 			// AddSoundForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(356, 392);
+			this.Controls.Add(this.ui_button_cancel);
 			this.Controls.Add(this.ui_button_hotkey);
 			this.Controls.Add(this.ui_button_clearHotkey);
 			this.Controls.Add(this.ui_combobox_PreviewDevice);
@@ -201,5 +215,6 @@
 		private System.Windows.Forms.ToolTip ui_tooltip;
 		private System.Windows.Forms.Button ui_button_clearHotkey;
 		private System.Windows.Forms.Button ui_button_hotkey;
+		private System.Windows.Forms.Button ui_button_cancel;
 	}
 }

@@ -52,7 +52,7 @@ namespace Soundboard
 			for(int x = 0; x < Count; ++x)
 			{
 				result += this.ElementAt(x);
-				if(x < Count - 1) result += " + ";
+				if(x < Count - 1) result += ", ";
 			}
 
 			return result;

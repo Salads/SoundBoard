@@ -13,6 +13,8 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using Soundboard.Data.Static;
+using Soundboard.Data;
+using System.ComponentModel;
 
 namespace Soundboard
 {
@@ -39,7 +41,7 @@ namespace Soundboard
 
 		public static uint GlobalVolume { get; set; }
 
-		public static float VolumeNormalized
+		public static float VolumeNormalized 
 		{
 			get
 			{
@@ -47,13 +49,42 @@ namespace Soundboard
 			}
 		}
 
-		public static ObservableCollection<Sound> Sounds { get; set; } = new ObservableCollection<Sound>();
+		public static MyBindingList<Sound> Sounds { get; set; } = new MyBindingList<Sound>();
 
 		public static ObservableCollection<AudioDevice> SelectedPlaybackDevices { get; set; } = new ObservableCollection<AudioDevice>();
 
 		public static AudioDevice SelectedRecordingDevice { get; set; } = null;
 
 		public static AudioDevice SelectedPreviewDevice { get; set; } = null;
+
+		public static Dictionary<Hotkey, Sound> HotkeyMap { get; set; } = new Dictionary<Hotkey, Sound>();
+
+
+		static SoundboardSettings()
+		{
+			Sounds.RemovingItem += Sounds_RemovingItem;
+			Sounds.ListChanged += Sounds_ListChanged;
+		}
+
+		private static void Sounds_ListChanged(object sender, ListChangedEventArgs e)
+		{
+			if(e.ListChangedType == ListChangedType.ItemAdded)
+			{
+				Sound newSound = Sounds[e.NewIndex];
+				if(newSound == null) return;
+				if(!newSound.HotKey.Any()) return;
+
+				HotkeyMap.Add(newSound.HotKey, newSound);
+			}
+		}
+
+		private static void Sounds_RemovingItem(object sender, ItemRemovedArgs<Sound> e)
+		{
+			if(e.RemovedItem.HotKey.Any())
+			{
+				HotkeyMap.Remove(e.RemovedItem.HotKey);
+			}
+		}
 
 		public static void SetMicMuted(bool mute)
 		{

@@ -22,7 +22,6 @@ namespace Soundboard.Data
 		public static bool ExecuteHotkeys { get; set; } = true;
 
 		private static Hotkey m_pressedKeys = new Hotkey();
-		private static Dictionary<Hotkey, Sound> m_hotkeyMap = new Dictionary<Hotkey, Sound>();
 		private static bool _LastKeyWasDown = false;
 		private static bool _KeysChanged = false;
 
@@ -31,72 +30,21 @@ namespace Soundboard.Data
 
 		static RawInputHandler()
 		{
-			ConstructHotkeyMap();
-
-			SoundboardSettings.Sounds.CollectionChanged += Sounds_CollectionChanged;
-		}
-
-		/// <summary>
-		/// Syncs the hotkey map to the global sounds collection when it changes.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private static void Sounds_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			if(e.Action == NotifyCollectionChangedAction.Add)
-			{
-				foreach(var item in e.NewItems)
-				{
-					Sound newSound = item as Sound;
-					if(newSound.HotKey.Any()) // Only add to the hotkey map if there is a hotkey. 
-					{
-						m_hotkeyMap.Add(newSound.HotKey, newSound);
-					}
-				}
-			}
-			else if(e.Action == NotifyCollectionChangedAction.Remove)
-			{
-				foreach(var item in e.OldItems)
-				{
-					Sound oldSound = item as Sound;
-					if(oldSound.HotKey.Any())
-					{
-						m_hotkeyMap.Remove(oldSound.HotKey);
-					}
-				}
-			}
-			else if(e.Action == NotifyCollectionChangedAction.Reset)
-			{
-				m_hotkeyMap.Clear();
-			}
-		}
-
-		public static void ConstructHotkeyMap()
-		{
-			m_hotkeyMap.Clear();
-
-			foreach (Sound sound in SoundboardSettings.Sounds)
-			{
-				if(sound.HotKey.Any())
-				{
-					m_hotkeyMap.Add(sound.HotKey, sound);
-				}
-			}
 		}
 
 		private static void _CheckHotkeys()
 		{
-			//_PrintHotkeys();
+			_PrintHotkeys();
 
-			if(ExecuteHotkeys && m_hotkeyMap.Keys.Contains(m_pressedKeys))
+			if(ExecuteHotkeys && SoundboardSettings.HotkeyMap.Keys.Contains(m_pressedKeys))
 			{
-				HotkeyPressed?.Invoke(null, new HotkeyPressedArgs(m_hotkeyMap[m_pressedKeys]));
+				HotkeyPressed?.Invoke(null, new HotkeyPressedArgs(SoundboardSettings.HotkeyMap[m_pressedKeys]));
 			}
 		}
 
 		private static void _PrintHotkeys()
 		{
-			Debug.WriteLine("HotKey: " + m_pressedKeys.ToString() + ", " + "Contains: " + m_hotkeyMap.ContainsKey(m_pressedKeys));
+			Debug.WriteLine("HotKey: " + m_pressedKeys.ToString() + ", " + "Contains: " + SoundboardSettings.HotkeyMap.ContainsKey(m_pressedKeys));
 		}
 
 		public static void HandleRawInput(ref Message message)
@@ -120,16 +68,6 @@ namespace Soundboard.Data
 
 					if(flags.HasFlag(RKeyboardFlags.RI_KEY_MAKE) && !m_pressedKeys.Contains(key))
 					{
-						// DEBUG
-						byte scanCode = (byte)input->keyboard.MakeCode;
-						Int32 reconstructedMessage = 0;
-						reconstructedMessage |= (scanCode << 16);
-
-						StringBuilder str = new StringBuilder();
-						RI.GetKeyNameText(reconstructedMessage, str, 64);
-						Debug.WriteLine("\"" + str + "\"" + " : " + key + " : " + new KeysConverter().ConvertToString(key));
-						//
-
 						_LastKeyWasDown = true;
 						_KeysChanged = true;
 						m_pressedKeys.Add(key);

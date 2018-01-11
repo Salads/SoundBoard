@@ -35,8 +35,8 @@
 			this.ui_textboxSearch = new System.Windows.Forms.TextBox();
 			this.ui_buttonAdd = new System.Windows.Forms.Button();
 			this.ui_contextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.ui_context_edit = new System.Windows.Forms.ToolStripMenuItem();
+			this.ui_context_delete = new System.Windows.Forms.ToolStripMenuItem();
 			this.ui_contextStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -110,25 +110,26 @@
 			// ui_contextStrip
 			// 
 			this.ui_contextStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editToolStripMenuItem,
-            this.deleteToolStripMenuItem});
+            this.ui_context_edit,
+            this.ui_context_delete});
 			this.ui_contextStrip.Name = "ui_contextStrip";
-			this.ui_contextStrip.Size = new System.Drawing.Size(153, 70);
+			this.ui_contextStrip.Size = new System.Drawing.Size(108, 48);
 			// 
-			// editToolStripMenuItem
+			// ui_context_edit
 			// 
-			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-			this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.editToolStripMenuItem.Text = "Edit";
+			this.ui_context_edit.Name = "ui_context_edit";
+			this.ui_context_edit.Size = new System.Drawing.Size(107, 22);
+			this.ui_context_edit.Text = "Edit";
+			this.ui_context_edit.Click += new System.EventHandler(this.ui_context_edit_Click);
 			// 
-			// deleteToolStripMenuItem
+			// ui_context_delete
 			// 
-			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.deleteToolStripMenuItem.Text = "Delete";
-			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			this.ui_context_delete.Name = "ui_context_delete";
+			this.ui_context_delete.Size = new System.Drawing.Size(107, 22);
+			this.ui_context_delete.Text = "Delete";
+			this.ui_context_delete.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
-			// SoundList
+			// SoundViewer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -137,7 +138,7 @@
 			this.Controls.Add(this.ui_soundList);
 			this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.Name = "SoundList";
+			this.Name = "SoundViewer";
 			this.Size = new System.Drawing.Size(473, 402);
 			this.ui_contextStrip.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -152,7 +153,7 @@
 		private System.Windows.Forms.Button ui_buttonAdd;
 		private System.Windows.Forms.ListView ui_soundList;
 		private System.Windows.Forms.ContextMenuStrip ui_contextStrip;
-		private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem ui_context_edit;
+		private System.Windows.Forms.ToolStripMenuItem ui_context_delete;
 	}
 }

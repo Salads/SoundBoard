@@ -13,7 +13,6 @@ namespace Soundboard
 	{
 		private Sound m_selectedSound;
 		private TimeSpan m_selectedSoundLength;
-		private ObservableCollection<AudioDevice> m_playbackDevices;
 
 		public SoundPlayer SoundPlayer { get; set; }
 
@@ -32,7 +31,6 @@ namespace Soundboard
 		{
 			InitializeComponent();
 			ui_volumeBar.Volume = SoundboardSettings.GlobalVolume;
-			m_playbackDevices = SoundboardSettings.SelectedPlaybackDevices;
 
 			// I set this here because initialization would cause some issues.
 			ui_volumeBar.VolumeChanged += new EventHandler(EV_VolumeChanged);

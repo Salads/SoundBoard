@@ -1,4 +1,15 @@
 ﻿
+==============================================================================================================================================
+- Added Edit sound functionality to the SoundViewer constext strip
+- Added MyBindingList to have a event that has the removed item
+- Added HotkeyMap in SoundboardSettings to easily keep track of occupied hotkeys
+- Removed m_playbackDevices from MediaControl, unused
+- Renamed context strip to ui_context_*
+- Renamed ui_soundList to ui_soundViewer
+- Changed SoundViewer resizing to have the hotkey column "align right"
+- Changed ToString() of HotKey to use ", " instead of " + ", removing need for extra space.
+- Changed AddSoundForm to be able to edit sounds as well as add completely new ones.
+
 1/9/2018 4:34PM
 ==============================================================================================================================================
 - Added ISoundPlayerUser interface to force implementation of SoundPlayer property. Added to SoundViewer, MediaControl

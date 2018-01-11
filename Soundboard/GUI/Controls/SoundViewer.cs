@@ -38,6 +38,9 @@ namespace Soundboard.GUI
 			InitializeComponent();
 			SendMessage(ui_textboxSearch.Handle, EM_SETCUEBANNER, 0, "Search...");
 			RefreshSoundsInList();
+
+			ui_soundList.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
+			ui_soundList.Columns[0].Width = ui_soundList.Width - (ui_soundList.Columns[1].Width + 15);
 		}
 
 		/// <summary>
@@ -54,6 +57,9 @@ namespace Soundboard.GUI
 			{
 				if(form.ShowDialog() == DialogResult.OK)
 				{
+					// Since we know that we're adding a new sound, we dont have to check AddSoundForm::EditMode
+					SoundboardSettings.Sounds.Add(form.SoundResult);
+
 					RefreshSoundsInList();
 				}
 			}
@@ -74,9 +80,8 @@ namespace Soundboard.GUI
 
 		private void EV_SoundList_Resize(object sender, EventArgs e)
 		{
-			int FullWidth = Width - 4 - SystemInformation.VerticalScrollBarWidth;
-			ui_soundList.Columns[0].Width = (int)(0.70f * FullWidth);
-			ui_soundList.Columns[1].Width = (int)(0.30f * FullWidth);
+			ui_soundList.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
+			ui_soundList.Columns[0].Width = ui_soundList.Width - (ui_soundList.Columns[1].Width + 15);
 		}
 
 		private void SoundList_MouseClick(object sender, MouseEventArgs e)
@@ -111,6 +116,20 @@ namespace Soundboard.GUI
 
 				newItem.SubItems.Add(sound.HotKey.ToString());
 				ui_soundList.Items.Add(newItem);
+			}
+		}
+
+		private void ui_context_edit_Click(object sender, EventArgs e)
+		{
+			Sound selectedSound = ui_soundList.SelectedItems[0]?.Tag as Sound;
+			if(selectedSound == null) return;
+
+			using(AddSoundForm form = new AddSoundForm(selectedSound))
+			{
+				if(form.ShowDialog() == DialogResult.OK)
+				{
+					RefreshSoundsInList();
+				}
 			}
 		}
 	}
