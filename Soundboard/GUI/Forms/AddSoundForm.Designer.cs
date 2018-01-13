@@ -34,12 +34,12 @@
 			this.ui_textboxNickname = new System.Windows.Forms.TextBox();
 			this.ui_labelNickname = new System.Windows.Forms.Label();
 			this.ui_button_OK = new System.Windows.Forms.Button();
-			this.ui_combobox_PreviewDevice = new System.Windows.Forms.ComboBox();
 			this.ui_tooltip = new System.Windows.Forms.ToolTip(this.components);
 			this.ui_button_clearHotkey = new System.Windows.Forms.Button();
 			this.ui_mediaControl = new Soundboard.MediaControl();
 			this.ui_button_hotkey = new System.Windows.Forms.Button();
 			this.ui_button_cancel = new System.Windows.Forms.Button();
+			this.ui_PreviewDeviceSelector = new Soundboard.GUI.Controls.Components.SingleDeviceSelector();
 			this.SuspendLayout();
 			// 
 			// ui_buttonBrowse
@@ -105,18 +105,6 @@
 			this.ui_button_OK.UseVisualStyleBackColor = true;
 			this.ui_button_OK.MouseClick += new System.Windows.Forms.MouseEventHandler(this.EV_OK_MouseClick);
 			// 
-			// ui_combobox_PreviewDevice
-			// 
-			this.ui_combobox_PreviewDevice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.ui_combobox_PreviewDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.ui_combobox_PreviewDevice.FormattingEnabled = true;
-			this.ui_combobox_PreviewDevice.Location = new System.Drawing.Point(10, 171);
-			this.ui_combobox_PreviewDevice.Name = "ui_combobox_PreviewDevice";
-			this.ui_combobox_PreviewDevice.Size = new System.Drawing.Size(338, 23);
-			this.ui_combobox_PreviewDevice.TabIndex = 7;
-			this.ui_combobox_PreviewDevice.TabStop = false;
-			// 
 			// ui_tooltip
 			// 
 			this.ui_tooltip.AutoPopDelay = 5000;
@@ -175,15 +163,27 @@
 			this.ui_button_cancel.UseVisualStyleBackColor = true;
 			this.ui_button_cancel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ui_button_cancel_MouseClick);
 			// 
+			// ui_PreviewDeviceSelector
+			// 
+			this.ui_PreviewDeviceSelector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.ui_PreviewDeviceSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.ui_PreviewDeviceSelector.FormattingEnabled = true;
+			this.ui_PreviewDeviceSelector.Location = new System.Drawing.Point(10, 173);
+			this.ui_PreviewDeviceSelector.Name = "ui_PreviewDeviceSelector";
+			this.ui_PreviewDeviceSelector.Size = new System.Drawing.Size(334, 23);
+			this.ui_PreviewDeviceSelector.TabIndex = 11;
+			this.ui_PreviewDeviceSelector.TabStop = false;
+			// 
 			// AddSoundForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(356, 392);
+			this.Controls.Add(this.ui_PreviewDeviceSelector);
 			this.Controls.Add(this.ui_button_cancel);
 			this.Controls.Add(this.ui_button_hotkey);
 			this.Controls.Add(this.ui_button_clearHotkey);
-			this.Controls.Add(this.ui_combobox_PreviewDevice);
 			this.Controls.Add(this.ui_button_OK);
 			this.Controls.Add(this.ui_mediaControl);
 			this.Controls.Add(this.ui_labelNickname);
@@ -211,10 +211,10 @@
 		private System.Windows.Forms.Label ui_labelNickname;
 		private MediaControl ui_mediaControl;
 		private System.Windows.Forms.Button ui_button_OK;
-		private System.Windows.Forms.ComboBox ui_combobox_PreviewDevice;
 		private System.Windows.Forms.ToolTip ui_tooltip;
 		private System.Windows.Forms.Button ui_button_clearHotkey;
 		private System.Windows.Forms.Button ui_button_hotkey;
 		private System.Windows.Forms.Button ui_button_cancel;
+		private Controls.Components.SingleDeviceSelector ui_PreviewDeviceSelector;
 	}
 }

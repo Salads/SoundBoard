@@ -9,14 +9,10 @@ using System.Diagnostics;
 
 namespace Soundboard
 {
+	// TODO: Better interface for AudioDevice, like device volume, etc.
+
 	public class AudioDevice : IDisposable
 	{
-		public AudioDevice()
-		{
-			Info = null;
-			Volume = null;
-		}
-
 		public AudioDevice(MMDevice NewDevice)
 		{
 			Info = NewDevice ?? throw new ArgumentNullException("NewDevice", "Device cannot be null.");
@@ -25,7 +21,7 @@ namespace Soundboard
 
 		public string FriendlyName { get { return Info.FriendlyName; } }
 
-		public string DeviceID
+		public string DeviceID 
 		{
 			get { return Info.DeviceID; }
 		}
@@ -34,24 +30,15 @@ namespace Soundboard
 
 		public AudioEndpointVolume Volume { get; private set; }
 
-		public void Dispose()
+		public void Dispose() 
 		{
 			Info.Dispose();
 			Volume.Dispose();
 		}
 
-		public override string ToString()
+		public override string ToString() 
 		{
-			return Info.ToString();
+			return FriendlyName;
 		}
-	}
-
-	public class DeviceNotFoundException : Exception
-	{
-		public DeviceNotFoundException() { }
-
-		public DeviceNotFoundException(string Message) : base(Message) { }
-
-		public DeviceNotFoundException(string Message, Exception Inner) : base(Message, Inner) { }
 	}
 }

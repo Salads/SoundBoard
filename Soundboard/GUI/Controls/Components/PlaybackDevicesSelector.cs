@@ -26,7 +26,7 @@ namespace Soundboard.GUI.Controls.Components
 			Devices.ActivePlaybackDevices.RemovingItem -= ActivePlaybackDevices_RemovingItem;
 		}
 
-		public void InitializeOptions()
+		public void Initialize()
 		{
 			ItemChecked -= PlaybackDeviceSelector_ItemChecked;
 			SizeChanged -= PlaybackDeviceSelector_SizeChanged;
@@ -35,13 +35,12 @@ namespace Soundboard.GUI.Controls.Components
 
 			Items.Clear();
 
-			List<string> savedOutputIDs = SoundboardSettings.SelectedPlaybackDevices.Select(x => x.DeviceID).ToList();
 			foreach(AudioDevice device in Devices.ActivePlaybackDevices)
 			{
 				ListViewItem newItem = new ListViewItem()
 				{
 					Text = device.FriendlyName,
-					Checked = savedOutputIDs.Contains(device.DeviceID),
+					Checked = SoundboardSettings.SelectedPlaybackDevices.Contains(device),
 					Tag = device
 				};
 
@@ -59,7 +58,7 @@ namespace Soundboard.GUI.Controls.Components
 		{
 			foreach(ListViewItem item in Items)
 			{
-				if(item.Tag as AudioDevice == e.RemovedItem)
+				if(ReferenceEquals(e.RemovedItem, item.Tag))
 				{
 					Items.Remove(item);
 				}
@@ -105,7 +104,6 @@ namespace Soundboard.GUI.Controls.Components
 			else
 			{
 				SoundboardSettings.SelectedPlaybackDevices.Remove(changedDevice);
-				// TODO: Stop sounds on device here?
 			}
 		}
 	}

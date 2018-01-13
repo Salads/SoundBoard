@@ -1,4 +1,11 @@
-﻿1/12/2018 8:17
+﻿1/13/2018 2:29PM
+==============================================================================================================================================
+- Refactored SingleDeviceSelector
+- Refactored PlaybackDevicesSelector
+- Added DesignMode check to initialization of Device Selector controls
+
+
+1/12/2018 8:17
 ==============================================================================================================================================
 - Moved WM_INPUT const to NativeMethods, since Windows specific message
 

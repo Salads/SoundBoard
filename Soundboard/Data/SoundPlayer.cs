@@ -20,7 +20,7 @@ namespace Soundboard
 
 		public bool IsPlaying { get { return m_PlayingSounds.Any(); } }
 
-		public float VolumeNormalized
+		public float VolumeNormalized 
 		{
 			get { return m_Volume; }
 			set
@@ -73,7 +73,8 @@ namespace Soundboard
 			foreach(AudioDevice device in m_playbackDevices)
 			{
 				if(device == null) continue;
-				Debug.WriteLine(device.FriendlyName);
+
+				Debug.Write(device.FriendlyName + ", ");
 
 				//	Need to create one for every output because the stream is handled in WaveSource.
 				//	This means multiple outputs will advance stream position if we don't seperate them.
@@ -92,6 +93,8 @@ namespace Soundboard
 				m_PlayingSounds.Add(newSoundOut);
 				SoundboardSettings.SetMicMuted(SoundboardSettings.MuteMicrophoneWhilePlaying);
 			}
+
+			Debug.WriteLine("");
 		}
 
 		public void StopSoundsOnDevice(AudioDevice device)

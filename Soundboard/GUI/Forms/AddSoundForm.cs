@@ -35,13 +35,24 @@ namespace Soundboard.GUI
 			InitializeComponent();
 			ui_mediaControl.SoundPlayer = m_soundPlayer;
 			ui_mediaControl.ShowName = false;
-			RawInputHandler.ExecuteHotkeys = false;
+			RawInputHandler.ExecuteHotkeys = false; // Don't want to be playing other sounds when tinkering with a new one
 
-			_InitializeDeviceDropdown();
-
-			ui_combobox_PreviewDevice.SelectedIndexChanged += Ui_combobox_PreviewDevice_SelectedIndexChanged;
+			ui_PreviewDeviceSelector.Initialize(GUI.Controls.Components.DeviceType.Playback);
+			m_soundPlayer.SetPlaybackDevice(ui_PreviewDeviceSelector.SelectedItem as AudioDevice);
+			ui_PreviewDeviceSelector.SelectedIndexChanged += EV_PreviewDeviceSelector_SelectedIndexChanged;
 			ui_button_hotkey.MouseClick += Ui_button_hotkey_MouseClick;
 			RawInputHandler.KeysChanged += RawInput_KeysChanged;
+		}
+
+		private void EV_PreviewDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			m_soundPlayer.StopAllSounds();
+			SoundboardSettings.SelectedPreviewDevice = ui_PreviewDeviceSelector.SelectedItem as AudioDevice;
+
+			if(SoundboardSettings.SelectedPreviewDevice != null)
+			{
+				m_soundPlayer.SetPlaybackDevice(SoundboardSettings.SelectedPreviewDevice);
+			}
 		}
 
 		public AddSoundForm(Sound sound) : this()
@@ -58,24 +69,6 @@ namespace Soundboard.GUI
 			ui_button_hotkey.FlatAppearance.MouseOverBackColor = ui_button_hotkey.BackColor;
 			SoundHotkey.Clear();
 			IsCapturingHotkey = true;
-		}
-
-		// TODO: Data binding
-		private void _InitializeDeviceDropdown()
-		{
-			ui_combobox_PreviewDevice.Items.Clear();
-			ui_combobox_PreviewDevice.Items.Add("Select Preview Device (None)");
-			ui_combobox_PreviewDevice.SelectedIndex = 0;
-
-			foreach(AudioDevice device in Devices.ActivePlaybackDevices)
-			{
-				ui_combobox_PreviewDevice.Items.Add(device);
-				if(ReferenceEquals(device, SoundboardSettings.SelectedPreviewDevice))
-				{
-					ui_combobox_PreviewDevice.SelectedItem = device;
-					m_soundPlayer.SetPlaybackDevice(device);
-				}
-			}
 		}
 
 		#region Event Handlers
@@ -101,17 +94,6 @@ namespace Soundboard.GUI
 		{
 			SoundHotkey.Clear();
 			ui_button_hotkey.Text = "No Hotkey Set (Click To Set)";
-		}
-
-		private void Ui_combobox_PreviewDevice_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			m_soundPlayer.StopAllSounds();
-			SoundboardSettings.SelectedPreviewDevice = ui_combobox_PreviewDevice.SelectedItem as AudioDevice;
-
-			if(SoundboardSettings.SelectedPreviewDevice != null)
-			{
-				m_soundPlayer.SetPlaybackDevice(SoundboardSettings.SelectedPreviewDevice);
-			}
 		}
 
 		private void EV_Browse_MouseClick(object sender, MouseEventArgs e)

@@ -13,16 +13,29 @@ using Soundboard.Data.Static;
 
 namespace Soundboard.GUI
 {
-	// TODO: Put these events into the component?
-
 	public partial class DevicesSelector : UserControl
 	{
 		public DevicesSelector()
 		{
 			InitializeComponent();
 
-			ui_RecordingDeviceSelector.Initialize(GUI.Controls.Components.DeviceType.Recording);
-			ui_PlaybackDevicesSelector.InitializeOptions();
+			if(!DesignMode)
+			{
+				ui_PlaybackDevicesSelector.Initialize();
+				ui_RecordingDeviceSelector.Initialize(GUI.Controls.Components.DeviceType.Recording);
+				ui_RecordingDeviceSelector.SelectedIndexChanged += EV_RecordingDeviceSelector_SelectedIndexChanged;
+			}
+		}
+
+		private void EV_RecordingDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// Unmute the previous recording device if there is one.
+			if(SoundboardSettings.SelectedRecordingDevice != null)
+			{
+				SoundboardSettings.SelectedRecordingDevice.Volume.IsMuted = false;
+			}
+
+			SoundboardSettings.SelectedRecordingDevice = (ui_RecordingDeviceSelector.SelectedIndex == 0 ? null : ui_RecordingDeviceSelector.SelectedItem as AudioDevice);
 		}
 	}
 }

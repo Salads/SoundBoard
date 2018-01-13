@@ -44,7 +44,6 @@ namespace Soundboard.GUI.Controls.Components
 				m_BindingListSource.ListChanged -= DeviceList_Changed;
 				m_BindingListSource.RemovingItem -= DeviceList_RemovingItem;
 			}
-			SelectedIndexChanged -= SingleDeviceSelector_SelectedIndexChanged;
 
 			string defaultOption = string.Empty;
 			AudioDevice selectedDevice = null;
@@ -77,25 +76,13 @@ namespace Soundboard.GUI.Controls.Components
 			
 			m_BindingListSource.ListChanged += DeviceList_Changed;
 			m_BindingListSource.RemovingItem += DeviceList_RemovingItem;
-			SelectedIndexChanged += SingleDeviceSelector_SelectedIndexChanged;
-		}
-
-		private void SingleDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if(m_DeviceType == DeviceType.Playback)
-			{
-				SoundboardSettings.SelectedPreviewDevice = (SelectedIndex == 0 ? null : SelectedItem as AudioDevice);
-			}
-			else if(m_DeviceType == DeviceType.Recording)
-			{
-				SoundboardSettings.SelectedRecordingDevice = (SelectedIndex == 0 ? null : SelectedItem as AudioDevice);
-			}
 		}
 
 		private void DeviceList_RemovingItem(object sender, ItemRemovedArgs<AudioDevice> e)
 		{
-			if(ReferenceEquals(e.RemovedItem, SoundboardSettings.SelectedPreviewDevice)
-				|| ReferenceEquals(e.RemovedItem, SoundboardSettings.SelectedRecordingDevice))
+			// If the removed device is the selected item, set the SelectedIndex to 0, the "None" choice.
+			if(ReferenceEquals(e.RemovedItem, SoundboardSettings.SelectedPreviewDevice) ||
+			   ReferenceEquals(e.RemovedItem, SoundboardSettings.SelectedRecordingDevice))
 			{
 				SelectedIndex = 0;
 			}
@@ -107,14 +94,7 @@ namespace Soundboard.GUI.Controls.Components
 		{
 			if(e.ListChangedType == ListChangedType.ItemAdded)
 			{
-				if(m_DeviceType == DeviceType.Playback)
-				{
-					Items.Add(Devices.ActivePlaybackDevices[e.NewIndex]);
-				}
-				else if(m_DeviceType == DeviceType.Recording)
-				{
-					Items.Add(Devices.ActiveRecordingDevices[e.NewIndex]);
-				}
+				Items.Add(m_BindingListSource[e.NewIndex]);
 			}
 		}
 	}
