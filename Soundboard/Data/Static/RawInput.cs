@@ -13,8 +13,6 @@ namespace RawInput
 {
 	public static partial class RI
 	{
-		
-
 		public static void RegisterDevices(IntPtr windowHandle)
 		{
 			RAWINPUTDEVICE[] devices = new RAWINPUTDEVICE[2];
@@ -32,12 +30,6 @@ namespace RawInput
 			devices[1].usUsage = 0x06;
 			devices[1].dwFlags = RI.RIDEV_INPUTSINK;
 			devices[1].hwndTarget = windowHandle;
-
-			//// Keypad (Don't know what this actually is, maybe a seperate numpad? Keyboard seems to pick up the numpad fine.)
-			//devices[2].UsagePage = 0x01;
-			//devices[2].Usage = 0x07;
-			//devices[2].Flags = RIDEV_INPUTSINK;
-			//devices[2].WindowHandle = windowHandle;
 
 			if(NativeMethods.RegisterRawInputDevices(devices, 2, Marshal.SizeOf(devices[0])))
 			{

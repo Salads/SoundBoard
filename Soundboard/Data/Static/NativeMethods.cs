@@ -15,6 +15,11 @@ namespace Soundboard.Data.Static
 	{
 		public const int EM_SETCUEBANNER = 0x1501;
 
+		/// <summary>
+		/// Window message; sent to windows that receive RawInput.
+		/// </summary>
+		public const Int32 WM_INPUT = 0x00FF;
+
 		[DllImport("User32.dll")]
 		public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
 

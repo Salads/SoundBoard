@@ -15,7 +15,7 @@ namespace Soundboard.Data
 {
 	public static class RawInputHandler
 	{
-		public static bool HasKeysPressed
+		public static bool HasKeysPressed 
 		{
 			get { return !m_pressedKeys.Any(); }
 		}
@@ -103,12 +103,7 @@ namespace Soundboard.Data
 		[Conditional("DEBUG")]
 		private static void _PrintKeysToOutput()
 		{
-			for(int x = 0; x < m_pressedKeys.Count; ++x)
-			{
-				Debug.Write(m_pressedKeys.ElementAt(x));
-				Debug.WriteIf(x < m_pressedKeys.Count - 1, " + ");
-			}
-			Debug.WriteLine("");
+			Debug.WriteLine(m_pressedKeys.ToString());
 		}
 
 		private static string ConstructFlagLogLine(string flagName, RawMouseButtons flags, RawMouseButtons flag)

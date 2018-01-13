@@ -26,11 +26,6 @@ namespace RawInput
 		public const UInt32 RIDEV_INPUTSINK = 0x00000100;
 
 		/// <summary>
-		/// Window message; sent to windows that receive RawInput.
-		/// </summary>
-		public const Int32 WM_INPUT = 0x00FF;
-
-		/// <summary>
 		/// Used with <see cref="GetRawInputData"/>. <para/>
 		/// Tells the function to get <see cref="RAWINPUTHEADER"/> of a <see cref="RAWINPUT"/> struct.
 		/// </summary>

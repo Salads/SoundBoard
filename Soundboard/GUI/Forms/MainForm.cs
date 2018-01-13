@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using Soundboard.Data;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using Soundboard.Data.Static;
 
 namespace Soundboard
 {
@@ -101,7 +102,7 @@ namespace Soundboard
 
 		protected override void WndProc(ref Message m)
 		{
-			if(m.Msg == RI.WM_INPUT)
+			if(m.Msg == NativeMethods.WM_INPUT)
 			{
 				RawInputHandler.HandleRawInput(ref m);
 				return;
