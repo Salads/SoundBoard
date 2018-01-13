@@ -29,15 +29,13 @@ namespace Soundboard
 		TAG_PreviewDeviceGUID
 	}
 
-	// TODO: OnChanged events for these settings.
-
 	public static class SoundboardSettings
 	{
 		private const string _DEFAULT_LOCATION = "default.soundboard";
 
 		public static bool FirstRun { get; set; }
 
-		public static bool MuteMicrophoneWhilePlaying{ get; set; }
+		public static bool MuteMicrophoneWhilePlaying { get; set; }
 
 		public static uint GlobalVolume { get; set; }
 
@@ -49,16 +47,15 @@ namespace Soundboard
 			}
 		}
 
-		public static MyBindingList<Sound> Sounds { get; set; } = new MyBindingList<Sound>();
+		public static CBindingList<Sound> Sounds { get; set; } = new CBindingList<Sound>();
 
-		public static ObservableCollection<AudioDevice> SelectedPlaybackDevices { get; set; } = new ObservableCollection<AudioDevice>();
+		public static CBindingList<AudioDevice> SelectedPlaybackDevices { get; set; } = new CBindingList<AudioDevice>();
 
 		public static AudioDevice SelectedRecordingDevice { get; set; } = null;
 
 		public static AudioDevice SelectedPreviewDevice { get; set; } = null;
 
 		public static Dictionary<Hotkey, Sound> HotkeyMap { get; set; } = new Dictionary<Hotkey, Sound>();
-
 
 		static SoundboardSettings()
 		{
@@ -127,8 +124,6 @@ namespace Soundboard
 				SaveToFile(Filename);
 				return;
 			}
-
-			Debug.WriteLine("Loading from default");
 
 			// Just to be sanitary. (safeguard in case settings are loaded again somewhere)
 			ResetToDefault();
@@ -211,14 +206,14 @@ namespace Soundboard
 							{
 								string previewDeviceGUID = reader.ReadString();
 
-								var matchingRecordingDevices = Devices.ActivePlaybackDevices.Where(x => previewDeviceGUID == x.DeviceID);
-								if(Guid.Empty.ToString() == previewDeviceGUID || !matchingRecordingDevices.Any())
+								var matchingPlaybackDevices = Devices.ActivePlaybackDevices.Where(x => previewDeviceGUID == x.DeviceID);
+								if(Guid.Empty.ToString() == previewDeviceGUID || !matchingPlaybackDevices.Any())
 								{
 									SelectedPreviewDevice = null;
 								}
 								else
 								{
-									SelectedPreviewDevice = matchingRecordingDevices.First();
+									SelectedPreviewDevice = matchingPlaybackDevices.First();
 								}
 
 							} break;

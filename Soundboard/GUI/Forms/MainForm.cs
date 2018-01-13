@@ -8,6 +8,7 @@ using RawInput;
 using System.Runtime.InteropServices;
 using Soundboard.Data;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace Soundboard
 {
@@ -71,18 +72,9 @@ namespace Soundboard
 		}
 		#endregion
 
-		private void PlaybackDevices_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		private void EV_SelectedPlaybackDevices_ItemRemoved(object sender, ItemRemovedArgs<AudioDevice> e)
 		{
-			if(e.Action == NotifyCollectionChangedAction.Remove)
-			{
-				foreach(var item in e.OldItems)
-				{
-					AudioDevice device = item as AudioDevice;
-					if(device == null) continue;
-
-					m_MainSoundPlayer.StopSoundsOnDevice(device);
-				}
-			}
+			m_MainSoundPlayer.StopSoundsOnDevice(e.RemovedItem);
 		}
 
 		private void EV_FormClosing(object sender, FormClosingEventArgs e)
@@ -97,7 +89,7 @@ namespace Soundboard
 			m_MainSoundPlayer.Play(e.Sound);
 		}
 
-		private void ui_tabControl_KeyDown(object sender, KeyEventArgs e)
+		private void EV_TabControl_KeyDown(object sender, KeyEventArgs e)
 		{
 			if(e.KeyCode == Keys.Left || e.KeyCode == Keys.Right ||
 				e.KeyCode == Keys.Home || e.KeyCode == Keys.End)
@@ -133,7 +125,7 @@ namespace Soundboard
 
 			ui_soundViewer.ItemSelectionChanged += ui_mediaControl.SoundList_ItemSelectionChanged;
 			RawInputHandler.HotkeyPressed += EV_HotkeyPressed;
-			SoundboardSettings.SelectedPlaybackDevices.CollectionChanged += PlaybackDevices_CollectionChanged;
+			SoundboardSettings.SelectedPlaybackDevices.RemovingItem += EV_SelectedPlaybackDevices_ItemRemoved;
 		}
 	}
 }

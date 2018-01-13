@@ -1,4 +1,16 @@
-﻿
+﻿1/12/2018 7:57PM
+==============================================================================================================================================
+- Added CTextBox that has built in ability for a cue banner (using Win32)
+- Added null check to StopSoundsOnDevice()
+- Added NativeMethods static class to hold Win32 related functions and values.
+- Added Initialize calls to DeviceSelector UserControl regarding device selector controls to avoid the default constructor setting Items. (Designer doesn't work well with that)
+- Renamed RecordingDeviceSelector to SingleDeviceSelector
+	> Based on the Initialize() function, it now binds to either recording device or preview device.
+- Renamed PlaybackDevicesListView to PlaybackDevicesSelector
+- Renamed MyBindingList<T> to CBindingList<T> for "Custom ...."
+- Changed ActiveRecordingDevices and ActivePlaybackDevices to use the new CBindingList<T>
+
+
 1/11/2018 3:24PM
 ==============================================================================================================================================
 - Added Edit sound functionality to the SoundViewer constext strip

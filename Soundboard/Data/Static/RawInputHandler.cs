@@ -1,4 +1,5 @@
 ﻿using RawInput;
+using Soundboard.Data.Static;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -53,10 +54,10 @@ namespace Soundboard.Data
 			{
 				_KeysChanged = false;
 				UInt32 dataSize = 0;
-				RI.GetRawInputData(message.LParam, RI.RID_INPUT, (void*)0, ref dataSize, Marshal.SizeOf<RAWINPUTHEADER>());
+				NativeMethods.GetRawInputData(message.LParam, RI.RID_INPUT, (void*)0, ref dataSize, Marshal.SizeOf<RAWINPUTHEADER>());
 
 				Byte* lpData = stackalloc Byte[(int)dataSize];
-				RI.GetRawInputData(message.LParam, RI.RID_INPUT, lpData, ref dataSize, Marshal.SizeOf<RAWINPUTHEADER>());
+				NativeMethods.GetRawInputData(message.LParam, RI.RID_INPUT, lpData, ref dataSize, Marshal.SizeOf<RAWINPUTHEADER>());
 
 				RAWINPUT* input = (RAWINPUT*)lpData;
 				if(input->header.dwType == RI.RIM_TYPEKEYBOARD)

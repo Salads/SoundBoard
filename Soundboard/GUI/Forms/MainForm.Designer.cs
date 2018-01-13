@@ -130,7 +130,7 @@
 			this.ui_tabControl.Size = new System.Drawing.Size(462, 180);
 			this.ui_tabControl.TabIndex = 5;
 			this.ui_tabControl.TabStop = false;
-			this.ui_tabControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ui_tabControl_KeyDown);
+			this.ui_tabControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EV_TabControl_KeyDown);
 			// 
 			// ui_tabMediaControl
 			// 

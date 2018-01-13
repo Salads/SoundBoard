@@ -96,6 +96,8 @@ namespace Soundboard
 
 		public void StopSoundsOnDevice(AudioDevice device)
 		{
+			if(device == null) return;
+
 			foreach(ISoundOut soundOut in m_PlayingSounds)
 			{
 				WasapiOut baseOut = soundOut as WasapiOut;

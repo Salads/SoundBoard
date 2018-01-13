@@ -101,15 +101,19 @@
     <Compile Include="Data\AudioDevice.cs" />
     <Compile Include="Data\Hotkey.cs" />
     <Compile Include="Data\Interfaces\ISoundPlayerUser.cs" />
-    <Compile Include="Data\MyBindingList.cs" />
+    <Compile Include="Data\CBindingList.cs" />
     <Compile Include="Data\Static\Devices.cs" />
+    <Compile Include="Data\Static\NativeMethods.cs" />
     <Compile Include="Data\Static\RawInputHandler.cs" />
     <Compile Include="Data\Static\RawInputTypes.cs" />
     <Content Include="Docs\Changes.txt" />
-    <Compile Include="GUI\Controls\Components\PlaybackDevicesListView.cs">
+    <Compile Include="GUI\Controls\Components\CTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\Components\RecordingDeviceSelector.cs">
+    <Compile Include="GUI\Controls\Components\PlaybackDevicesSelector.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GUI\Controls\Components\SingleDeviceSelector.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GUI\Controls\MediaControl.cs">

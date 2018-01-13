@@ -16,8 +16,8 @@ namespace Soundboard.Data.Static
 	{
 		private static MMDeviceEnumerator m_Enumerator = new MMDeviceEnumerator();
 
-		public static BindingList<AudioDevice> ActivePlaybackDevices { get; private set; } = new BindingList<AudioDevice>();
-		public static BindingList<AudioDevice> ActiveRecordingDevices { get; private set; } = new BindingList<AudioDevice>();
+		public static CBindingList<AudioDevice> ActivePlaybackDevices { get; private set; } = new CBindingList<AudioDevice>();
+		public static CBindingList<AudioDevice> ActiveRecordingDevices { get; private set; } = new CBindingList<AudioDevice>();
 
 		static Devices()
 		{
@@ -33,26 +33,40 @@ namespace Soundboard.Data.Static
 				}
 			}
 
-			m_Enumerator.DeviceAdded += M_Enumerator_DeviceAdded;
-			m_Enumerator.DeviceRemoved += M_Enumerator_DeviceRemoved;
+			m_Enumerator.DeviceAdded += MMDeviceEnumerator_DeviceAdded;
+			m_Enumerator.DeviceRemoved += MMDeviceEnumerator_DeviceRemoved;
 		}
 
-		private static void M_Enumerator_DeviceRemoved(object sender, DeviceNotificationEventArgs e)
+		private static void MMDeviceEnumerator_DeviceRemoved(object sender, DeviceNotificationEventArgs e)
 		{
 			foreach(AudioDevice pDevice in ActivePlaybackDevices.Where(x => x.DeviceID == e.DeviceId))
 			{
 				ActivePlaybackDevices.Remove(pDevice);
+
+				// Remove the device from other existing collections
+				SoundboardSettings.SelectedPlaybackDevices.Remove(pDevice);
+				if(pDevice.DeviceID == SoundboardSettings.SelectedPreviewDevice.DeviceID)
+				{
+					SoundboardSettings.SelectedPreviewDevice = null;
+				}
+
 				pDevice.Dispose();
 			}
 
+			// Do the same for recording devices
 			foreach(AudioDevice rDevice in ActiveRecordingDevices.Where(x => x.DeviceID == e.DeviceId))
 			{
 				ActiveRecordingDevices.Remove(rDevice);
+				if(rDevice.DeviceID == SoundboardSettings.SelectedRecordingDevice.DeviceID)
+				{
+					SoundboardSettings.SelectedRecordingDevice = null;
+				}
+
 				rDevice.Dispose();
 			}
 		}
 
-		private static void M_Enumerator_DeviceAdded(object sender, DeviceNotificationEventArgs e)
+		private static void MMDeviceEnumerator_DeviceAdded(object sender, DeviceNotificationEventArgs e)
 		{
 			if(e.TryGetDevice(out MMDevice newDevice))
 			{

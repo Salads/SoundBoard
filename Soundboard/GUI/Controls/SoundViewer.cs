@@ -22,9 +22,6 @@ namespace Soundboard.GUI
 	/// </summary>
 	public partial class SoundViewer : UserControl, ISoundPlayerUser
 	{
-		// TODO: Make a derived Textbox control and put this Win32 malarky in there instead.
-		private const int EM_SETCUEBANNER = 0x1501;
-		
 		public SoundPlayer SoundPlayer { get; set; }
 
 		public event ListViewItemSelectionChangedEventHandler ItemSelectionChanged
@@ -36,18 +33,12 @@ namespace Soundboard.GUI
 		public SoundViewer()
 		{
 			InitializeComponent();
-			SendMessage(ui_textboxSearch.Handle, EM_SETCUEBANNER, 0, "Search...");
-			RefreshSoundsInList();
+			//ui_textboxSearch.BannerText = "Search...";
 
+			RefreshSoundsInList();
 			ui_soundList.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
 			ui_soundList.Columns[0].Width = ui_soundList.Width - (ui_soundList.Columns[1].Width + 15);
 		}
-
-		/// <summary>
-		/// Imported, lParam is a string because we only use it for ghost text of textbox.
-		/// </summary>
-		[DllImport("User32.dll")] // TODO: Move this to somewhere proper.
-		private static extern Int32 SendMessage(IntPtr hWnd, UInt32 Msg, UInt32 wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
 		#region Event Handlers
 

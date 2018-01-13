@@ -7,13 +7,13 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using Soundboard.Data.Static;
 
 namespace RawInput
 {
 	public static partial class RI
 	{
-		[DllImport("user32.dll")]
-		public static extern int GetKeyNameText(Int32 lParam, [Out] StringBuilder lpString, int nSize);
+		
 
 		public static void RegisterDevices(IntPtr windowHandle)
 		{
@@ -39,7 +39,7 @@ namespace RawInput
 			//devices[2].Flags = RIDEV_INPUTSINK;
 			//devices[2].WindowHandle = windowHandle;
 
-			if(RI.RegisterRawInputDevices(devices, 2, Marshal.SizeOf(devices[0])))
+			if(NativeMethods.RegisterRawInputDevices(devices, 2, Marshal.SizeOf(devices[0])))
 			{
 				Debug.WriteLine("Registered RawInput Devices.");
 			}

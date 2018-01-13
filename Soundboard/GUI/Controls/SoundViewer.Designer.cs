@@ -32,11 +32,11 @@
 			this.ui_soundList = new System.Windows.Forms.ListView();
 			this.Header_Filenames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.Header_Hotkey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-			this.ui_textboxSearch = new System.Windows.Forms.TextBox();
 			this.ui_buttonAdd = new System.Windows.Forms.Button();
 			this.ui_contextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.ui_context_edit = new System.Windows.Forms.ToolStripMenuItem();
 			this.ui_context_delete = new System.Windows.Forms.ToolStripMenuItem();
+			this.ui_textboxSearch = new Soundboard.GUI.Controls.Components.CTextBox();
 			this.ui_contextStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -81,19 +81,6 @@
 			this.Header_Hotkey.Text = "Hotkeys";
 			this.Header_Hotkey.Width = 424;
 			// 
-			// ui_textboxSearch
-			// 
-			this.ui_textboxSearch.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.ui_textboxSearch.Location = new System.Drawing.Point(3, 6);
-			this.ui_textboxSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.ui_textboxSearch.MinimumSize = new System.Drawing.Size(186, 20);
-			this.ui_textboxSearch.Name = "ui_textboxSearch";
-			this.ui_textboxSearch.Size = new System.Drawing.Size(186, 23);
-			this.ui_textboxSearch.TabIndex = 3;
-			this.ui_textboxSearch.TabStop = false;
-			this.ui_textboxSearch.WordWrap = false;
-			this.ui_textboxSearch.TextChanged += new System.EventHandler(this.EV_Searchbox_TextChanged);
-			// 
 			// ui_buttonAdd
 			// 
 			this.ui_buttonAdd.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -129,6 +116,20 @@
 			this.ui_context_delete.Text = "Delete";
 			this.ui_context_delete.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
+			// ui_textboxSearch
+			// 
+			this.ui_textboxSearch.BannerText = "Search...";
+			this.ui_textboxSearch.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ui_textboxSearch.Location = new System.Drawing.Point(3, 6);
+			this.ui_textboxSearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.ui_textboxSearch.MinimumSize = new System.Drawing.Size(186, 20);
+			this.ui_textboxSearch.Name = "ui_textboxSearch";
+			this.ui_textboxSearch.Size = new System.Drawing.Size(186, 23);
+			this.ui_textboxSearch.TabIndex = 3;
+			this.ui_textboxSearch.TabStop = false;
+			this.ui_textboxSearch.WordWrap = false;
+			this.ui_textboxSearch.TextChanged += new System.EventHandler(this.EV_Searchbox_TextChanged);
+			// 
 			// SoundViewer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -149,7 +150,7 @@
 		#endregion
 		private System.Windows.Forms.ColumnHeader Header_Filenames;
 		private System.Windows.Forms.ColumnHeader Header_Hotkey;
-		private System.Windows.Forms.TextBox ui_textboxSearch;
+		private Soundboard.GUI.Controls.Components.CTextBox ui_textboxSearch;
 		private System.Windows.Forms.Button ui_buttonAdd;
 		private System.Windows.Forms.ListView ui_soundList;
 		private System.Windows.Forms.ContextMenuStrip ui_contextStrip;

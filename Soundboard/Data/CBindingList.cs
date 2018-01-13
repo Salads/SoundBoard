@@ -10,7 +10,7 @@ namespace Soundboard.Data
 	/// <summary>
 	/// Alternate version of BindingList that adds a "ItemRemoved" event that passes the removed item in the event.
 	/// </summary>
-	public class MyBindingList<T> : BindingList<T>
+	public class CBindingList<T> : BindingList<T>
 	{
 		public event EventHandler<ItemRemovedArgs<T>> RemovingItem;
 
