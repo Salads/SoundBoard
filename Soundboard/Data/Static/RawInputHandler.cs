@@ -37,15 +37,15 @@ namespace Soundboard.Data
 		{
 			_PrintHotkeys();
 
-			if(ExecuteHotkeys && SoundboardSettings.HotkeyMap.Keys.Contains(m_pressedKeys))
+			if(ExecuteHotkeys && SoundboardSettings.Instance.HotkeyMap.Keys.Contains(m_pressedKeys))
 			{
-				HotkeyPressed?.Invoke(null, new HotkeyPressedArgs(SoundboardSettings.HotkeyMap[m_pressedKeys]));
+				HotkeyPressed?.Invoke(null, new HotkeyPressedArgs(SoundboardSettings.Instance.HotkeyMap[m_pressedKeys]));
 			}
 		}
 
 		private static void _PrintHotkeys()
 		{
-			Debug.WriteLine("HotKey: " + m_pressedKeys.ToString() + ", " + "Contains: " + SoundboardSettings.HotkeyMap.ContainsKey(m_pressedKeys));
+			Debug.WriteLine("HotKey: " + m_pressedKeys.ToString() + ", " + "Contains: " + SoundboardSettings.Instance.HotkeyMap.ContainsKey(m_pressedKeys));
 		}
 
 		public static void HandleRawInput(ref Message message)

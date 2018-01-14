@@ -17,7 +17,7 @@ namespace Soundboard
 	{
 		private SoundPlayer m_MainSoundPlayer = new SoundPlayer()
 		{
-			VolumeNormalized = SoundboardSettings.VolumeNormalized
+			VolumeNormalized = SoundboardSettings.Instance.VolumeNormalized
 		};
 
 		public MainForm()
@@ -27,7 +27,7 @@ namespace Soundboard
 			RI.RegisterDevices(Handle);
 			ui_mediaControl.SoundPlayer = ui_soundViewer.SoundPlayer = m_MainSoundPlayer;
 
-			if(SoundboardSettings.FirstRun)
+			if(SoundboardSettings.Instance.FirstRun)
 			{
 				DialogResult FirstResult =
 				MessageBox.Show("Would you like to visit the \"How to\" webpage?",
@@ -39,7 +39,7 @@ namespace Soundboard
 					_OpenHelpWebsite();
 				}
 
-				SoundboardSettings.FirstRun = false;
+				SoundboardSettings.Instance.FirstRun = false;
 			}
 		}
 
@@ -54,21 +54,21 @@ namespace Soundboard
 
 		private void EV_Menu_ResetDeviceSettings_Clicked(object sender, EventArgs e)
 		{
-			SoundboardSettings.ResetDevices();
-			SoundboardSettings.SaveToFile();
+			SoundboardSettings.Instance.ResetDevices();
+			SoundboardSettings.Instance.SaveToFile();
 		}
 
 		private void EV_Menu_ResetSounds_Clicked(object sender, EventArgs e)
 		{
-			SoundboardSettings.ResetSounds();
-			SoundboardSettings.SaveToFile();
+			SoundboardSettings.Instance.ResetSounds();
+			SoundboardSettings.Instance.SaveToFile();
 			ui_soundViewer.RefreshSoundsInList();
 		}
 
 		private void EV_Menu_ResetAllSettings_Clicked(object sender, EventArgs e)
 		{
-			SoundboardSettings.ResetToDefault();
-			SoundboardSettings.SaveToFile();
+			SoundboardSettings.Instance.ResetToDefault();
+			SoundboardSettings.Instance.SaveToFile();
 			ui_soundViewer.RefreshSoundsInList();
 		}
 		#endregion
@@ -81,7 +81,7 @@ namespace Soundboard
 		private void EV_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			m_MainSoundPlayer.StopAllSounds();
-			SoundboardSettings.SaveToFile();
+			SoundboardSettings.Instance.SaveToFile();
 		}
 
 		private void EV_HotkeyPressed(object sender, HotkeyPressedArgs e)
@@ -126,7 +126,7 @@ namespace Soundboard
 
 			ui_soundViewer.ItemSelectionChanged += ui_mediaControl.SoundList_ItemSelectionChanged;
 			RawInputHandler.HotkeyPressed += EV_HotkeyPressed;
-			SoundboardSettings.SelectedPlaybackDevices.RemovingItem += EV_SelectedPlaybackDevices_ItemRemoved;
+			SoundboardSettings.Instance.SelectedPlaybackDevices.RemovingItem += EV_SelectedPlaybackDevices_ItemRemoved;
 		}
 	}
 }

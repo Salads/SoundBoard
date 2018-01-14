@@ -30,12 +30,12 @@ namespace Soundboard.GUI
 		private void EV_RecordingDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			// Unmute the previous recording device if there is one.
-			if(SoundboardSettings.SelectedRecordingDevice != null)
+			if(SoundboardSettings.Instance.SelectedRecordingDevice != null)
 			{
-				SoundboardSettings.SelectedRecordingDevice.Volume.IsMuted = false;
+				SoundboardSettings.Instance.SelectedRecordingDevice.Volume.IsMuted = false;
 			}
 
-			SoundboardSettings.SelectedRecordingDevice = (ui_RecordingDeviceSelector.SelectedIndex == 0 ? null : ui_RecordingDeviceSelector.SelectedItem as AudioDevice);
+			SoundboardSettings.Instance.SelectedRecordingDevice = (ui_RecordingDeviceSelector.SelectedIndex == 0 ? null : ui_RecordingDeviceSelector.SelectedItem as AudioDevice);
 		}
 	}
 }

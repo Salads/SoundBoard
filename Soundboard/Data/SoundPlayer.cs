@@ -38,16 +38,16 @@ namespace Soundboard
 
 		public SoundPlayer()
 		{
-			m_playbackDevices = SoundboardSettings.SelectedPlaybackDevices;
-			VolumeNormalized = SoundboardSettings.VolumeNormalized;
+			m_playbackDevices = SoundboardSettings.Instance.SelectedPlaybackDevices;
+			VolumeNormalized = SoundboardSettings.Instance.VolumeNormalized;
 		}
 
 		public void SetPlaybackDevices(IList<AudioDevice> devices)
 		{
 			// If we want to set it back to default for some reason
-			if(ReferenceEquals(devices, SoundboardSettings.SelectedPlaybackDevices))
+			if(ReferenceEquals(devices, SoundboardSettings.Instance.SelectedPlaybackDevices))
 			{
-				m_playbackDevices = SoundboardSettings.SelectedPlaybackDevices;
+				m_playbackDevices = SoundboardSettings.Instance.SelectedPlaybackDevices;
 			}
 			else
 			{
@@ -91,7 +91,7 @@ namespace Soundboard
 				newSoundOut.Play();
 
 				m_PlayingSounds.Add(newSoundOut);
-				SoundboardSettings.SetMicMuted(SoundboardSettings.MuteMicrophoneWhilePlaying);
+				SoundboardSettings.Instance.SetMicMuted(SoundboardSettings.Instance.MuteMicrophoneWhilePlaying);
 			}
 
 			Debug.WriteLine("");
@@ -121,7 +121,7 @@ namespace Soundboard
 				Task.Run(() => _StopSound(PlayingSound));
 			}
 
-			SoundboardSettings.SetMicMuted(false);
+			SoundboardSettings.Instance.SetMicMuted(false);
 
 			m_PlayingSounds.Clear();
 		}
@@ -144,7 +144,7 @@ namespace Soundboard
 
 			if(!m_PlayingSounds.Any())
 			{
-				SoundboardSettings.SetMicMuted(false);
+				SoundboardSettings.Instance.SetMicMuted(false);
 			}
 
 			Stopped.Dispose();

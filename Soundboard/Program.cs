@@ -20,7 +20,7 @@ namespace Soundboard
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			SoundboardSettings.LoadFromFile();
+			SoundboardSettings.Instance.LoadFromFile();
 			Application.Run(new MainForm());
 		}
 	}

@@ -30,7 +30,7 @@ namespace Soundboard
 		public MediaControl()
 		{
 			InitializeComponent();
-			ui_volumeBar.Volume = SoundboardSettings.GlobalVolume;
+			ui_volumeBar.Volume = SoundboardSettings.Instance.GlobalVolume;
 
 			// I set this here because initialization would cause some issues.
 			ui_volumeBar.VolumeChanged += new EventHandler(EV_VolumeChanged);
@@ -90,7 +90,7 @@ namespace Soundboard
 		private void EV_VolumeChanged(object sender, EventArgs e)
 		{
 			SoundPlayer.VolumeNormalized = ui_volumeBar.VolumeNormalized;
-			SoundboardSettings.GlobalVolume = ui_volumeBar.Volume;
+			SoundboardSettings.Instance.GlobalVolume = ui_volumeBar.Volume;
 		}
 		#endregion
 

@@ -29,17 +29,32 @@ namespace Soundboard
 		TAG_PreviewDeviceGUID
 	}
 
-	public static class SoundboardSettings
+	public class SoundboardSettings
 	{
+		private static SoundboardSettings m_Instance;
+
+		public static SoundboardSettings Instance 
+		{
+			get
+			{
+				if(m_Instance == null)
+				{ m_Instance = new SoundboardSettings(); }
+
+				return m_Instance;
+			}
+		}
+
+		public bool HasLoaded { get; private set; } = false;
+
 		private const string _DEFAULT_LOCATION = "default.soundboard";
 
-		public static bool FirstRun { get; set; }
+		public bool FirstRun { get; set; }
 
-		public static bool MuteMicrophoneWhilePlaying { get; set; }
+		public bool MuteMicrophoneWhilePlaying { get; set; }
 
-		public static uint GlobalVolume { get; set; }
+		public uint GlobalVolume { get; set; }
 
-		public static float VolumeNormalized 
+		public float VolumeNormalized 
 		{
 			get
 			{
@@ -47,23 +62,29 @@ namespace Soundboard
 			}
 		}
 
-		public static CBindingList<Sound> Sounds { get; set; } = new CBindingList<Sound>();
+		public CBindingList<Sound> Sounds { get; set; } = new CBindingList<Sound>();
 
-		public static CBindingList<AudioDevice> SelectedPlaybackDevices { get; set; } = new CBindingList<AudioDevice>();
+		public CBindingList<AudioDevice> SelectedPlaybackDevices { get; set; } = new CBindingList<AudioDevice>();
 
-		public static AudioDevice SelectedRecordingDevice { get; set; } = null;
+		public AudioDevice SelectedRecordingDevice { get; set; } = null;
 
-		public static AudioDevice SelectedPreviewDevice { get; set; } = null;
+		public AudioDevice SelectedPreviewDevice { get; set; } = null;
 
-		public static Dictionary<Hotkey, Sound> HotkeyMap { get; set; } = new Dictionary<Hotkey, Sound>();
+		public Dictionary<Hotkey, Sound> HotkeyMap { get; set; } = new Dictionary<Hotkey, Sound>();
 
-		static SoundboardSettings()
+		public SoundboardSettings()
 		{
 			Sounds.RemovingItem += Sounds_RemovingItem;
 			Sounds.ListChanged += Sounds_ListChanged;
 		}
 
-		private static void Sounds_ListChanged(object sender, ListChangedEventArgs e)
+		~SoundboardSettings()
+		{
+			Sounds.RemovingItem -= Sounds_RemovingItem;
+			Sounds.ListChanged -= Sounds_ListChanged;
+		}
+
+		private void Sounds_ListChanged(object sender, ListChangedEventArgs e)
 		{
 			if(e.ListChangedType == ListChangedType.ItemAdded)
 			{
@@ -75,7 +96,7 @@ namespace Soundboard
 			}
 		}
 
-		private static void Sounds_RemovingItem(object sender, ItemRemovedArgs<Sound> e)
+		private void Sounds_RemovingItem(object sender, ItemRemovedArgs<Sound> e)
 		{
 			if(e.RemovedItem.HotKey.Any())
 			{
@@ -83,7 +104,7 @@ namespace Soundboard
 			}
 		}
 
-		public static void SetMicMuted(bool mute)
+		public void SetMicMuted(bool mute)
 		{
 			if(SelectedRecordingDevice != null)
 			{
@@ -91,7 +112,7 @@ namespace Soundboard
 			}
 		}
 
-		public static void ResetToDefault()
+		public void ResetToDefault()
 		{
 			FirstRun = true;
 			MuteMicrophoneWhilePlaying = false;
@@ -100,12 +121,12 @@ namespace Soundboard
 			ResetDevices();
 		}
 
-		public static void ResetSounds()
+		public void ResetSounds()
 		{
 			Sounds.Clear();
 		}
 
-		public static void ResetDevices()
+		public void ResetDevices()
 		{
 			foreach(AudioDevice device in SelectedPlaybackDevices) { device.Dispose(); }
 			SelectedPlaybackDevices.Clear();
@@ -114,7 +135,7 @@ namespace Soundboard
 			SelectedRecordingDevice = null;
 		}
 
-		public static void LoadFromFile(string Filename = _DEFAULT_LOCATION)
+		public void LoadFromFile(string Filename = _DEFAULT_LOCATION)
 		{
 			//	If we want to load from a file, that means we want to get rid of our old settings.
 			//	If the file doesn't exist might as well set to default then save the file.
@@ -220,9 +241,11 @@ namespace Soundboard
 					}
 				}
 			}
+
+			HasLoaded = true;
 		}
 
-		public static void SaveToFile(string Filename = _DEFAULT_LOCATION)
+		public void SaveToFile(string Filename = _DEFAULT_LOCATION)
 		{
 			using(BinaryWriter writer = new BinaryWriter(File.Create(Filename)))
 			{
