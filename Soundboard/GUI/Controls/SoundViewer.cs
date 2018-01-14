@@ -49,7 +49,7 @@ namespace Soundboard.GUI
 				if(form.ShowDialog() == DialogResult.OK)
 				{
 					// Since we know that we're adding a new sound, we dont have to check AddSoundForm::EditMode
-					SoundboardSettings.Instance.Sounds.Add(form.SoundResult);
+					SBSettings.Instance.Sounds.Add(form.SoundResult);
 
 					RefreshSoundsInList();
 				}
@@ -86,7 +86,7 @@ namespace Soundboard.GUI
 		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if(ui_soundList.SelectedItems.Count < 1) return;
-			SoundboardSettings.Instance.Sounds.Remove(ui_soundList.SelectedItems[0].Tag as Sound);
+			SBSettings.Instance.Sounds.Remove(ui_soundList.SelectedItems[0].Tag as Sound);
 			RefreshSoundsInList();
 		}
 		#endregion
@@ -94,7 +94,7 @@ namespace Soundboard.GUI
 		public void RefreshSoundsInList(string filter = "")
 		{
 			ui_soundList.Items.Clear();
-			List<Sound> sounds = SoundboardSettings.Instance.Sounds.Where(x => x.FullFilepath.ToLower().Contains(filter) || x.Nickname.ToLower().Contains(filter)).ToList();
+			List<Sound> sounds = SBSettings.Instance.Sounds.Where(x => x.FullFilepath.ToLower().Contains(filter) || x.Nickname.ToLower().Contains(filter)).ToList();
 
 			foreach(Sound sound in sounds)
 			{

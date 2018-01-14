@@ -44,10 +44,10 @@ namespace Soundboard.Data.Static
 				ActivePlaybackDevices.Remove(pDevice);
 
 				// Remove the device from other existing collections
-				SoundboardSettings.Instance.SelectedPlaybackDevices.Remove(pDevice);
-				if(pDevice.DeviceID == SoundboardSettings.Instance.SelectedPreviewDevice.DeviceID)
+				SBSettings.Instance.SelectedPlaybackDevices.Remove(pDevice);
+				if(pDevice.DeviceID == SBSettings.Instance.SelectedPreviewDevice.DeviceID)
 				{
-					SoundboardSettings.Instance.SelectedPreviewDevice = null;
+					SBSettings.Instance.SelectedPreviewDevice = null;
 				}
 
 				pDevice.Dispose();
@@ -57,9 +57,9 @@ namespace Soundboard.Data.Static
 			foreach(AudioDevice rDevice in ActiveRecordingDevices.Where(x => x.DeviceID == e.DeviceId))
 			{
 				ActiveRecordingDevices.Remove(rDevice);
-				if(rDevice.DeviceID == SoundboardSettings.Instance.SelectedRecordingDevice.DeviceID)
+				if(rDevice.DeviceID == SBSettings.Instance.SelectedRecordingDevice.DeviceID)
 				{
-					SoundboardSettings.Instance.SelectedRecordingDevice = null;
+					SBSettings.Instance.SelectedRecordingDevice = null;
 				}
 
 				rDevice.Dispose();

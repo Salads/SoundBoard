@@ -40,7 +40,7 @@ namespace Soundboard.GUI.Controls.Components
 				ListViewItem newItem = new ListViewItem()
 				{
 					Text = device.FriendlyName,
-					Checked = SoundboardSettings.Instance.SelectedPlaybackDevices.Contains(device),
+					Checked = SBSettings.Instance.SelectedPlaybackDevices.Contains(device),
 					Tag = device
 				};
 
@@ -74,7 +74,7 @@ namespace Soundboard.GUI.Controls.Components
 				ListViewItem newItem = new ListViewItem()
 				{
 					Text = newDevice.FriendlyName,
-					Checked = SoundboardSettings.Instance.SelectedPlaybackDevices.Contains(newDevice),
+					Checked = SBSettings.Instance.SelectedPlaybackDevices.Contains(newDevice),
 					Tag = newDevice
 				};
 
@@ -96,14 +96,14 @@ namespace Soundboard.GUI.Controls.Components
 
 			if(e.Item.Checked)
 			{
-				if(!SoundboardSettings.Instance.SelectedPlaybackDevices.Contains(changedDevice))
+				if(!SBSettings.Instance.SelectedPlaybackDevices.Contains(changedDevice))
 				{
-					SoundboardSettings.Instance.SelectedPlaybackDevices.Add(changedDevice);
+					SBSettings.Instance.SelectedPlaybackDevices.Add(changedDevice);
 				}
 			}
 			else
 			{
-				SoundboardSettings.Instance.SelectedPlaybackDevices.Remove(changedDevice);
+				SBSettings.Instance.SelectedPlaybackDevices.Remove(changedDevice);
 			}
 		}
 	}

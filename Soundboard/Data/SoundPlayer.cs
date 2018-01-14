@@ -38,16 +38,16 @@ namespace Soundboard
 
 		public SoundPlayer()
 		{
-			m_playbackDevices = SoundboardSettings.Instance.SelectedPlaybackDevices;
-			VolumeNormalized = SoundboardSettings.Instance.VolumeNormalized;
+			m_playbackDevices = SBSettings.Instance.SelectedPlaybackDevices;
+			VolumeNormalized = SBSettings.Instance.VolumeNormalized;
 		}
 
 		public void SetPlaybackDevices(IList<AudioDevice> devices)
 		{
 			// If we want to set it back to default for some reason
-			if(ReferenceEquals(devices, SoundboardSettings.Instance.SelectedPlaybackDevices))
+			if(ReferenceEquals(devices, SBSettings.Instance.SelectedPlaybackDevices))
 			{
-				m_playbackDevices = SoundboardSettings.Instance.SelectedPlaybackDevices;
+				m_playbackDevices = SBSettings.Instance.SelectedPlaybackDevices;
 			}
 			else
 			{
@@ -74,7 +74,7 @@ namespace Soundboard
 			{
 				if(device == null) continue;
 
-				Debug.Write(device.FriendlyName + ", ");
+				Debug.WriteLine("\t" + device.FriendlyName);
 
 				//	Need to create one for every output because the stream is handled in WaveSource.
 				//	This means multiple outputs will advance stream position if we don't seperate them.
@@ -91,7 +91,7 @@ namespace Soundboard
 				newSoundOut.Play();
 
 				m_PlayingSounds.Add(newSoundOut);
-				SoundboardSettings.Instance.SetMicMuted(SoundboardSettings.Instance.MuteMicrophoneWhilePlaying);
+				SBSettings.Instance.SetMicMuted(SBSettings.Instance.MuteMicrophoneWhilePlaying);
 			}
 
 			Debug.WriteLine("");
@@ -121,7 +121,7 @@ namespace Soundboard
 				Task.Run(() => _StopSound(PlayingSound));
 			}
 
-			SoundboardSettings.Instance.SetMicMuted(false);
+			SBSettings.Instance.SetMicMuted(false);
 
 			m_PlayingSounds.Clear();
 		}
@@ -144,7 +144,7 @@ namespace Soundboard
 
 			if(!m_PlayingSounds.Any())
 			{
-				SoundboardSettings.Instance.SetMicMuted(false);
+				SBSettings.Instance.SetMicMuted(false);
 			}
 
 			Stopped.Dispose();

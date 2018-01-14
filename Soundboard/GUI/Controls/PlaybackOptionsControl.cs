@@ -16,7 +16,7 @@ namespace Soundboard.GUI.Controls
 		{
 			InitializeComponent();
 
-			ui_checkbox_MuteWhilePlaying.DataBindings.Add(nameof(SoundboardSettings.Instance.MuteMicrophoneWhilePlaying), SoundboardSettings.Instance, "Checked");
+			ui_checkbox_MuteWhilePlaying.DataBindings.Add(nameof(SBSettings.Instance.MuteMicrophoneWhilePlaying), SBSettings.Instance, "Checked");
 		}
 
 		private void MuteWhilePlaying_CheckedChanged(object sender, EventArgs e)

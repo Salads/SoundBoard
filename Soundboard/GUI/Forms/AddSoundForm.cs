@@ -47,11 +47,11 @@ namespace Soundboard.GUI
 		private void EV_PreviewDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			m_soundPlayer.StopAllSounds();
-			SoundboardSettings.Instance.SelectedPreviewDevice = ui_PreviewDeviceSelector.SelectedItem as AudioDevice;
+			SBSettings.Instance.SelectedPreviewDevice = ui_PreviewDeviceSelector.SelectedItem as AudioDevice;
 
-			if(SoundboardSettings.Instance.SelectedPreviewDevice != null)
+			if(SBSettings.Instance.SelectedPreviewDevice != null)
 			{
-				m_soundPlayer.SetPlaybackDevice(SoundboardSettings.Instance.SelectedPreviewDevice);
+				m_soundPlayer.SetPlaybackDevice(SBSettings.Instance.SelectedPreviewDevice);
 			}
 		}
 
@@ -121,12 +121,12 @@ namespace Soundboard.GUI
 
 				if(SoundResult.HotKey != SoundHotkey)
 				{
-					SoundboardSettings.Instance.HotkeyMap.Remove(SoundResult.HotKey);
+					SBSettings.Instance.HotkeyMap.Remove(SoundResult.HotKey);
 					SoundResult.HotKey.CopyFrom(SoundHotkey);
 
 					if(SoundResult.HotKey.Any())
 					{
-						SoundboardSettings.Instance.HotkeyMap.Add(SoundResult.HotKey, SoundResult);
+						SBSettings.Instance.HotkeyMap.Add(SoundResult.HotKey, SoundResult);
 					}
 				}
 			}

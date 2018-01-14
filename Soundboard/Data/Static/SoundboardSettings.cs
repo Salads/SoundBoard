@@ -29,16 +29,16 @@ namespace Soundboard
 		TAG_PreviewDeviceGUID
 	}
 
-	public class SoundboardSettings
+	public class SBSettings
 	{
-		private static SoundboardSettings m_Instance;
+		private static SBSettings m_Instance;
 
-		public static SoundboardSettings Instance 
+		public static SBSettings Instance 
 		{
 			get
 			{
 				if(m_Instance == null)
-				{ m_Instance = new SoundboardSettings(); }
+				{ m_Instance = new SBSettings(); }
 
 				return m_Instance;
 			}
@@ -72,13 +72,13 @@ namespace Soundboard
 
 		public Dictionary<Hotkey, Sound> HotkeyMap { get; set; } = new Dictionary<Hotkey, Sound>();
 
-		public SoundboardSettings()
+		private SBSettings()
 		{
 			Sounds.RemovingItem += Sounds_RemovingItem;
 			Sounds.ListChanged += Sounds_ListChanged;
 		}
 
-		~SoundboardSettings()
+		~SBSettings()
 		{
 			Sounds.RemovingItem -= Sounds_RemovingItem;
 			Sounds.ListChanged -= Sounds_ListChanged;
