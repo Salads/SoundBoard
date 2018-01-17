@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.ui_soundList = new System.Windows.Forms.ListView();
+			this.ui_listview_Sounds = new System.Windows.Forms.ListView();
 			this.Header_Filenames = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.Header_Hotkey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.ui_buttonAdd = new System.Windows.Forms.Button();
@@ -42,34 +42,34 @@
 			// 
 			// ui_soundList
 			// 
-			this.ui_soundList.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-			this.ui_soundList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			this.ui_listview_Sounds.Alignment = System.Windows.Forms.ListViewAlignment.Default;
+			this.ui_listview_Sounds.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.ui_soundList.BackColor = System.Drawing.SystemColors.Window;
-			this.ui_soundList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+			this.ui_listview_Sounds.BackColor = System.Drawing.SystemColors.Window;
+			this.ui_listview_Sounds.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.Header_Filenames,
             this.Header_Hotkey});
-			this.ui_soundList.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.ui_soundList.FullRowSelect = true;
-			this.ui_soundList.GridLines = true;
-			this.ui_soundList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-			this.ui_soundList.HideSelection = false;
-			this.ui_soundList.LabelWrap = false;
-			this.ui_soundList.Location = new System.Drawing.Point(3, 38);
-			this.ui_soundList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-			this.ui_soundList.MultiSelect = false;
-			this.ui_soundList.Name = "ui_soundList";
-			this.ui_soundList.ShowGroups = false;
-			this.ui_soundList.Size = new System.Drawing.Size(465, 360);
-			this.ui_soundList.Sorting = System.Windows.Forms.SortOrder.Ascending;
-			this.ui_soundList.TabIndex = 2;
-			this.ui_soundList.TabStop = false;
-			this.ui_soundList.UseCompatibleStateImageBehavior = false;
-			this.ui_soundList.View = System.Windows.Forms.View.Details;
-			this.ui_soundList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SoundList_MouseClick);
-			this.ui_soundList.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.EV_ListView_MouseDoubleClick);
-			this.ui_soundList.Resize += new System.EventHandler(this.EV_SoundList_Resize);
+			this.ui_listview_Sounds.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ui_listview_Sounds.FullRowSelect = true;
+			this.ui_listview_Sounds.GridLines = true;
+			this.ui_listview_Sounds.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+			this.ui_listview_Sounds.HideSelection = false;
+			this.ui_listview_Sounds.LabelWrap = false;
+			this.ui_listview_Sounds.Location = new System.Drawing.Point(3, 38);
+			this.ui_listview_Sounds.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+			this.ui_listview_Sounds.MultiSelect = false;
+			this.ui_listview_Sounds.Name = "ui_soundList";
+			this.ui_listview_Sounds.ShowGroups = false;
+			this.ui_listview_Sounds.Size = new System.Drawing.Size(465, 360);
+			this.ui_listview_Sounds.Sorting = System.Windows.Forms.SortOrder.Ascending;
+			this.ui_listview_Sounds.TabIndex = 2;
+			this.ui_listview_Sounds.TabStop = false;
+			this.ui_listview_Sounds.UseCompatibleStateImageBehavior = false;
+			this.ui_listview_Sounds.View = System.Windows.Forms.View.Details;
+			this.ui_listview_Sounds.MouseClick += new System.Windows.Forms.MouseEventHandler(this.EV_SoundList_MouseClick);
+			this.ui_listview_Sounds.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.EV_SoundList_DoubleClick);
+			this.ui_listview_Sounds.Resize += new System.EventHandler(this.EV_SoundList_Resize);
 			// 
 			// Header_Filenames
 			// 
@@ -107,14 +107,14 @@
 			this.ui_context_edit.Name = "ui_context_edit";
 			this.ui_context_edit.Size = new System.Drawing.Size(107, 22);
 			this.ui_context_edit.Text = "Edit";
-			this.ui_context_edit.Click += new System.EventHandler(this.ui_context_edit_Click);
+			this.ui_context_edit.Click += new System.EventHandler(this.EV_ToolStrip_Edit_Click);
 			// 
 			// ui_context_delete
 			// 
 			this.ui_context_delete.Name = "ui_context_delete";
 			this.ui_context_delete.Size = new System.Drawing.Size(107, 22);
 			this.ui_context_delete.Text = "Delete";
-			this.ui_context_delete.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			this.ui_context_delete.Click += new System.EventHandler(this.EV_ToolStrip_Delete_Click);
 			// 
 			// ui_textboxSearch
 			// 
@@ -136,7 +136,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.ui_buttonAdd);
 			this.Controls.Add(this.ui_textboxSearch);
-			this.Controls.Add(this.ui_soundList);
+			this.Controls.Add(this.ui_listview_Sounds);
 			this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.Name = "SoundViewer";
@@ -152,7 +152,7 @@
 		private System.Windows.Forms.ColumnHeader Header_Hotkey;
 		private Soundboard.GUI.Controls.Components.CTextBox ui_textboxSearch;
 		private System.Windows.Forms.Button ui_buttonAdd;
-		private System.Windows.Forms.ListView ui_soundList;
+		private System.Windows.Forms.ListView ui_listview_Sounds;
 		private System.Windows.Forms.ContextMenuStrip ui_contextStrip;
 		private System.Windows.Forms.ToolStripMenuItem ui_context_edit;
 		private System.Windows.Forms.ToolStripMenuItem ui_context_delete;

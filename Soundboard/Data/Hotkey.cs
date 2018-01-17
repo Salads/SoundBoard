@@ -48,6 +48,8 @@ namespace Soundboard
 
 		public override string ToString()
 		{
+            if (!this.Any()) { return "∅"; }
+
 			string result = string.Empty;
 			for(int x = 0; x < Count; ++x)
 			{

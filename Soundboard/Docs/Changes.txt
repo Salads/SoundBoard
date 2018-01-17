@@ -1,6 +1,18 @@
-﻿1/13/2018 7:40PM
+﻿1/16/2018 11:52PM
 ==============================================================================================================================================
 - Renamed SoundboardSettings to SBSettings
+- Added MicMuted setter property to SBSettings for easier mic muting
+- Added default string representation of Hotkey "∅"
+- Added DisplayName property to Sound to get nickname or default name value
+- Added events SoundStarted and SoundStopped to SoundPlayer to handle mic settings externally.
+- Added UsePreviewDevice property to MediaControl to determine which device to use from SBSettings
+- Added MuteMicWhilePlaying to playback options, databinded
+- Renamed AddSoundForm to NewSoundForm
+- Changed NewSoundForm to always create a new Sound, to simplify logic.
+- Changed SoundPlayer::Play to pass in which devices to use to play the sound
+- Organized SoundViewer.cs
+- Organized MainForm.cs
+
 
 1/13/2018 6:08PM
 ==============================================================================================================================================

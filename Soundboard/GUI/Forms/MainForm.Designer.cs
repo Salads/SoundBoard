@@ -42,11 +42,13 @@
 			this.ui_tabPageDevices = new System.Windows.Forms.TabPage();
 			this.ui_deviceControl = new Soundboard.GUI.DevicesSelector();
 			this.ui_tabPlaybackOptions = new System.Windows.Forms.TabPage();
+			this.ui_tab_PlaybackOptions = new Soundboard.GUI.Controls.PlaybackOptionsControl();
 			this.ui_soundViewer = new Soundboard.GUI.SoundViewer();
 			this.GUI_MenuStrip.SuspendLayout();
 			this.ui_tabControl.SuspendLayout();
 			this.ui_tabMediaControl.SuspendLayout();
 			this.ui_tabPageDevices.SuspendLayout();
+			this.ui_tabPlaybackOptions.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// GUI_MenuStrip
@@ -77,7 +79,7 @@
             this.Menu_ResetFiles,
             this.Menu_ResetAllSettings});
 			this.Menu_ResetSettings.Name = "Menu_ResetSettings";
-			this.Menu_ResetSettings.Size = new System.Drawing.Size(152, 22);
+			this.Menu_ResetSettings.Size = new System.Drawing.Size(147, 22);
 			this.Menu_ResetSettings.Text = "Reset Settings";
 			// 
 			// Menu_ResetDeviceSettings
@@ -158,6 +160,7 @@
 			// 
 			// ui_tabPageDevices
 			// 
+			this.ui_tabPageDevices.BackColor = System.Drawing.SystemColors.Control;
 			this.ui_tabPageDevices.Controls.Add(this.ui_deviceControl);
 			this.ui_tabPageDevices.Location = new System.Drawing.Point(4, 24);
 			this.ui_tabPageDevices.Name = "ui_tabPageDevices";
@@ -165,7 +168,6 @@
 			this.ui_tabPageDevices.Size = new System.Drawing.Size(454, 152);
 			this.ui_tabPageDevices.TabIndex = 1;
 			this.ui_tabPageDevices.Text = "Devices";
-			this.ui_tabPageDevices.UseVisualStyleBackColor = true;
 			// 
 			// ui_deviceControl
 			// 
@@ -179,13 +181,23 @@
 			// 
 			// ui_tabPlaybackOptions
 			// 
+			this.ui_tabPlaybackOptions.BackColor = System.Drawing.SystemColors.Control;
+			this.ui_tabPlaybackOptions.Controls.Add(this.ui_tab_PlaybackOptions);
 			this.ui_tabPlaybackOptions.Location = new System.Drawing.Point(4, 24);
 			this.ui_tabPlaybackOptions.Name = "ui_tabPlaybackOptions";
 			this.ui_tabPlaybackOptions.Padding = new System.Windows.Forms.Padding(3);
 			this.ui_tabPlaybackOptions.Size = new System.Drawing.Size(454, 152);
 			this.ui_tabPlaybackOptions.TabIndex = 2;
 			this.ui_tabPlaybackOptions.Text = "Playback Options";
-			this.ui_tabPlaybackOptions.UseVisualStyleBackColor = true;
+			// 
+			// ui_tab_PlaybackOptions
+			// 
+			this.ui_tab_PlaybackOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ui_tab_PlaybackOptions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ui_tab_PlaybackOptions.Location = new System.Drawing.Point(3, 3);
+			this.ui_tab_PlaybackOptions.Name = "ui_tab_PlaybackOptions";
+			this.ui_tab_PlaybackOptions.Size = new System.Drawing.Size(448, 146);
+			this.ui_tab_PlaybackOptions.TabIndex = 0;
 			// 
 			// ui_soundViewer
 			// 
@@ -225,6 +237,7 @@
 			this.ui_tabControl.ResumeLayout(false);
 			this.ui_tabMediaControl.ResumeLayout(false);
 			this.ui_tabPageDevices.ResumeLayout(false);
+			this.ui_tabPlaybackOptions.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -247,6 +260,7 @@
 		private System.Windows.Forms.TabPage ui_tabPageDevices;
 		public GUI.DevicesSelector ui_deviceControl;
 		private System.Windows.Forms.TabPage ui_tabPlaybackOptions;
+		private GUI.Controls.PlaybackOptionsControl ui_tab_PlaybackOptions;
 	}
 }
 

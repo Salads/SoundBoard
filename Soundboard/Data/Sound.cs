@@ -48,6 +48,8 @@ namespace Soundboard
 		/// </summary>
 		public string FilenameWithFolder { get; private set; }
 
+        public string DisplayName { get { return string.IsNullOrWhiteSpace(Nickname) ? FilenameWithFolder : Nickname; } }
+
 		public Sound(string filepath)
 		{
 			FullFilepath = filepath;

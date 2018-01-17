@@ -26,74 +26,22 @@ namespace Soundboard.GUI
 
 		public event ListViewItemSelectionChangedEventHandler ItemSelectionChanged
 		{
-			add { ui_soundList.ItemSelectionChanged += value; }
-			remove { ui_soundList.ItemSelectionChanged -= value; }
+			add { ui_listview_Sounds.ItemSelectionChanged += value; }
+			remove { ui_listview_Sounds.ItemSelectionChanged -= value; }
 		}
 
 		public SoundViewer()
 		{
 			InitializeComponent();
-			//ui_textboxSearch.BannerText = "Search...";
 
 			RefreshSoundsInList();
-			ui_soundList.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
-			ui_soundList.Columns[0].Width = ui_soundList.Width - (ui_soundList.Columns[1].Width + 15);
+			ui_listview_Sounds.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
+			ui_listview_Sounds.Columns[0].Width = ui_listview_Sounds.Width - (ui_listview_Sounds.Columns[1].Width + 15);
 		}
-
-		#region Event Handlers
-
-		private void EV_Button_AddSound_MouseClick(object sender, MouseEventArgs e)
-		{
-			using(AddSoundForm form = new AddSoundForm())
-			{
-				if(form.ShowDialog() == DialogResult.OK)
-				{
-					// Since we know that we're adding a new sound, we dont have to check AddSoundForm::EditMode
-					SBSettings.Instance.Sounds.Add(form.SoundResult);
-
-					RefreshSoundsInList();
-				}
-			}
-		}
-
-		private void EV_ListView_MouseDoubleClick(object sender, MouseEventArgs e)
-		{
-			if(ui_soundList.SelectedItems[0] != null)
-			{
-				SoundPlayer.Play(ui_soundList.SelectedItems[0].Tag as Sound);
-			}
-		}
-
-		private void EV_Searchbox_TextChanged(object sender, EventArgs e)
-		{
-			RefreshSoundsInList(ui_textboxSearch.Text);
-		}
-
-		private void EV_SoundList_Resize(object sender, EventArgs e)
-		{
-			ui_soundList.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
-			ui_soundList.Columns[0].Width = ui_soundList.Width - (ui_soundList.Columns[1].Width + 15);
-		}
-
-		private void SoundList_MouseClick(object sender, MouseEventArgs e)
-		{
-			if(e.Button == MouseButtons.Right)
-			{
-				ui_contextStrip.Show(Cursor.Position);
-			}
-		}
-
-		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if(ui_soundList.SelectedItems.Count < 1) return;
-			SBSettings.Instance.Sounds.Remove(ui_soundList.SelectedItems[0].Tag as Sound);
-			RefreshSoundsInList();
-		}
-		#endregion
 
 		public void RefreshSoundsInList(string filter = "")
 		{
-			ui_soundList.Items.Clear();
+			ui_listview_Sounds.Items.Clear();
 			List<Sound> sounds = SBSettings.Instance.Sounds.Where(x => x.FullFilepath.ToLower().Contains(filter) || x.Nickname.ToLower().Contains(filter)).ToList();
 
 			foreach(Sound sound in sounds)
@@ -101,27 +49,94 @@ namespace Soundboard.GUI
 				ListViewItem newItem = new ListViewItem
 				{
 					// TODO: Add options for default text.
-					Text = (string.IsNullOrEmpty(sound.Nickname) ? sound.FilenameWithFolder : sound.Nickname),
+					Text = sound.DisplayName,
 					Tag = sound
 				};
 
 				newItem.SubItems.Add(sound.HotKey.ToString());
-				ui_soundList.Items.Add(newItem);
+
+                ui_listview_Sounds.Items.Add(newItem);
 			}
 		}
 
-		private void ui_context_edit_Click(object sender, EventArgs e)
-		{
-			Sound selectedSound = ui_soundList.SelectedItems[0]?.Tag as Sound;
-			if(selectedSound == null) return;
+        #region Event Handlers
 
-			using(AddSoundForm form = new AddSoundForm(selectedSound))
-			{
-				if(form.ShowDialog() == DialogResult.OK)
-				{
-					RefreshSoundsInList();
-				}
-			}
-		}
-	}
+        private void EV_Button_AddSound_MouseClick(object sender, MouseEventArgs e)
+        {
+            SoundPlayer?.StopAllSounds();
+            SBSettings.Instance.MicMuted = false;
+
+            using (NewSoundForm form = new NewSoundForm())
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    SBSettings.Instance.Sounds.Add(form.SoundResult);
+                    RefreshSoundsInList();
+                }
+            }
+        }
+
+        #region Toolstrip Handlers
+        private void EV_ToolStrip_Edit_Click(object sender, EventArgs e)
+        {
+            Sound selectedSound = ui_listview_Sounds.SelectedItems[0]?.Tag as Sound;
+            if (selectedSound == null) return;
+
+            // Remove the selectedSound here to make sure the hotkey map doesnt conflict.
+            SBSettings.Instance.Sounds.Remove(selectedSound);
+
+            using (NewSoundForm form = new NewSoundForm(selectedSound))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    SBSettings.Instance.Sounds.Add(form.SoundResult);
+                }
+                else // If we cancel just add back the previous sound.
+                {
+                    SBSettings.Instance.Sounds.Add(selectedSound);
+                }
+
+                RefreshSoundsInList();
+            }
+        }
+
+        private void EV_ToolStrip_Delete_Click(object sender, EventArgs e)
+        {
+            if (ui_listview_Sounds.SelectedItems.Count < 1) return;
+            SBSettings.Instance.Sounds.Remove(ui_listview_Sounds.SelectedItems[0].Tag as Sound);
+            RefreshSoundsInList();
+        }
+        #endregion
+
+        private void EV_Searchbox_TextChanged(object sender, EventArgs e)
+        {
+            RefreshSoundsInList(ui_textboxSearch.Text);
+        }
+
+        // TODO: Move this out?
+        private void EV_SoundList_DoubleClick(object sender, MouseEventArgs e)
+        {
+            if (ui_listview_Sounds.SelectedItems[0] != null)
+            {
+                SoundPlayer.Play(ui_listview_Sounds.SelectedItems[0].Tag as Sound, SBSettings.Instance.SelectedPlaybackDevices);
+            }
+        }
+
+        private void EV_SoundList_Resize(object sender, EventArgs e)
+        {
+            ui_listview_Sounds.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
+            ui_listview_Sounds.Columns[0].Width = ui_listview_Sounds.Width - (ui_listview_Sounds.Columns[1].Width + 15);
+        }
+
+        private void EV_SoundList_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                ui_contextStrip.Show(Cursor.Position);
+            }
+        }
+
+
+        #endregion
+    }
 }

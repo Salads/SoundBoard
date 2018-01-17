@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Soundboard.GUI.Controls
 {
@@ -16,12 +17,7 @@ namespace Soundboard.GUI.Controls
 		{
 			InitializeComponent();
 
-			ui_checkbox_MuteWhilePlaying.DataBindings.Add(nameof(SBSettings.Instance.MuteMicrophoneWhilePlaying), SBSettings.Instance, "Checked");
-		}
-
-		private void MuteWhilePlaying_CheckedChanged(object sender, EventArgs e)
-		{
-			// SoundboardSettings.Instance..MuteMicrophoneWhilePlaying = ui_checkbox_MuteWhilePlaying.Checked;
+			ui_checkbox_MuteMicWhilePlaying.DataBindings.Add("Checked", SBSettings.Instance, "MuteMicrophoneWhilePlaying", false, DataSourceUpdateMode.OnPropertyChanged);
 		}
 	}
 }

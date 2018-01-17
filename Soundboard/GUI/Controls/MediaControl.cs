@@ -14,6 +14,8 @@ namespace Soundboard
 		private Sound m_selectedSound;
 		private TimeSpan m_selectedSoundLength;
 
+        public bool UsePreviewDevice { get; set; }
+
 		public SoundPlayer SoundPlayer { get; set; }
 
 		public bool ShowName
@@ -79,7 +81,19 @@ namespace Soundboard
 		{
 			if(m_selectedSound == null) return;
 
-			SoundPlayer?.Play(m_selectedSound, TimeSpan.FromSeconds(ui_trackBar.Value));
+            
+            if(UsePreviewDevice)
+            {
+                List<AudioDevice> devices = new List<AudioDevice>()
+                {
+                    SBSettings.Instance.SelectedPreviewDevice
+                };
+                SoundPlayer?.Play(m_selectedSound, devices, TimeSpan.FromSeconds(ui_trackBar.Value));
+            }
+            else
+            {
+                SoundPlayer?.Play(m_selectedSound, SBSettings.Instance.SelectedPlaybackDevices, TimeSpan.FromSeconds(ui_trackBar.Value));
+            }
 		}
 
 		private void EV_StopClicked(object sender, MouseEventArgs e)

@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using Soundboard.Data.Static;
 using Soundboard.Data;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Soundboard
 {
@@ -29,10 +30,9 @@ namespace Soundboard
 		TAG_PreviewDeviceGUID
 	}
 
-	public class SBSettings
+	public class SBSettings : INotifyPropertyChanged
 	{
 		private static SBSettings m_Instance;
-
 		public static SBSettings Instance 
 		{
 			get
@@ -44,33 +44,66 @@ namespace Soundboard
 			}
 		}
 
-		public bool HasLoaded { get; private set; } = false;
+		private bool m_MuteMicrophoneWhilePlaying;
+        private AudioDevice m_SelectedRecordingDevice;
 
 		private const string _DEFAULT_LOCATION = "default.soundboard";
 
 		public bool FirstRun { get; set; }
 
-		public bool MuteMicrophoneWhilePlaying { get; set; }
-
 		public uint GlobalVolume { get; set; }
 
-		public float VolumeNormalized 
-		{
-			get
-			{
-				return GlobalVolume / (100.0f);
-			}
-		}
+        public bool MuteMicrophoneWhilePlaying 
+        {
+            get { return m_MuteMicrophoneWhilePlaying; }
+            set
+            {
+                m_MuteMicrophoneWhilePlaying = value;
+                NotifyPropertyChanged();
+            }
+        }
 
-		public CBindingList<Sound> Sounds { get; set; } = new CBindingList<Sound>();
+        public CBindingList<Sound> Sounds { get; set; } = new CBindingList<Sound>();
 
 		public CBindingList<AudioDevice> SelectedPlaybackDevices { get; set; } = new CBindingList<AudioDevice>();
 
-		public AudioDevice SelectedRecordingDevice { get; set; } = null;
+		public AudioDevice SelectedRecordingDevice 
+        {
+            get { return m_SelectedRecordingDevice; }
+            set
+            {
+                m_SelectedRecordingDevice = value;
+                RecordingDeviceChanged?.BeginInvoke(this, new EventArgs(), null, null);
+            }
+        }
 
 		public AudioDevice SelectedPreviewDevice { get; set; } = null;
 
 		public Dictionary<Hotkey, Sound> HotkeyMap { get; set; } = new Dictionary<Hotkey, Sound>();
+
+		//////////////////////////////////////////////////////////
+
+		public bool MicMuted 
+		{
+			set
+			{
+				if(SelectedRecordingDevice != null)
+				{
+					SelectedRecordingDevice.Volume.IsMuted = value;
+				}
+			}
+		}
+
+        public float VolumeNormalized 
+        {
+            get
+            {
+                return GlobalVolume / (100.0f);
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler RecordingDeviceChanged;
 
 		private SBSettings()
 		{
@@ -84,6 +117,11 @@ namespace Soundboard
 			Sounds.ListChanged -= Sounds_ListChanged;
 		}
 
+		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
 		private void Sounds_ListChanged(object sender, ListChangedEventArgs e)
 		{
 			if(e.ListChangedType == ListChangedType.ItemAdded)
@@ -95,7 +133,6 @@ namespace Soundboard
 				HotkeyMap.Add(newSound.HotKey, newSound);
 			}
 		}
-
 		private void Sounds_RemovingItem(object sender, ItemRemovedArgs<Sound> e)
 		{
 			if(e.RemovedItem.HotKey.Any())
@@ -104,13 +141,17 @@ namespace Soundboard
 			}
 		}
 
-		public void SetMicMuted(bool mute)
-		{
-			if(SelectedRecordingDevice != null)
-			{
-				SelectedRecordingDevice.Volume.IsMuted = mute;
-			}
-		}
+        public void ApplyMicSettings()
+        {
+            if (Instance.MuteMicrophoneWhilePlaying)
+            {
+                Instance.MicMuted = true;
+            }
+            else
+            {
+                Instance.MicMuted = false;
+            }
+        }
 
 		public void ResetToDefault()
 		{
@@ -135,7 +176,7 @@ namespace Soundboard
 			SelectedRecordingDevice = null;
 		}
 
-		public void LoadFromFile(string Filename = _DEFAULT_LOCATION)
+		public void LoadFromFile(string Filename = _DEFAULT_LOCATION) 
 		{
 			//	If we want to load from a file, that means we want to get rid of our old settings.
 			//	If the file doesn't exist might as well set to default then save the file.
@@ -241,11 +282,9 @@ namespace Soundboard
 					}
 				}
 			}
-
-			HasLoaded = true;
 		}
 
-		public void SaveToFile(string Filename = _DEFAULT_LOCATION)
+		public void SaveToFile(string Filename = _DEFAULT_LOCATION) 
 		{
 			using(BinaryWriter writer = new BinaryWriter(File.Create(Filename)))
 			{

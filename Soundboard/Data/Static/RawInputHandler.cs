@@ -35,17 +35,10 @@ namespace Soundboard.Data
 
 		private static void _CheckHotkeys()
 		{
-			_PrintHotkeys();
-
 			if(ExecuteHotkeys && SBSettings.Instance.HotkeyMap.Keys.Contains(m_pressedKeys))
 			{
 				HotkeyPressed?.Invoke(null, new HotkeyPressedArgs(SBSettings.Instance.HotkeyMap[m_pressedKeys]));
 			}
-		}
-
-		private static void _PrintHotkeys()
-		{
-			Debug.WriteLine("HotKey: " + m_pressedKeys.ToString() + ", " + "Contains: " + SBSettings.Instance.HotkeyMap.ContainsKey(m_pressedKeys));
 		}
 
 		public static void HandleRawInput(ref Message message)
@@ -64,8 +57,6 @@ namespace Soundboard.Data
 				{
 					RKeyboardFlags flags = (RKeyboardFlags)input->keyboard.Flags;
 					Keys key = (Keys)input->keyboard.VKey;
-
-					Application.OpenForms[0].Text = "ExtraInformation: " + input->keyboard.ExtraInformation;
 
 					if(flags.HasFlag(RKeyboardFlags.RI_KEY_MAKE) && !m_pressedKeys.Contains(key))
 					{
@@ -98,17 +89,6 @@ namespace Soundboard.Data
 					_CheckHotkeys();
 				}
 			}
-		}
-
-		[Conditional("DEBUG")]
-		private static void _PrintKeysToOutput()
-		{
-			Debug.WriteLine(m_pressedKeys.ToString());
-		}
-
-		private static string ConstructFlagLogLine(string flagName, RawMouseButtons flags, RawMouseButtons flag)
-		{
-			return flagName + ": " + flags.HasFlag(flag);
 		}
 
 		private static void GetKeyFromFlag(RawMouseButtons flag, ref Keys key, ref bool down)

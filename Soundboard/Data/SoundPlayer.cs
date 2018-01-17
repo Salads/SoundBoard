@@ -16,10 +16,8 @@ namespace Soundboard
 	{
 		private float m_Volume;
 		private List<ISoundOut> m_PlayingSounds = new List<ISoundOut>();
-		private IList<AudioDevice> m_playbackDevices;
 
 		public bool IsPlaying { get { return m_PlayingSounds.Any(); } }
-
 		public float VolumeNormalized 
 		{
 			get { return m_Volume; }
@@ -36,41 +34,22 @@ namespace Soundboard
 			}
 		}
 
+        public event EventHandler SoundStarted;
+        public event EventHandler SoundStopped;
+
 		public SoundPlayer()
 		{
-			m_playbackDevices = SBSettings.Instance.SelectedPlaybackDevices;
 			VolumeNormalized = SBSettings.Instance.VolumeNormalized;
 		}
 
-		public void SetPlaybackDevices(IList<AudioDevice> devices)
-		{
-			// If we want to set it back to default for some reason
-			if(ReferenceEquals(devices, SBSettings.Instance.SelectedPlaybackDevices))
-			{
-				m_playbackDevices = SBSettings.Instance.SelectedPlaybackDevices;
-			}
-			else
-			{
-				m_playbackDevices = devices;
-			}
-		}
-
-		public void SetPlaybackDevice(AudioDevice device)
-		{
-			m_playbackDevices = new List<AudioDevice>
-			{
-				device
-			};
-		}
-
-		public void Play(Sound sound, TimeSpan? startTime = null)
+		public void Play(Sound sound, IEnumerable<AudioDevice> devices, TimeSpan? startTime = null)
 		{
 			TimeSpan soundStartTime = ((startTime == null) ? sound.StartTime : startTime.Value);
 
 			Debug.WriteLine("Playing new sound on devices: ");
 
 			string filename = sound.FullFilepath;
-			foreach(AudioDevice device in m_playbackDevices)
+			foreach(AudioDevice device in devices)
 			{
 				if(device == null) continue;
 
@@ -91,11 +70,11 @@ namespace Soundboard
 				newSoundOut.Play();
 
 				m_PlayingSounds.Add(newSoundOut);
-				SBSettings.Instance.SetMicMuted(SBSettings.Instance.MuteMicrophoneWhilePlaying);
 			}
 
 			Debug.WriteLine("");
-		}
+            SoundStarted?.BeginInvoke(this, new EventArgs(), null, null);
+        }
 
 		public void StopSoundsOnDevice(AudioDevice device)
 		{
@@ -117,35 +96,27 @@ namespace Soundboard
 		{
 			foreach(ISoundOut PlayingSound in m_PlayingSounds)
 			{
-				// Run a task here to make sounds stop more in time with each other.
 				Task.Run(() => _StopSound(PlayingSound));
 			}
-
-			SBSettings.Instance.SetMicMuted(false);
 
 			m_PlayingSounds.Clear();
 		}
 
 		private void _StopSound(ISoundOut Sound)
 		{
-			Debug.WriteLine("Stop Sound Called");
-
 			if(Sound.PlaybackState != PlaybackState.Stopped)
 			{
 				Sound.Stop();
 				Sound.Dispose();
 			}
+
+            SoundStopped?.BeginInvoke(this, new EventArgs(), null, null);
 		}
 
 		private void EV_OnSoundStopped(object sender, PlaybackStoppedEventArgs e)
 		{
 			ISoundOut Stopped = sender as ISoundOut;
 			m_PlayingSounds.Remove(Stopped);
-
-			if(!m_PlayingSounds.Any())
-			{
-				SBSettings.Instance.SetMicMuted(false);
-			}
 
 			Stopped.Dispose();
 		}
