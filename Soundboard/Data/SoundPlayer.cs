@@ -111,7 +111,7 @@ namespace Soundboard
 			}
 
             SoundStopped?.BeginInvoke(this, new EventArgs(), null, null);
-		}
+        }
 
 		private void EV_OnSoundStopped(object sender, PlaybackStoppedEventArgs e)
 		{
@@ -119,6 +119,7 @@ namespace Soundboard
 			m_PlayingSounds.Remove(Stopped);
 
 			Stopped.Dispose();
-		}
+            SoundStopped?.BeginInvoke(this, new EventArgs(), null, null);
+        }
 	}
 }

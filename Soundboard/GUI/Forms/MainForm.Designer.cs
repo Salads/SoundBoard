@@ -210,7 +210,6 @@
 			this.ui_soundViewer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.ui_soundViewer.Name = "ui_soundViewer";
 			this.ui_soundViewer.Size = new System.Drawing.Size(462, 311);
-			this.ui_soundViewer.SoundPlayer = null;
 			this.ui_soundViewer.TabIndex = 4;
 			// 
 			// MainForm

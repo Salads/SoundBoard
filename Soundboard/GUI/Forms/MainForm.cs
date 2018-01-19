@@ -25,7 +25,7 @@ namespace Soundboard
 			InitializeComponent();
 
 			RI.RegisterDevices(Handle);
-			ui_mediaControl.SoundPlayer = ui_soundViewer.SoundPlayer = m_MainSoundPlayer;
+			ui_mediaControl.SoundPlayer = m_MainSoundPlayer;
 
 			if(SBSettings.Instance.FirstRun) 
 			{
@@ -47,6 +47,8 @@ namespace Soundboard
             m_MainSoundPlayer.SoundStarted += EV_MainSoundPlayer_SoundStarted;
             m_MainSoundPlayer.SoundStopped += EV_MainSoundPlayer_SoundStopped;
             ui_soundViewer.ItemSelectionChanged += ui_mediaControl.SoundList_ItemSelectionChanged; // TODO: handle this directly here
+            ui_soundViewer.BeforeAddSoundClicked += EV_SoundViewer_BeforeAddSound;
+            ui_soundViewer.SoundDoubleClicked += EV_SoundViewer_SoundDoubleClicked;
 
             SBSettings.Instance.RecordingDeviceChanged += EV_RecordingDeviceChanged;
             SBSettings.Instance.PropertyChanged += Settings_PropertyChanged;
@@ -112,6 +114,7 @@ namespace Soundboard
 
         private void EV_MainSoundPlayer_SoundStopped(object sender, EventArgs e)
         {
+            Debug.WriteLine("SoundStopped called");
             SBSettings.Instance.MicMuted = false;
         }
 
@@ -142,6 +145,19 @@ namespace Soundboard
 				e.Handled = true;
 			}
 		}
+
+        private void EV_SoundViewer_SoundDoubleClicked(object sender, MouseEventArgs e)
+        {
+            if (ui_soundViewer.SelectedItems[0] != null)
+            {
+                m_MainSoundPlayer.Play(ui_soundViewer.SelectedItems[0].Tag as Sound, SBSettings.Instance.SelectedPlaybackDevices);
+            }
+        }
+
+        private void EV_SoundViewer_BeforeAddSound(object sender, EventArgs e)
+        {
+            m_MainSoundPlayer.StopAllSounds();
+        }
 
         private void MainForm_Load(object sender, EventArgs e)
         {

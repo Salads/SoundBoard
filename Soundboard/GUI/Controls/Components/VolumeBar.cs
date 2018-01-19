@@ -25,7 +25,7 @@ namespace Soundboard
 		/// Gets the volume in a normalized format between 0.0f and 1.0f.
 		/// </summary>
 		[Browsable(false)]
-		public float VolumeNormalized
+		public float VolumeNormalized 
 		{
 			get
 			{
@@ -111,13 +111,30 @@ namespace Soundboard
 				}
 
 				int ImageDimension = fullBarHeight - 1;
-				e.Graphics.DrawImage(iconSpeaker, e.ClipRectangle.X, e.ClipRectangle.Y - 4, ImageDimension, ImageDimension);
+                int ImageStartY = e.ClipRectangle.Y;
 
-				// Draw text
-				e.Graphics.DrawString("" + Volume + "%",
-					Font,
-					Brushes.Black,
-					new Point(e.ClipRectangle.X + 30, e.ClipRectangle.Y));
+                e.Graphics.DrawImage(iconSpeaker, e.ClipRectangle.X, ImageStartY, ImageDimension, ImageDimension);
+                // e.Graphics.DrawRectangle(Pens.Green, e.ClipRectangle.X, ImageStartY, ImageDimension, ImageDimension);
+
+                // Draw text
+                float emSize = ImageDimension / 2.0f;
+                if(emSize > 0)
+                {
+                    Font labelFont = new Font(Font.FontFamily, emSize, FontStyle.Regular);
+
+                    int descent = labelFont.FontFamily.GetCellDescent(FontStyle.Regular);
+                    int ascent = labelFont.FontFamily.GetCellAscent(FontStyle.Regular);
+                    int ascentPixel = (int)labelFont.Size * ascent / labelFont.FontFamily.GetEmHeight(FontStyle.Regular);
+                    int descentPixel = (int)labelFont.Size * descent / labelFont.FontFamily.GetEmHeight(FontStyle.Regular);
+                    int fontPixel = ascentPixel + descentPixel;
+
+                    int diff = ImageDimension - fontPixel;
+
+                    e.Graphics.DrawString(Volume + "%",
+                        labelFont,
+                        Brushes.Black,
+                        new Point(e.ClipRectangle.X + ImageDimension, ImageStartY + (diff / 4)));
+                }
 
 				// Draw bar graphic
 				if(volumeBarWidth > 0)
@@ -145,38 +162,41 @@ namespace Soundboard
 			base.OnPaint(e);
 		}
 
-		protected override void OnMouseDown(MouseEventArgs e)
-		{
-			base.OnMouseDown(e);
-
-			m_IsBeingDragged = true;
-			_UpdateVolumeFromMouse();
-		}
-
-		protected override void OnMouseUp(MouseEventArgs e)
-		{
-			base.OnMouseUp(e);
-
-			m_IsBeingDragged = false;
-		}
-
-		protected override void OnMouseMove(MouseEventArgs e)
-		{
-			base.OnMouseMove(e);
-
-			if(m_IsBeingDragged)
-			{
-				_UpdateVolumeFromMouse();
-			}
-		}
-
-		private void EV_SizeChanged(object sender, EventArgs e)
+        private void EV_SizeChanged(object sender, EventArgs e)
 		{
 			Invalidate();
 		}
-		#endregion
 
-		private void _UpdateVolumeFromMouse()
+        #region Override Events
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            m_IsBeingDragged = true;
+            _UpdateVolumeFromMouse();
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            m_IsBeingDragged = false;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            if (m_IsBeingDragged)
+            {
+                _UpdateVolumeFromMouse();
+            }
+        }
+        #endregion
+
+        #endregion
+
+        private void _UpdateVolumeFromMouse()
 		{
 			Point clientMousePos = PointToClient(Cursor.Position);
 			if(!m_BarHitboxRect.Contains(clientMousePos) && !m_IsBeingDragged)

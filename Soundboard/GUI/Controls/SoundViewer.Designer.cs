@@ -68,7 +68,6 @@
 			this.ui_listview_Sounds.UseCompatibleStateImageBehavior = false;
 			this.ui_listview_Sounds.View = System.Windows.Forms.View.Details;
 			this.ui_listview_Sounds.MouseClick += new System.Windows.Forms.MouseEventHandler(this.EV_SoundList_MouseClick);
-			this.ui_listview_Sounds.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.EV_SoundList_DoubleClick);
 			this.ui_listview_Sounds.Resize += new System.EventHandler(this.EV_SoundList_Resize);
 			// 
 			// Header_Filenames

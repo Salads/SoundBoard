@@ -11,6 +11,7 @@ using CSCore.Codecs;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Soundboard.Data.Interfaces;
+using static System.Windows.Forms.ListView;
 
 namespace Soundboard.GUI
 {
@@ -20,15 +21,26 @@ namespace Soundboard.GUI
 	/// Handles adding/deleting/editing sounds. <para/>
 	/// Contains ListView (Sounds), Textbox (Search), and Button(Add Sound)
 	/// </summary>
-	public partial class SoundViewer : UserControl, ISoundPlayerUser
+	public partial class SoundViewer : UserControl
 	{
-		public SoundPlayer SoundPlayer { get; set; }
-
 		public event ListViewItemSelectionChangedEventHandler ItemSelectionChanged
 		{
 			add { ui_listview_Sounds.ItemSelectionChanged += value; }
 			remove { ui_listview_Sounds.ItemSelectionChanged -= value; }
 		}
+
+        public event MouseEventHandler SoundDoubleClicked
+        {
+            add { ui_listview_Sounds.MouseDoubleClick += value; }
+            remove { ui_listview_Sounds.MouseDoubleClick -= value; }
+        }
+
+        public event EventHandler BeforeAddSoundClicked;
+
+        public SelectedListViewItemCollection SelectedItems 
+        {
+            get { return ui_listview_Sounds.SelectedItems; }
+        }
 
 		public SoundViewer()
 		{
@@ -63,7 +75,7 @@ namespace Soundboard.GUI
 
         private void EV_Button_AddSound_MouseClick(object sender, MouseEventArgs e)
         {
-            SoundPlayer?.StopAllSounds();
+            BeforeAddSoundClicked?.Invoke(this, new EventArgs());
             SBSettings.Instance.MicMuted = false;
 
             using (NewSoundForm form = new NewSoundForm())
@@ -111,15 +123,6 @@ namespace Soundboard.GUI
         private void EV_Searchbox_TextChanged(object sender, EventArgs e)
         {
             RefreshSoundsInList(ui_textboxSearch.Text);
-        }
-
-        // TODO: Move this out?
-        private void EV_SoundList_DoubleClick(object sender, MouseEventArgs e)
-        {
-            if (ui_listview_Sounds.SelectedItems[0] != null)
-            {
-                SoundPlayer.Play(ui_listview_Sounds.SelectedItems[0].Tag as Sound, SBSettings.Instance.SelectedPlaybackDevices);
-            }
         }
 
         private void EV_SoundList_Resize(object sender, EventArgs e)

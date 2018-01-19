@@ -53,7 +53,7 @@ namespace Soundboard
 			string result = string.Empty;
 			for(int x = 0; x < Count; ++x)
 			{
-				result += this.ElementAt(x);
+				result += this.ElementAt(x); // TODO: Way to get locale sensitive keyname?
 				if(x < Count - 1) result += ", ";
 			}
 

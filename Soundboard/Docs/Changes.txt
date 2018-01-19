@@ -1,4 +1,11 @@
-﻿1/16/2018 11:52PM
+﻿1/19/2018 12:29AM
+==============================================================================================================================================
+- Fixed mic not unmuting when sounds finish playing naturally.
+- Changed text on VolumeBar to be a bit more aligned
+- Removed SoundPlayer from SoundViewer, events now handled on parent form
+
+
+1/16/2018 11:52PM
 ==============================================================================================================================================
 - Renamed SoundboardSettings to SBSettings
 - Added MicMuted setter property to SBSettings for easier mic muting
