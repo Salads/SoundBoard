@@ -198,9 +198,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="assets\__Volume High.png" />
     <None Include="assets\__Volume Low.png" />
     <None Include="assets\__Volume Medium.png" />
