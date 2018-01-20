@@ -55,12 +55,9 @@ namespace Soundboard
 
 				Debug.WriteLine("\t" + device.FriendlyName);
 
-				//	Need to create one for every output because the stream is handled in WaveSource.
-				//	This means multiple outputs will advance stream position if we don't seperate them.
-				IWaveSource waveSource = CodecFactory.Instance.GetCodec(filename)
-					.ToSampleSource()
-					.ToStereo()
-					.ToWaveSource();
+                //	Need to create one for every output because the stream is handled in WaveSource.
+                //	This means multiple outputs will advance stream position if we don't seperate them.
+                IWaveSource waveSource = CodecFactory.Instance.GetCodec(filename).ToStereo();
 				waveSource.SetPosition(soundStartTime);
 
 				ISoundOut newSoundOut = new WasapiOut() { Latency = 20, Device = device.Info };
