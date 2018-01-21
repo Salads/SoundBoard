@@ -1,0 +1,5 @@
+﻿Alpha 0.0.2
+==============================================================================================================================
+- Added Changelog.txt
+- Fixed the selected sound name not appearing in the main media control
+- Sounds list now resizes by a default size ratio if the content is too small.

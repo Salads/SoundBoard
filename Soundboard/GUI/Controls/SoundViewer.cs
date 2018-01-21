@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Soundboard.Data.Interfaces;
 using static System.Windows.Forms.ListView;
+using Soundboard.Data.Static;
 
 namespace Soundboard.GUI
 {
@@ -45,11 +46,8 @@ namespace Soundboard.GUI
 		public SoundViewer()
 		{
 			InitializeComponent();
-
 			RefreshSoundsInList();
-			ui_listview_Sounds.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
-			ui_listview_Sounds.Columns[0].Width = ui_listview_Sounds.Width - (ui_listview_Sounds.Columns[1].Width + 15);
-		}
+        }
 
 		public void RefreshSoundsInList(string filter = "")
 		{
@@ -69,9 +67,25 @@ namespace Soundboard.GUI
 
                 ui_listview_Sounds.Items.Add(newItem);
 			}
+
+            ResizeColumns();
 		}
 
-        #region Event Handlers
+        private void ResizeColumns()
+        {
+            if(ui_listview_Sounds.Items.Count <= 0 || !SBSettings.Instance.Sounds.Where(x => x.HotKey.Any() == true).Any())
+            {
+                ui_listview_Sounds.Columns[1].Width = (int)(0.30f * ui_listview_Sounds.Width);
+                ui_listview_Sounds.Columns[0].Width = (int)(0.70f * ui_listview_Sounds.Width) - SystemInformation.VerticalScrollBarWidth - 4;
+            }
+            else
+            {
+                ui_listview_Sounds.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
+                ui_listview_Sounds.Columns[0].Width = ui_listview_Sounds.Width - (ui_listview_Sounds.Columns[1].Width) - SystemInformation.VerticalScrollBarWidth - 4;
+            }
+        }
+
+#region Event Handlers
 
         private void EV_Button_AddSound_MouseClick(object sender, MouseEventArgs e)
         {
@@ -88,7 +102,7 @@ namespace Soundboard.GUI
             }
         }
 
-        #region Toolstrip Handlers
+#region Toolstrip Handlers
         private void EV_ToolStrip_Edit_Click(object sender, EventArgs e)
         {
             Sound selectedSound = ui_listview_Sounds.SelectedItems[0]?.Tag as Sound;
@@ -118,7 +132,7 @@ namespace Soundboard.GUI
             SBSettings.Instance.Sounds.Remove(ui_listview_Sounds.SelectedItems[0].Tag as Sound);
             RefreshSoundsInList();
         }
-        #endregion
+#endregion
 
         private void EV_Searchbox_TextChanged(object sender, EventArgs e)
         {
@@ -127,8 +141,7 @@ namespace Soundboard.GUI
 
         private void EV_SoundList_Resize(object sender, EventArgs e)
         {
-            ui_listview_Sounds.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
-            ui_listview_Sounds.Columns[0].Width = ui_listview_Sounds.Width - (ui_listview_Sounds.Columns[1].Width + 15);
+            ResizeColumns();
         }
 
         private void EV_SoundList_MouseClick(object sender, MouseEventArgs e)
@@ -139,6 +152,11 @@ namespace Soundboard.GUI
             }
         }
 
+        private void EV_ListView_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
+        {
+            e.NewWidth = ui_listview_Sounds.Columns[e.ColumnIndex].Width;
+            e.Cancel = true;
+        }
 
         #endregion
     }

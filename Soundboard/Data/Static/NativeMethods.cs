@@ -26,12 +26,12 @@ namespace Soundboard.Data.Static
 		[DllImport("User32.dll")]
 		public static extern int GetKeyNameText(Int32 lParam, [Out] StringBuilder lpString, int nSize);
 
-		/// <summary>Function to register a raw input device.</summary>
-		/// <param name="pRawInputDevices">Array of raw input devices.</param>
-		/// <param name="uiNumDevices">Number of devices.</param>
-		/// <param name="cbSize">Size of the RAWINPUTDEVICE structure.</param>
-		/// <returns>TRUE if successful, FALSE if not.</returns>
-		[DllImport("user32.dll")]
+        /// <summary>Function to register a raw input device.</summary>
+        /// <param name="pRawInputDevices">Array of raw input devices.</param>
+        /// <param name="uiNumDevices">Number of devices.</param>
+        /// <param name="cbSize">Size of the RAWINPUTDEVICE structure.</param>
+        /// <returns>TRUE if successful, FALSE if not.</returns>
+        [DllImport("user32.dll")]
 		public static extern bool RegisterRawInputDevices([MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] RAWINPUTDEVICE[] pRawInputDevices, int uiNumDevices, int cbSize);
 
 		/// <summary>

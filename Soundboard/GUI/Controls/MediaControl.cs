@@ -6,6 +6,7 @@ using CSCore;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using Soundboard.Data.Interfaces;
+using System.Diagnostics;
 
 namespace Soundboard
 {
@@ -43,6 +44,9 @@ namespace Soundboard
 		{
 			if(e.IsSelected)
 			{
+                Debug.WriteLine("ItemSelectionChanged && IsSelected");
+                Debug.WriteLineIf(e.Item.Tag as Sound != null, "Sound is not null");
+
 				SetSelectedSound(e.Item.Tag as Sound);
 			}
 		}
@@ -51,10 +55,10 @@ namespace Soundboard
 		{
 			if(selectedSound == null) return;
 
-			ui_selectedSoundLabel.Text = Path.GetFileName(selectedSound.Nickname != null ? selectedSound.Nickname : selectedSound.Filename);
+            ui_selectedSoundLabel.Text = selectedSound.DisplayName;
 
-			// TODO(Salads): Perhaps theres a less expensive way to get audio length?
-			var waveSource = CodecFactory.Instance.GetCodec(selectedSound.FullFilepath);
+            // TODO(Salads): Perhaps theres a less expensive way to get audio length?
+            var waveSource = CodecFactory.Instance.GetCodec(selectedSound.FullFilepath);
 
 			m_selectedSoundLength = waveSource.GetLength();
 			ui_timeLabel.Text = _GetTimeSpanFormatString(TimeSpan.Zero) + "/" + _GetTimeSpanFormatString(m_selectedSoundLength);

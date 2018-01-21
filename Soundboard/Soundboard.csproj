@@ -106,7 +106,6 @@
     <Compile Include="Data\Static\NativeMethods.cs" />
     <Compile Include="Data\Static\RawInputHandler.cs" />
     <Compile Include="Data\Static\RawInputTypes.cs" />
-    <Content Include="Docs\Changes.txt" />
     <Compile Include="GUI\Controls\Components\CTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -202,6 +201,9 @@
     <None Include="assets\__Volume Low.png" />
     <None Include="assets\__Volume Medium.png" />
     <None Include="assets\__Volume Mute.png" />
+    <Content Include="Docs\Changelog.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Docs\Research.txt" />
   </ItemGroup>
   <ItemGroup />
