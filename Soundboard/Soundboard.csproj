@@ -201,11 +201,19 @@
     <None Include="assets\__Volume Low.png" />
     <None Include="assets\__Volume Medium.png" />
     <None Include="assets\__Volume Mute.png" />
-    <Content Include="Docs\Changelog.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Docs\Changelog.txt" />
     <Content Include="Docs\Research.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+
+RMDIR /s /q "$(TargetDir)build\"
+MKDIR "$(TargetDir)build\"
+ROBOCOPY "$(TargetDir) " "$(TargetDir)build\ " *.exe
+ROBOCOPY "$(TargetDir) " "$(TargetDir)build\ " *.dll
+ROBOCOPY "$(TargetDir) " "$(TargetDir)build\ " *.msi
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
