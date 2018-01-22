@@ -21,8 +21,10 @@ namespace Soundboard.GUI
     /// </summary>
 	public partial class NewSoundForm : Form
 	{
-        private string m_FullFilename;
-		private Hotkey m_Hotkey = new Hotkey();
+        private string ResultFilename { get; set; }
+        private string ResultNickname { get { return ui_textbox_nickname.Text; } set { ui_textbox_nickname.Text = value; } }
+        private Hotkey ResultHotkey { get; set; } = new Hotkey();
+        private TimeSpan ResultStartTime { get { return ui_mediaControl.Position; } }
 
 		private bool IsCapturingHotkey { get; set; }
 		private SoundPlayer m_soundPlayer = new SoundPlayer();
@@ -53,20 +55,51 @@ namespace Soundboard.GUI
 			_PopulateControls(sound);
 		}
 
+        private bool _ValidateOptions()
+        {
+            bool filename_valid = File.Exists(ResultFilename);
+            bool nickname_valid = !string.IsNullOrWhiteSpace(ui_textbox_nickname.Text);
+            bool hotkey_valid = !ResultHotkey.Any() || !SBSettings.Instance.HotkeyMap.ContainsKey(ResultHotkey);
+            // didn't check time since it's assumed correct all the time.
+            string error_result = string.Empty;
+            if(!filename_valid)
+            {
+                error_result += "File doesn't exist!" + Environment.NewLine;
+            }
+
+            if(!hotkey_valid)
+            {
+                error_result += "Hotkey is already in use!";
+            }
+
+            if(!nickname_valid) // Since nickname isn't needed, just trim down the whitespace.
+            {
+                ResultNickname = " ";
+            }
+
+            if(error_result != string.Empty)
+            {
+                MessageBox.Show(error_result, "Invalid Sound Options!", MessageBoxButtons.OK);
+            }
+
+            return filename_valid && hotkey_valid;
+        }
+            
+
         private void _PopulateControls(string filename)
         {
-            m_FullFilename = filename;
+            ResultFilename = filename;
             ui_label_filename.Text = Path.GetFileName(filename);
             ui_mediaControl.SetSelectedSound(filename);
         }
 
         private void _PopulateControls(Sound sound)
         {
-            m_FullFilename = sound.FullFilepath;
+            ResultFilename = sound.FullFilepath;
             ui_label_filename.Text = sound.Filename;
             ui_textbox_nickname.Text = sound.Nickname;
 
-            m_Hotkey.CopyFrom(sound.HotKey);
+            ResultHotkey.CopyFrom(sound.HotKey);
             if (sound.HotKey.Any())
             {
                 ui_button_Hotkey.Text = sound.HotKey.ToString();
@@ -96,26 +129,26 @@ namespace Soundboard.GUI
         {
             ui_button_Hotkey.BackColor = Color.OrangeRed;
             ui_button_Hotkey.FlatAppearance.MouseOverBackColor = ui_button_Hotkey.BackColor;
-            m_Hotkey.Clear();
+            ResultHotkey.Clear();
             IsCapturingHotkey = true;
         }
 
         private void EV_Button_ClearHotkey_Click(object sender, EventArgs e)
         {
-            m_Hotkey.Clear();
+            ResultHotkey.Clear();
             ui_button_Hotkey.Text = "No Hotkey Set (Click To Set)";
         }
 
         private void EV_OK_MouseClick(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine(ui_label_filename.Text);
+            if (!_ValidateOptions()) return;
 
-            SoundResult = new Sound(m_FullFilename)
+            SoundResult = new Sound(ResultFilename)
             {
-                Nickname = ui_textbox_nickname.Text,
-                StartTime = ui_mediaControl.Position
+                Nickname = ResultNickname,
+                StartTime = ResultStartTime
             };
-            SoundResult.HotKey.CopyFrom(m_Hotkey);
+            SoundResult.HotKey.CopyFrom(ResultHotkey);
 
             DialogResult = DialogResult.OK;
             Close();
@@ -135,8 +168,8 @@ namespace Soundboard.GUI
 
 			if(e.Action == KeysChangedAction.Added)
 			{
-				m_Hotkey.Add(e.Key);
-                ui_button_Hotkey.Text = m_Hotkey.ToString();
+				ResultHotkey.Add(e.Key);
+                ui_button_Hotkey.Text = ResultHotkey.ToString();
             }
 			else if(e.Action == KeysChangedAction.Removed)
 			{
@@ -144,9 +177,9 @@ namespace Soundboard.GUI
 				ui_button_Hotkey.BackColor = SystemColors.ControlDark;
 				ui_button_Hotkey.FlatAppearance.MouseOverBackColor = Color.Goldenrod;
 
-                if(SBSettings.Instance.HotkeyMap.ContainsKey(m_Hotkey))
+                if(SBSettings.Instance.HotkeyMap.ContainsKey(ResultHotkey))
                 {
-                    MessageBox.Show("Hotkey already in use!", "Error", MessageBoxButtons.OK);
+                    MessageBox.Show("Hotkey \"" + ResultHotkey.ToString() + "\" already in use!", "Error", MessageBoxButtons.OK);
                     ui_button_ClearHotkey.PerformClick();
                 }
 			}
