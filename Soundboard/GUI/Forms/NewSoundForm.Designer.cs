@@ -58,7 +58,8 @@
             // 
             // ui_label_filename
             // 
-            this.ui_label_filename.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.ui_label_filename.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ui_label_filename.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ui_label_filename.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -72,7 +73,7 @@
             // 
             // ui_textbox_nickname
             // 
-            this.ui_textbox_nickname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.ui_textbox_nickname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ui_textbox_nickname.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ui_textbox_nickname.Location = new System.Drawing.Point(10, 69);
@@ -84,7 +85,7 @@
             // 
             // ui_labelNickname
             // 
-            this.ui_labelNickname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.ui_labelNickname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ui_labelNickname.AutoSize = true;
             this.ui_labelNickname.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -113,7 +114,7 @@
             // 
             // ui_button_ClearHotkey
             // 
-            this.ui_button_ClearHotkey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ui_button_ClearHotkey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ui_button_ClearHotkey.Location = new System.Drawing.Point(253, 119);
             this.ui_button_ClearHotkey.Name = "ui_button_ClearHotkey";
             this.ui_button_ClearHotkey.Size = new System.Drawing.Size(83, 23);
@@ -124,7 +125,7 @@
             // 
             // ui_button_Hotkey
             // 
-            this.ui_button_Hotkey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.ui_button_Hotkey.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ui_button_Hotkey.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ui_button_Hotkey.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Goldenrod;
@@ -151,7 +152,7 @@
             // 
             // ui_PreviewDeviceSelector
             // 
-            this.ui_PreviewDeviceSelector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.ui_PreviewDeviceSelector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ui_PreviewDeviceSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ui_PreviewDeviceSelector.FormattingEnabled = true;
@@ -163,10 +164,8 @@
             // 
             // ui_mediaControl
             // 
-            this.ui_mediaControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.ui_mediaControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ui_mediaControl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ui_mediaControl.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ui_mediaControl.Location = new System.Drawing.Point(10, 203);
             this.ui_mediaControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
