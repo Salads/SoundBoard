@@ -22,13 +22,13 @@ namespace RawInput
 			// Mouse
 			devices[0].usUsagePage = 0x01;
 			devices[0].usUsage = 0x02;
-			devices[0].dwFlags = RI.RIDEV_INPUTSINK;
+			devices[0].dwFlags = RIDEV_INPUTSINK;
 			devices[0].hwndTarget = windowHandle;
 
 			// Keyboard
 			devices[1].usUsagePage = 0x01;
 			devices[1].usUsage = 0x06;
-			devices[1].dwFlags = RI.RIDEV_INPUTSINK;
+			devices[1].dwFlags = RIDEV_INPUTSINK;
 			devices[1].hwndTarget = windowHandle;
 
 			if(NativeMethods.RegisterRawInputDevices(devices, 2, Marshal.SizeOf(devices[0])))

@@ -10,20 +10,20 @@ namespace RawInput
 	/// </summary>
 	public static partial class RI
 	{
-		/// <summary>
-		/// Size of the RAWINPUTHEADER struct.
-		/// Depends on build target.
-		/// </summary>
-#if WIN64
+        /// <summary>
+        /// Size of the RAWINPUTHEADER struct.
+        /// Depends on build target.
+        /// </summary>
+#if (WIN64)
 		public const int RAWINPUTHEADER_SIZE = 24;
-#elif WIN32
+#elif(WIN32)
 		public const int RAWINPUTHEADER_SIZE = 16;
 #endif
-		/// <summary>
-		/// Used with <see cref="RAWINPUTDEVICE.dwFlags"/> to receive input even when called is not in the foreground. 
-		/// <see cref="RAWINPUTDEVICE.hwndTarget"/> must be set if you use this!
-		/// </summary>
-		public const UInt32 RIDEV_INPUTSINK = 0x00000100;
+        /// <summary>
+        /// Used with <see cref="RAWINPUTDEVICE.dwFlags"/> to receive input even when called is not in the foreground. 
+        /// <see cref="RAWINPUTDEVICE.hwndTarget"/> must be set if you use this!
+        /// </summary>
+        public const UInt32 RIDEV_INPUTSINK = 0x00000100;
 
 		/// <summary>
 		/// Used with <see cref="GetRawInputData"/>. <para/>

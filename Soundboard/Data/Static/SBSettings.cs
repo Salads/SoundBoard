@@ -47,7 +47,7 @@ namespace Soundboard
 		private bool m_MuteMicrophoneWhilePlaying;
         private AudioDevice m_SelectedRecordingDevice;
 
-		private const string _DEFAULT_LOCATION = "default.soundboard";
+		private const string _DEFAULT_FILENAME = "default.sbp";
 
 		public bool FirstRun { get; set; }
 
@@ -102,12 +102,24 @@ namespace Soundboard
             }
         }
 
+        public bool IsPortable 
+        {
+            get 
+            {
+#if (PORTABLE)
+                return true;
+#else
+                return false;
+#endif
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler RecordingDeviceChanged;
 
 		private SBSettings()
 		{
-			Sounds.RemovingItem += Sounds_RemovingItem;
+            Sounds.RemovingItem += Sounds_RemovingItem;
 			Sounds.ListChanged += Sounds_ListChanged;
 		}
 
@@ -140,6 +152,18 @@ namespace Soundboard
 				HotkeyMap.Remove(e.RemovedItem.HotKey);
 			}
 		}
+
+        public string GetSaveFolder()
+        {
+            if(IsPortable)
+            {
+                return Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Saves"); // Portable version saves in the same directory
+            }
+            else
+            {
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboard.NET", "Saves");
+            }
+        }
 
         public void ApplyMicSettings()
         {
@@ -176,21 +200,18 @@ namespace Soundboard
 			SelectedRecordingDevice = null;
 		}
 
-		public void LoadFromFile(string Filename = _DEFAULT_LOCATION) 
-		{
-			//	If we want to load from a file, that means we want to get rid of our old settings.
-			//	If the file doesn't exist might as well set to default then save the file.
-			if(!File.Exists(Filename))
+		public void LoadFromFile(string filename = _DEFAULT_FILENAME)
+        {
+            Directory.CreateDirectory(GetSaveFolder());
+            ResetToDefault();
+
+            if (!File.Exists(Path.Combine(GetSaveFolder(), filename)))
 			{
-				ResetToDefault();
-				SaveToFile(Filename);
+				SaveToFile(filename);
 				return;
 			}
 
-			// Just to be sanitary. (safeguard in case settings are loaded again somewhere)
-			ResetToDefault();
-
-			using(BinaryReader reader = new BinaryReader(File.OpenRead(Filename)))
+			using(BinaryReader reader = new BinaryReader(File.OpenRead(filename)))
 			{
 				while(reader.BaseStream.Position != reader.BaseStream.Length)
 				{
@@ -284,9 +305,10 @@ namespace Soundboard
 			}
 		}
 
-		public void SaveToFile(string Filename = _DEFAULT_LOCATION) 
+		public void SaveToFile(string filename = _DEFAULT_FILENAME) 
 		{
-			using(BinaryWriter writer = new BinaryWriter(File.Create(Filename)))
+            Directory.CreateDirectory(GetSaveFolder());
+			using(BinaryWriter writer = new BinaryWriter(File.Create(Path.Combine(GetSaveFolder(), filename))))
 			{
 				writer.Write((int)SettingTags.TAG_FirstRun);
 				writer.Write(FirstRun);

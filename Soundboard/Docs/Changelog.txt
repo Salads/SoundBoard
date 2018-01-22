@@ -5,3 +5,4 @@
 - Sounds list now resizes by a default size ratio if the content is too small.
 - Add Sound Form now resizes filename box when resizing
 - Add Sound Form now safely checks values 
+- Installer version created
