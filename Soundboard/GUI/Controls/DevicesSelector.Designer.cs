@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.ui_RecordingDeviceSelector = new Soundboard.GUI.Controls.Components.SingleDeviceSelector();
+			this.ui_RecordingDeviceSelector = new Soundboard.GUI.SingleDeviceSelector();
 			this.ui_PlaybackDevicesSelector = new Soundboard.GUI.Controls.Components.PlaybackDevicesSelector();
 			this.colDevice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.SuspendLayout();
@@ -88,7 +88,7 @@
 		#endregion
 
 		private Controls.Components.PlaybackDevicesSelector ui_PlaybackDevicesSelector;
-		private Controls.Components.SingleDeviceSelector ui_RecordingDeviceSelector;
+		private SingleDeviceSelector ui_RecordingDeviceSelector;
 		private System.Windows.Forms.ColumnHeader colDevice;
 	}
 }

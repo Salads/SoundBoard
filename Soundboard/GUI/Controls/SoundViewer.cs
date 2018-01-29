@@ -90,7 +90,7 @@ namespace Soundboard.GUI
         private void EV_Button_AddSound_MouseClick(object sender, MouseEventArgs e)
         {
             BeforeAddSoundClicked?.Invoke(this, new EventArgs());
-            SBSettings.Instance.MicMuted = false;
+            SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
 
             using (NewSoundForm form = new NewSoundForm())
             {

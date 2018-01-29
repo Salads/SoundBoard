@@ -47,7 +47,7 @@ namespace Soundboard.GUI.Controls.Components
 				Items.Add(newItem);
 			};
 
-			ItemChecked += PlaybackDeviceSelector_ItemChecked;
+            ItemChecked += PlaybackDeviceSelector_ItemChecked;
 			SizeChanged += PlaybackDeviceSelector_SizeChanged;
 			Devices.ActivePlaybackDevices.ListChanged += ActivePlaybackDevices_ListChanged;
 			Devices.ActivePlaybackDevices.RemovingItem += ActivePlaybackDevices_RemovingItem;

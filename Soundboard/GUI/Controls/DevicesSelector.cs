@@ -22,17 +22,8 @@ namespace Soundboard.GUI
 			if(!DesignMode)
 			{
 				ui_PlaybackDevicesSelector.Initialize();
-				ui_RecordingDeviceSelector.Initialize(GUI.Controls.Components.DeviceType.Recording);
-				ui_RecordingDeviceSelector.SelectedIndexChanged += EV_RecordingDeviceSelector_SelectedIndexChanged;
+				ui_RecordingDeviceSelector.Initialize(DeviceType.Recording);
 			}
-		}
-
-		private void EV_RecordingDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
-		{
-            // Unmute the previous recording device if there is one.
-            SBSettings.Instance.MicMuted = false;
-
-			SBSettings.Instance.SelectedRecordingDevice = (ui_RecordingDeviceSelector.SelectedIndex == 0 ? null : ui_RecordingDeviceSelector.SelectedItem as AudioDevice);
 		}
 	}
 }

@@ -256,13 +256,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if "$(ConfigurationName)" == Release OR  "$(ConfigurationName)" == "Release Portable"(
-
-RMDIR /s /q "$(TargetDir)build\"
-MKDIR "$(TargetDir)build\"
-ROBOCOPY "$(TargetDir) " "$(TargetDir)build\ " *.exe
-ROBOCOPY "$(TargetDir) " "$(TargetDir)build\ " *.dll
-ROBOCOPY "$(TargetDir) " "$(TargetDir)build\ " *.msi
-)</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)PostBuild.bat" "$(ConfigurationName)" "$(TargetDir)" "$(SolutionDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

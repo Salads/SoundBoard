@@ -17,6 +17,7 @@ namespace Soundboard
 		{
 			Info = NewDevice ?? throw new ArgumentNullException("NewDevice", "Device cannot be null.");
 			Volume = AudioEndpointVolume.FromDevice(NewDevice);
+            OriginalMicMute = Volume.IsMuted;
 		}
 
 		public string FriendlyName { get { return Info.FriendlyName; } }
@@ -29,6 +30,8 @@ namespace Soundboard
 		public MMDevice Info { get; private set; }
 
 		public AudioEndpointVolume Volume { get; private set; }
+
+        public bool OriginalMicMute { get; private set; }
 
 		public void Dispose() 
 		{

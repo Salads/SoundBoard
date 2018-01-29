@@ -44,9 +44,6 @@ namespace Soundboard
 		{
 			if(e.IsSelected)
 			{
-                Debug.WriteLine("ItemSelectionChanged && IsSelected");
-                Debug.WriteLineIf(e.Item.Tag as Sound != null, "Sound is not null");
-
 				SetSelectedSound(e.Item.Tag as Sound);
 			}
 		}

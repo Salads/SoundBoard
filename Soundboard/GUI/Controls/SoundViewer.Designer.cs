@@ -84,11 +84,11 @@
             // ui_buttonAdd
             // 
             this.ui_buttonAdd.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ui_buttonAdd.Location = new System.Drawing.Point(195, 6);
+            this.ui_buttonAdd.Location = new System.Drawing.Point(195, 5);
             this.ui_buttonAdd.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ui_buttonAdd.MinimumSize = new System.Drawing.Size(83, 26);
+            this.ui_buttonAdd.MinimumSize = new System.Drawing.Size(83, 25);
             this.ui_buttonAdd.Name = "ui_buttonAdd";
-            this.ui_buttonAdd.Size = new System.Drawing.Size(83, 26);
+            this.ui_buttonAdd.Size = new System.Drawing.Size(83, 25);
             this.ui_buttonAdd.TabIndex = 4;
             this.ui_buttonAdd.Text = "Add Sound";
             this.ui_buttonAdd.UseVisualStyleBackColor = true;
@@ -132,11 +132,12 @@
             // 
             // SoundViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.ui_buttonAdd);
             this.Controls.Add(this.ui_textboxSearch);
             this.Controls.Add(this.ui_listview_Sounds);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "SoundViewer";

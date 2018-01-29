@@ -38,7 +38,7 @@
             this.ui_button_ClearHotkey = new System.Windows.Forms.Button();
             this.ui_button_Hotkey = new System.Windows.Forms.Button();
             this.ui_button_cancel = new System.Windows.Forms.Button();
-            this.ui_PreviewDeviceSelector = new Soundboard.GUI.Controls.Components.SingleDeviceSelector();
+            this.ui_PreviewDeviceSelector = new Soundboard.GUI.SingleDeviceSelector();
             this.ui_mediaControl = new Soundboard.MediaControl();
             this.SuspendLayout();
             // 
@@ -217,6 +217,6 @@
 		private System.Windows.Forms.Button ui_button_ClearHotkey;
 		private System.Windows.Forms.Button ui_button_Hotkey;
 		private System.Windows.Forms.Button ui_button_cancel;
-		private Controls.Components.SingleDeviceSelector ui_PreviewDeviceSelector;
+		private SingleDeviceSelector ui_PreviewDeviceSelector;
 	}
 }

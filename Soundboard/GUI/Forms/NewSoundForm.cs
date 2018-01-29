@@ -35,21 +35,31 @@ namespace Soundboard.GUI
 		{
 			InitializeComponent();
 
-            SBSettings.Instance.MicMuted = false;
-			ui_mediaControl.SoundPlayer = m_soundPlayer;
+            SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
+            ui_mediaControl.SoundPlayer = m_soundPlayer;
 			ui_mediaControl.ShowName = false;
             ui_mediaControl.UsePreviewDevice = true;
 			RawInputHandler.ExecuteHotkeys = false; // Don't want to be playing other sounds when tinkering with a new one
 
             if(!DesignMode)
             {
-                ui_PreviewDeviceSelector.Initialize(GUI.Controls.Components.DeviceType.Playback);
+                ui_PreviewDeviceSelector.Initialize(DeviceType.Preview);
+                ui_PreviewDeviceSelector.SelectedIndexChanged += EV_PreviewDeviceSelector_IndexChanged;
                 ui_button_Hotkey.MouseClick += EV_Button_Hotkey_MouseClick;
                 RawInputHandler.KeysChanged += EV_RawInput_KeysChanged;
             }
 		}
 
-		public NewSoundForm(Sound sound) : this()
+        private void EV_PreviewDeviceSelector_IndexChanged(object sender, EventArgs e)
+        {
+            m_soundPlayer.StopAllSounds();
+        }
+
+        /// <summary>
+        /// Constructor for editing sounds.
+        /// </summary>
+        /// <param name="sound">Sound to edit</param>
+        public NewSoundForm(Sound sound) : this()
 		{
 			Text = "Edit Sound";
 			_PopulateControls(sound);
@@ -60,6 +70,7 @@ namespace Soundboard.GUI
             bool filename_valid = File.Exists(ResultFilename);
             bool nickname_valid = !string.IsNullOrWhiteSpace(ui_textbox_nickname.Text);
             bool hotkey_valid = !ResultHotkey.Any() || !SBSettings.Instance.HotkeyMap.ContainsKey(ResultHotkey);
+
             // didn't check time since it's assumed correct all the time.
             string error_result = string.Empty;
             if(!filename_valid)

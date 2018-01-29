@@ -114,15 +114,16 @@ namespace Soundboard
 
         private void EV_MainSoundPlayer_SoundStopped(object sender, EventArgs e)
         {
-            Debug.WriteLine("SoundStopped called");
-            SBSettings.Instance.MicMuted = false;
+            SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
         }
 
         private void EV_MainSoundPlayer_SoundStarted(object sender, EventArgs e)
         {
-            SBSettings.Instance.ApplyMicSettings();
+            if(m_MainSoundPlayer.IsPlaying)
+            {
+                SBSettings.Instance.ApplyMicSettings();
+            }
         }
-
 
         #endregion
 
@@ -134,6 +135,11 @@ namespace Soundboard
 		private void EV_HotkeyPressed(object sender, HotkeyPressedArgs e) 
 		{
 			Debug.WriteLine("Hotkey Pressed");
+            if(m_MainSoundPlayer.IsPlaying)
+            {
+                SBSettings.Instance.ApplyMicSettings();
+            }
+           
 			m_MainSoundPlayer.Play(e.Sound, SBSettings.Instance.SelectedPlaybackDevices);
 		}
 
@@ -171,7 +177,7 @@ namespace Soundboard
         private void EV_FormClosing(object sender, FormClosingEventArgs e) 
         {
             m_MainSoundPlayer.StopAllSounds();
-            SBSettings.Instance.MicMuted = false;
+            SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
             SBSettings.Instance.SaveToFile();
         }
         #endregion
@@ -186,5 +192,5 @@ namespace Soundboard
 
 			base.WndProc(ref m);
 		}
-	}
+    }
 }

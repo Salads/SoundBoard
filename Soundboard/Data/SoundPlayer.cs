@@ -94,6 +94,7 @@ namespace Soundboard
 			foreach(ISoundOut PlayingSound in m_PlayingSounds)
 			{
 				Task.Run(() => _StopSound(PlayingSound));
+                Debug.WriteLine("Stopping sound: " + Environment.NewLine + "\t");
 			}
 
 			m_PlayingSounds.Clear();

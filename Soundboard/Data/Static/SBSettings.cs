@@ -46,8 +46,9 @@ namespace Soundboard
 
 		private bool m_MuteMicrophoneWhilePlaying;
         private AudioDevice m_SelectedRecordingDevice;
+        private AudioDevice m_SelectedPreviewDevice;
 
-		private const string _DEFAULT_FILENAME = "default.sbp";
+		public const string _DEFAULT_FILENAME = "default.sbp";
 
 		public bool FirstRun { get; set; }
 
@@ -77,9 +78,17 @@ namespace Soundboard
             }
         }
 
-		public AudioDevice SelectedPreviewDevice { get; set; } = null;
+		public AudioDevice SelectedPreviewDevice 
+        {
+            get { return m_SelectedPreviewDevice; }
+            set
+            {
+                m_SelectedPreviewDevice = value;
+                PreviewDeviceChanged?.BeginInvoke(this, new EventArgs(), null, null);
+            }
+        }
 
-		public Dictionary<Hotkey, Sound> HotkeyMap { get; set; } = new Dictionary<Hotkey, Sound>();
+        public Dictionary<Hotkey, Sound> HotkeyMap { get; set; } = new Dictionary<Hotkey, Sound>();
 
 		//////////////////////////////////////////////////////////
 
@@ -90,6 +99,7 @@ namespace Soundboard
 				if(SelectedRecordingDevice != null)
 				{
 					SelectedRecordingDevice.Volume.IsMuted = value;
+                    Debug.WriteLine(value ? "Muted Microphone" : "Un-Muted Microphone");
 				}
 			}
 		}
@@ -116,6 +126,7 @@ namespace Soundboard
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler RecordingDeviceChanged;
+        public event EventHandler PreviewDeviceChanged;
 
 		private SBSettings()
 		{
@@ -153,7 +164,7 @@ namespace Soundboard
 			}
 		}
 
-        public string GetSaveFolder()
+        public string GetSaveFolder() 
         {
             if(IsPortable)
             {
@@ -163,6 +174,13 @@ namespace Soundboard
             {
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboard.NET", "Saves");
             }
+        }
+
+        public string GetSaveFilename(string filename)
+        {
+            if (filename == null) throw new ArgumentNullException("filename cannot be null");
+
+            return Path.Combine(GetSaveFolder(), filename);
         }
 
         public void ApplyMicSettings()
@@ -205,110 +223,117 @@ namespace Soundboard
             Directory.CreateDirectory(GetSaveFolder());
             ResetToDefault();
 
-            if (!File.Exists(Path.Combine(GetSaveFolder(), filename)))
+            string full_filename = Instance.GetSaveFilename(filename);
+
+            if (!File.Exists(full_filename))
 			{
-				SaveToFile(filename);
+				SaveToFile(full_filename);
 				return;
 			}
 
-			using(BinaryReader reader = new BinaryReader(File.OpenRead(filename)))
-			{
-				while(reader.BaseStream.Position != reader.BaseStream.Length)
-				{
-					SettingTags Tag = (SettingTags)(reader.ReadInt32());
-					switch(Tag)
-					{
-						case SettingTags.TAG_FirstRun:
-							FirstRun = reader.ReadBoolean();
-							break;
+            using (BinaryReader reader = new BinaryReader(File.OpenRead(full_filename)))
+            {
+                while (reader.BaseStream.Position != reader.BaseStream.Length)
+                {
+                    SettingTags Tag = (SettingTags)(reader.ReadInt32());
+                    switch (Tag)
+                    {
+                        case SettingTags.TAG_FirstRun:
+                        FirstRun = reader.ReadBoolean();
+                        break;
 
-						case SettingTags.TAG_MuteMicWhilePlaying:
-							MuteMicrophoneWhilePlaying = reader.ReadBoolean();
-							break;
+                        case SettingTags.TAG_MuteMicWhilePlaying:
+                        MuteMicrophoneWhilePlaying = reader.ReadBoolean();
+                        break;
 
-						case SettingTags.TAG_GlobalVolume:
-							GlobalVolume = reader.ReadUInt32();
-							break;
+                        case SettingTags.TAG_GlobalVolume:
+                        GlobalVolume = reader.ReadUInt32();
+                        break;
 
-						case SettingTags.TAG_PlaybackDeviceGUIDs:
-							{
-								int Count = reader.ReadInt32();
-								List<string> savedGUIDs = new List<string>();
-								for(int x = 0; x < Count; ++x)
-								{
-									savedGUIDs.Add(reader.ReadString());
-								}
+                        case SettingTags.TAG_PlaybackDeviceGUIDs:
+                        {
+                            int Count = reader.ReadInt32();
+                            List<string> savedGUIDs = new List<string>();
+                            for (int x = 0; x < Count; ++x)
+                            {
+                                savedGUIDs.Add(reader.ReadString());
+                            }
 
-								foreach(AudioDevice device in Devices.ActivePlaybackDevices.Where(x => savedGUIDs.Contains(x.DeviceID)))
-								{
-									SelectedPlaybackDevices.Add(device);
-								}
-							} break;
+                            foreach (AudioDevice device in Devices.ActivePlaybackDevices.Where(x => savedGUIDs.Contains(x.DeviceID)))
+                            {
+                                SelectedPlaybackDevices.Add(device);
+                            }
+                        }
+                        break;
 
-						case SettingTags.TAG_RecordingDeviceGUID:
-							{
-								string recordingDeviceGUID = reader.ReadString();
+                        case SettingTags.TAG_RecordingDeviceGUID:
+                        {
+                            string recordingDeviceGUID = reader.ReadString();
 
-								var matchingRecordingDevices = Devices.ActiveRecordingDevices.Where(x => recordingDeviceGUID == x.DeviceID);
-								if(Guid.Empty.ToString() == recordingDeviceGUID || !matchingRecordingDevices.Any())
-								{
-									SelectedRecordingDevice = null;
-								}
-								else
-								{
-									SelectedRecordingDevice = matchingRecordingDevices.First();
-								}
-							} break;
+                            var matchingRecordingDevices = Devices.ActiveRecordingDevices.Where(x => recordingDeviceGUID == x.DeviceID);
+                            if (Guid.Empty.ToString() == recordingDeviceGUID || !matchingRecordingDevices.Any())
+                            {
+                                SelectedRecordingDevice = null;
+                            }
+                            else
+                            {
+                                SelectedRecordingDevice = matchingRecordingDevices.First();
+                            }
+                        }
+                        break;
 
-						case SettingTags.TAG_Sounds:
-							{
-								int soundsCount = reader.ReadInt32();
-								for(int x = 0; x < soundsCount; ++x)
-								{
-									string savedSoundPath = reader.ReadString();
-									string rawStartTime = reader.ReadString();
-									string nickname = reader.ReadString();
+                        case SettingTags.TAG_Sounds:
+                        {
+                            int soundsCount = reader.ReadInt32();
+                            for (int x = 0; x < soundsCount; ++x)
+                            {
+                                string savedSoundPath = reader.ReadString();
+                                string rawStartTime = reader.ReadString();
+                                string nickname = reader.ReadString();
 
-									Sound newSound = new Sound(savedSoundPath)
-									{
-										StartTime = TimeSpan.Parse(rawStartTime),
-										Nickname = nickname
-									};
+                                Sound newSound = new Sound(savedSoundPath)
+                                {
+                                    StartTime = TimeSpan.Parse(rawStartTime),
+                                    Nickname = nickname
+                                };
 
-									int hotkeyKeysCount = reader.ReadInt32();
-									for(int i = 0; i < hotkeyKeysCount; ++i)
-									{
-										newSound.HotKey.Add((Keys)reader.ReadInt32());
-									}
+                                int hotkeyKeysCount = reader.ReadInt32();
+                                for (int i = 0; i < hotkeyKeysCount; ++i)
+                                {
+                                    newSound.HotKey.Add((Keys)reader.ReadInt32());
+                                }
 
-									Debug.WriteLine("Loaded: " + newSound.Nickname + " : " + newSound.HotKey.ToString());
-									Sounds.Add(newSound);
-								}
-							} break;
-						case SettingTags.TAG_PreviewDeviceGUID:
-							{
-								string previewDeviceGUID = reader.ReadString();
+                                Debug.WriteLine("Loaded: " + newSound.Nickname + " : " + newSound.HotKey.ToString());
+                                Sounds.Add(newSound);
+                            }
+                        }
+                        break;
+                        case SettingTags.TAG_PreviewDeviceGUID:
+                        {
+                            string previewDeviceGUID = reader.ReadString();
 
-								var matchingPlaybackDevices = Devices.ActivePlaybackDevices.Where(x => previewDeviceGUID == x.DeviceID);
-								if(Guid.Empty.ToString() == previewDeviceGUID || !matchingPlaybackDevices.Any())
-								{
-									SelectedPreviewDevice = null;
-								}
-								else
-								{
-									SelectedPreviewDevice = matchingPlaybackDevices.First();
-								}
+                            var matchingPlaybackDevices = Devices.ActivePlaybackDevices.Where(x => previewDeviceGUID == x.DeviceID);
+                            if (Guid.Empty.ToString() == previewDeviceGUID || !matchingPlaybackDevices.Any())
+                            {
+                                SelectedPreviewDevice = null;
+                            }
+                            else
+                            {
+                                SelectedPreviewDevice = matchingPlaybackDevices.First();
+                            }
 
-							} break;
-					}
-				}
-			}
+                        }
+                        break;
+                    }
+                }
+            }
 		}
 
 		public void SaveToFile(string filename = _DEFAULT_FILENAME) 
 		{
             Directory.CreateDirectory(GetSaveFolder());
-			using(BinaryWriter writer = new BinaryWriter(File.Create(Path.Combine(GetSaveFolder(), filename))))
+
+            using (BinaryWriter writer = new BinaryWriter(File.Create(Instance.GetSaveFilename(filename))))
 			{
 				writer.Write((int)SettingTags.TAG_FirstRun);
 				writer.Write(FirstRun);

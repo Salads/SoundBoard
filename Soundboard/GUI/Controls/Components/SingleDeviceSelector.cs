@@ -10,18 +10,20 @@ using System.Windows.Forms;
 using Soundboard.Data.Static;
 using Soundboard.Data;
 
-namespace Soundboard.GUI.Controls.Components
+namespace Soundboard.GUI
 {
 	public enum DeviceType
 	{
-		Playback,
+		Preview,
 		Recording
 	}
 
 	public class SingleDeviceSelector : ComboBox
 	{
 		private CBindingList<AudioDevice> m_BindingListSource = null;
-		private DeviceType m_DeviceType;
+        private bool IsInitialized { get; set; } = false;
+
+        public DeviceType DeviceType { get; private set; }
 
 		public SingleDeviceSelector()
 		{}
@@ -35,34 +37,71 @@ namespace Soundboard.GUI.Controls.Components
 			}
 		}
 
-		public void Initialize(DeviceType deviceType)
-		{
-			m_DeviceType = deviceType;
+        protected override void OnSelectedIndexChanged(EventArgs e) 
+        {
+            if (!IsInitialized)
+            {
+                return;
+            }
 
-			if(m_BindingListSource != null)
+            if(SelectedIndex == 0)
+            {
+                if(DeviceType == DeviceType.Preview)
+                {
+                    SBSettings.Instance.SelectedPreviewDevice = null;
+                }
+                else if(DeviceType == DeviceType.Recording)
+                {
+                    AudioDevice recordingDevice = SBSettings.Instance.SelectedRecordingDevice;
+                    SBSettings.Instance.MicMuted = recordingDevice?.OriginalMicMute ?? false;
+                    SBSettings.Instance.SelectedRecordingDevice = null;
+                }
+            }
+            else
+            {
+                if (DeviceType == DeviceType.Preview)
+                {
+                    SBSettings.Instance.SelectedPreviewDevice = Devices.ActivePlaybackDevices[SelectedIndex - 1];
+                    Debug.WriteLine("Selected Preview Device: " + SBSettings.Instance.SelectedPreviewDevice);
+                }
+                else if (DeviceType == DeviceType.Recording)
+                {
+                    AudioDevice recordingDevice = SBSettings.Instance.SelectedRecordingDevice;
+                    SBSettings.Instance.MicMuted = recordingDevice?.OriginalMicMute ?? false;
+                    SBSettings.Instance.SelectedRecordingDevice = Devices.ActiveRecordingDevices[SelectedIndex - 1];
+                    Debug.WriteLine("Selected Recording Device: " + SBSettings.Instance.SelectedRecordingDevice);
+                }
+            }
+
+            base.OnSelectedIndexChanged(e);
+        }
+
+        public void Initialize(DeviceType deviceType)
+		{
+			DeviceType = deviceType;
+
+			if(m_BindingListSource != null) 
 			{
 				m_BindingListSource.ListChanged -= DeviceList_Changed;
 				m_BindingListSource.RemovingItem -= DeviceList_RemovingItem;
 			}
 
-			string defaultOption = string.Empty;
+            Items.Clear();
 			AudioDevice selectedDevice = null;
 
-			if(m_DeviceType == DeviceType.Playback)
+			if(DeviceType == DeviceType.Preview)
 			{
 				m_BindingListSource = Devices.ActivePlaybackDevices;
-				defaultOption = "Select Playback Device (None)";
+				Items.Add("Select Playback Device (None)");
 				selectedDevice = SBSettings.Instance.SelectedPreviewDevice;
 			}
-			else if(m_DeviceType == DeviceType.Recording)
+			else if(DeviceType == DeviceType.Recording)
 			{
 				m_BindingListSource = Devices.ActiveRecordingDevices;
-				defaultOption = "Select Recording Device (None)";
+				Items.Add("Select Recording Device (None)");
 				selectedDevice = SBSettings.Instance.SelectedRecordingDevice;
 			}
 
-			Items.Clear();
-			Items.Add(defaultOption);
 			SelectedIndex = 0;
 
 			foreach(AudioDevice device in m_BindingListSource)
@@ -76,6 +115,8 @@ namespace Soundboard.GUI.Controls.Components
 			
 			m_BindingListSource.ListChanged += DeviceList_Changed;
 			m_BindingListSource.RemovingItem += DeviceList_RemovingItem;
+
+            IsInitialized = true;
 		}
 
 		private void DeviceList_RemovingItem(object sender, ItemRemovedArgs<AudioDevice> e)
