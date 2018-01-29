@@ -6,3 +6,6 @@
 - Add Sound Form now resizes filename box when resizing
 - Add Sound Form now safely checks values 
 - Installer version created
+- Selected recording devices now revert back to their original mic muted setting, no matter what that setting was. (muted or unmuted)
+- SBP files are now saved in a "Saves" folder
+- Added a SplitContainer to the main window for user resizing.
