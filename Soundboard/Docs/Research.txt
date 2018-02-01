@@ -10,3 +10,11 @@ https://msdn.microsoft.com/en-us/library/windows/desktop/bb761475(v=vs.85).aspx
 	> 24dbb0fc-9311-4b3d-9cf0-18ff155639d4/2, boolean for the "Power management" options. (True for "Disable automatically to save power")
 	> 24dbb0fc-9311-4b3d-9cf0-18ff155639d4/0, if this exists then it is a string of the device id that was selected as the listen target.
 		~ Some other computers don't have the 0 at the end with the same base GUID. Need more testing to see if it's stored in another place...
+
+============================
+Possible Names:
+
+- Sayuri
+- styrelse-board (styrelse is board in swedish)
+- Makahiya
+- Hanami

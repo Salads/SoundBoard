@@ -18,6 +18,9 @@ namespace Soundboard.GUI
 		Recording
 	}
 
+    /// <summary>
+    /// Manages the selected preview/recording device
+    /// </summary>
 	public class SingleDeviceSelector : ComboBox
 	{
 		private CBindingList<AudioDevice> m_BindingListSource = null;
@@ -49,12 +52,14 @@ namespace Soundboard.GUI
                 if(DeviceType == DeviceType.Preview)
                 {
                     SBSettings.Instance.SelectedPreviewDevice = null;
+                    Debug.WriteLine("Selected Preview Device: NULL");
                 }
                 else if(DeviceType == DeviceType.Recording)
                 {
                     AudioDevice recordingDevice = SBSettings.Instance.SelectedRecordingDevice;
                     SBSettings.Instance.MicMuted = recordingDevice?.OriginalMicMute ?? false;
                     SBSettings.Instance.SelectedRecordingDevice = null;
+                    Debug.WriteLine("Selected Recording Device: NULL");
                 }
             }
             else
@@ -119,7 +124,8 @@ namespace Soundboard.GUI
             IsInitialized = true;
 		}
 
-		private void DeviceList_RemovingItem(object sender, ItemRemovedArgs<AudioDevice> e)
+        #region Active Device List Events
+        private void DeviceList_RemovingItem(object sender, ItemRemovedArgs<AudioDevice> e)
 		{
 			// If the removed device is the selected item, set the SelectedIndex to 0, the "None" choice.
 			if(ReferenceEquals(e.RemovedItem, SBSettings.Instance.SelectedPreviewDevice) ||
@@ -138,5 +144,6 @@ namespace Soundboard.GUI
 				Items.Add(m_BindingListSource[e.NewIndex]);
 			}
 		}
-	}
+        #endregion
+    }
 }

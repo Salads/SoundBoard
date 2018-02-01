@@ -118,6 +118,8 @@
             // 
             // ui_textboxSearch
             // 
+            this.ui_textboxSearch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.ui_textboxSearch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.RecentlyUsedList;
             this.ui_textboxSearch.BannerText = "Search...";
             this.ui_textboxSearch.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ui_textboxSearch.Location = new System.Drawing.Point(3, 6);

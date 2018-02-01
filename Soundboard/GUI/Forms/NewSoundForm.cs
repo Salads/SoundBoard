@@ -50,11 +50,6 @@ namespace Soundboard.GUI
             }
 		}
 
-        private void EV_PreviewDeviceSelector_IndexChanged(object sender, EventArgs e)
-        {
-            m_soundPlayer.StopAllSounds();
-        }
-
         /// <summary>
         /// Constructor for editing sounds.
         /// </summary>
@@ -122,6 +117,11 @@ namespace Soundboard.GUI
         #region Event Handlers
 
         #region Control Event Handlers
+
+        private void EV_PreviewDeviceSelector_IndexChanged(object sender, EventArgs e)
+        {
+            m_soundPlayer.StopAllSounds();
+        }
 
         private void EV_Browse_MouseClick(object sender, MouseEventArgs e)
         {

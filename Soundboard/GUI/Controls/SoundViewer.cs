@@ -52,7 +52,7 @@ namespace Soundboard.GUI
 		public void RefreshSoundsInList(string filter = "")
 		{
 			ui_listview_Sounds.Items.Clear();
-			List<Sound> sounds = SBSettings.Instance.Sounds.Where(x => x.FullFilepath.ToLower().Contains(filter) || x.Nickname.ToLower().Contains(filter)).ToList();
+			var sounds = SBSettings.Instance.Sounds.Where(x => x.DisplayName.ToLower().Contains(filter.ToLower()));
 
 			foreach(Sound sound in sounds)
 			{

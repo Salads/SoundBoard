@@ -40,7 +40,7 @@
             this.ui_tabMediaControl = new System.Windows.Forms.TabPage();
             this.ui_mediaControl = new Soundboard.MediaControl();
             this.ui_tabPageDevices = new System.Windows.Forms.TabPage();
-            this.ui_deviceControl = new Soundboard.GUI.DevicesSelector();
+            this.ui_devicesSelector = new Soundboard.GUI.DevicesSelector();
             this.ui_tabPlaybackOptions = new System.Windows.Forms.TabPage();
             this.ui_tab_PlaybackOptions = new Soundboard.GUI.Controls.PlaybackOptionsControl();
             this.ui_split_container = new System.Windows.Forms.SplitContainer();
@@ -168,32 +168,32 @@
             // ui_tabPageDevices
             // 
             this.ui_tabPageDevices.BackColor = System.Drawing.SystemColors.Control;
-            this.ui_tabPageDevices.Controls.Add(this.ui_deviceControl);
-            this.ui_tabPageDevices.Location = new System.Drawing.Point(4, 24);
+            this.ui_tabPageDevices.Controls.Add(this.ui_devicesSelector);
+            this.ui_tabPageDevices.Location = new System.Drawing.Point(4, 22);
             this.ui_tabPageDevices.Name = "ui_tabPageDevices";
             this.ui_tabPageDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.ui_tabPageDevices.Size = new System.Drawing.Size(454, 173);
+            this.ui_tabPageDevices.Size = new System.Drawing.Size(454, 175);
             this.ui_tabPageDevices.TabIndex = 1;
             this.ui_tabPageDevices.Text = "Devices";
             // 
-            // ui_deviceControl
+            // ui_devicesSelector
             // 
-            this.ui_deviceControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ui_deviceControl.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ui_deviceControl.Location = new System.Drawing.Point(3, 3);
-            this.ui_deviceControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ui_deviceControl.Name = "ui_deviceControl";
-            this.ui_deviceControl.Size = new System.Drawing.Size(448, 167);
-            this.ui_deviceControl.TabIndex = 0;
+            this.ui_devicesSelector.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ui_devicesSelector.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ui_devicesSelector.Location = new System.Drawing.Point(3, 3);
+            this.ui_devicesSelector.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ui_devicesSelector.Name = "ui_devicesSelector";
+            this.ui_devicesSelector.Size = new System.Drawing.Size(448, 169);
+            this.ui_devicesSelector.TabIndex = 0;
             // 
             // ui_tabPlaybackOptions
             // 
             this.ui_tabPlaybackOptions.BackColor = System.Drawing.SystemColors.Control;
             this.ui_tabPlaybackOptions.Controls.Add(this.ui_tab_PlaybackOptions);
-            this.ui_tabPlaybackOptions.Location = new System.Drawing.Point(4, 24);
+            this.ui_tabPlaybackOptions.Location = new System.Drawing.Point(4, 22);
             this.ui_tabPlaybackOptions.Name = "ui_tabPlaybackOptions";
             this.ui_tabPlaybackOptions.Padding = new System.Windows.Forms.Padding(3);
-            this.ui_tabPlaybackOptions.Size = new System.Drawing.Size(454, 173);
+            this.ui_tabPlaybackOptions.Size = new System.Drawing.Size(454, 175);
             this.ui_tabPlaybackOptions.TabIndex = 2;
             this.ui_tabPlaybackOptions.Text = "Playback Options";
             // 
@@ -203,7 +203,7 @@
             this.ui_tab_PlaybackOptions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ui_tab_PlaybackOptions.Location = new System.Drawing.Point(3, 3);
             this.ui_tab_PlaybackOptions.Name = "ui_tab_PlaybackOptions";
-            this.ui_tab_PlaybackOptions.Size = new System.Drawing.Size(448, 167);
+            this.ui_tab_PlaybackOptions.Size = new System.Drawing.Size(448, 169);
             this.ui_tab_PlaybackOptions.TabIndex = 0;
             // 
             // ui_split_container
@@ -290,7 +290,7 @@
 		private System.Windows.Forms.TabPage ui_tabMediaControl;
 		private MediaControl ui_mediaControl;
 		private System.Windows.Forms.TabPage ui_tabPageDevices;
-		public GUI.DevicesSelector ui_deviceControl;
+		public GUI.DevicesSelector ui_devicesSelector;
 		private System.Windows.Forms.TabPage ui_tabPlaybackOptions;
 		private GUI.Controls.PlaybackOptionsControl ui_tab_PlaybackOptions;
         private System.Windows.Forms.SplitContainer ui_split_container;

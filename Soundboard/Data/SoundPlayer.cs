@@ -57,11 +57,11 @@ namespace Soundboard
 
                 //	Need to create one for every output because the stream is handled in WaveSource.
                 //	This means multiple outputs will advance stream position if we don't seperate them.
-                IWaveSource waveSource = CodecFactory.Instance.GetCodec(filename).ToStereo();
-				waveSource.SetPosition(soundStartTime);
+                var soundSource = CodecFactory.Instance.GetCodec(filename); // TODO: OGG Vorbis
+				soundSource.SetPosition(soundStartTime);
 
 				ISoundOut newSoundOut = new WasapiOut() { Latency = 20, Device = device.Info };
-				newSoundOut.Initialize(waveSource);
+				newSoundOut.Initialize(soundSource);
 				newSoundOut.Stopped += EV_OnSoundStopped;
 				newSoundOut.Volume = VolumeNormalized;
 				newSoundOut.Play();

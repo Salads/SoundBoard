@@ -40,14 +40,6 @@ namespace Soundboard
 			ui_volumeBar.Invalidate();
 		}
 
-		public void SoundList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-		{
-			if(e.IsSelected)
-			{
-				SetSelectedSound(e.Item.Tag as Sound);
-			}
-		}
-
 		public void SetSelectedSound(Sound selectedSound)
 		{
 			if(selectedSound == null) return;

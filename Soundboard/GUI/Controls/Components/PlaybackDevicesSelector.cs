@@ -16,6 +16,10 @@ namespace Soundboard.GUI.Controls.Components
 	{
 		public PlaybackDevicesSelector()
 		{
+            if(!DesignMode)
+            {
+                Initialize();
+            }
 		}
 
 		~PlaybackDevicesSelector()

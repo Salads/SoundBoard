@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Soundboard.NET"
-#define MyAppVersion "0.0.2"
+#define MyAppVersion "0.0.1"
 #define MyAppPublisher "Salads"
 #define MyAppURL "https://github.com/Salads/Soundboard.NET"
 #define MyAppExeName "Soundboard.exe"

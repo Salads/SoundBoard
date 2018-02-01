@@ -185,14 +185,7 @@ namespace Soundboard
 
         public void ApplyMicSettings()
         {
-            if (Instance.MuteMicrophoneWhilePlaying)
-            {
-                Instance.MicMuted = true;
-            }
-            else
-            {
-                Instance.MicMuted = false;
-            }
+            Instance.MicMuted = Instance.MuteMicrophoneWhilePlaying;
         }
 
 		public void ResetToDefault()

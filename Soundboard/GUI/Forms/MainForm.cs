@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using System.Diagnostics;
-using CSCore.Codecs;
 using RawInput;
-using System.Runtime.InteropServices;
 using Soundboard.Data;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using Soundboard.Data.Static;
 
 namespace Soundboard
 {
-	public partial class MainForm : Form
+    public partial class MainForm : Form
 	{
 		private SoundPlayer m_MainSoundPlayer = new SoundPlayer()
 		{
 			VolumeNormalized = SBSettings.Instance.VolumeNormalized
 		};
 
-		public MainForm()
+		public MainForm() 
 		{
 			InitializeComponent();
 
@@ -46,7 +41,7 @@ namespace Soundboard
 
             m_MainSoundPlayer.SoundStarted += EV_MainSoundPlayer_SoundStarted;
             m_MainSoundPlayer.SoundStopped += EV_MainSoundPlayer_SoundStopped;
-            ui_soundViewer.ItemSelectionChanged += ui_mediaControl.SoundList_ItemSelectionChanged; // TODO: handle this directly here
+            ui_soundViewer.ItemSelectionChanged += EV_SoundViewer_SelectionChanged;
             ui_soundViewer.BeforeAddSoundClicked += EV_SoundViewer_BeforeAddSound;
             ui_soundViewer.SoundDoubleClicked += EV_SoundViewer_SoundDoubleClicked;
 
@@ -114,7 +109,10 @@ namespace Soundboard
 
         private void EV_MainSoundPlayer_SoundStopped(object sender, EventArgs e)
         {
-            SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
+            if(!m_MainSoundPlayer.IsPlaying)
+            {
+                SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
+            }
         }
 
         private void EV_MainSoundPlayer_SoundStarted(object sender, EventArgs e)
@@ -127,14 +125,21 @@ namespace Soundboard
 
         #endregion
 
+        private void EV_SoundViewer_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (e.IsSelected)
+            {
+                ui_mediaControl.SetSelectedSound(e.Item.Tag as Sound);
+            }
+        }
+
         private void EV_SelectedPlaybackDevices_ItemRemoved(object sender, ItemRemovedArgs<AudioDevice> e) 
 		{
-			m_MainSoundPlayer.StopSoundsOnDevice(e.RemovedItem);
-		}
+            m_MainSoundPlayer.StopSoundsOnDevice(e.RemovedItem);
+        }
 
 		private void EV_HotkeyPressed(object sender, HotkeyPressedArgs e) 
 		{
-			Debug.WriteLine("Hotkey Pressed");
             if(m_MainSoundPlayer.IsPlaying)
             {
                 SBSettings.Instance.ApplyMicSettings();
@@ -145,6 +150,7 @@ namespace Soundboard
 
 		private void EV_TabControl_KeyDown(object sender, KeyEventArgs e) 
 		{
+            // Prevent tab control using keys to navigate since we're using hotkeys that may interfere.
 			if(e.KeyCode == Keys.Left || e.KeyCode == Keys.Right ||
 				e.KeyCode == Keys.Home || e.KeyCode == Keys.End)
 			{
