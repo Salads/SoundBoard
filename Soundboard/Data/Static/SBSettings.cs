@@ -131,6 +131,7 @@ namespace Soundboard
 
 		private SBSettings()
 		{
+            ResetToDefault();
             Sounds.RemovingItem += Sounds_RemovingItem;
 			Sounds.ListChanged += Sounds_ListChanged;
 		}

@@ -20,7 +20,23 @@ namespace Soundboard
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			SBSettings.Instance.LoadFromFile();
+            SBSettings.Instance.LoadFromFile();
+            if (SBSettings.Instance.FirstRun)
+            {
+                DialogResult FirstResult =
+                MessageBox.Show("Would you like to visit the \"How to\" webpage?",
+                                "Welcome!",
+                                MessageBoxButtons.YesNo);
+
+                if (FirstResult == DialogResult.Yes)
+                {
+                    Process.Start("https://salads.github.io/Soundboard");
+                }
+
+                SBSettings.Instance.FirstRun = false;
+                SBSettings.Instance.SaveToFile();
+            }
+            
 			Application.Run(new MainForm());
 		}
 	}

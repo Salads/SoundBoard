@@ -15,27 +15,12 @@ namespace Soundboard
 			VolumeNormalized = SBSettings.Instance.VolumeNormalized
 		};
 
-		public MainForm() 
-		{
-			InitializeComponent();
+        public MainForm()
+        {
+            InitializeComponent();
 
-			RI.RegisterDevices(Handle);
-			ui_mediaControl.SoundPlayer = m_MainSoundPlayer;
-
-			if(SBSettings.Instance.FirstRun) 
-			{
-				DialogResult FirstResult =
-				MessageBox.Show("Would you like to visit the \"How to\" webpage?",
-								"Welcome!",
-								MessageBoxButtons.YesNo);
-
-				if(FirstResult == DialogResult.Yes)
-				{
-					_OpenHelpWebsite();
-				}
-
-				SBSettings.Instance.FirstRun = false;
-			}
+            RI.RegisterDevices(Handle);
+            ui_mediaControl.SoundPlayer = m_MainSoundPlayer;
 
             RawInputHandler.HotkeyPressed += EV_HotkeyPressed;
 
@@ -50,19 +35,14 @@ namespace Soundboard
             SBSettings.Instance.SelectedPlaybackDevices.RemovingItem += EV_SelectedPlaybackDevices_ItemRemoved;
         }
 
-        private void _OpenHelpWebsite()
-        {
-            Process.Start("https://salads.github.io/Soundboard");
-        }
-
         #region Event Handlers
 
         #region Menu Events
 
         private void EV_Menu_HowTo_Clicked(object sender, EventArgs e)
 		{
-			_OpenHelpWebsite();
-		}
+            Process.Start("https://salads.github.io/Soundboard");
+        }
 
 		private void EV_Menu_ResetDeviceSettings_Clicked(object sender, EventArgs e)
 		{
