@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soundboard", "Soundboard\Soundboard.csproj", "{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tori", "Soundboard\Tori.csproj", "{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Registry Tester", "RegistryTester\Registry Tester\Registry Tester.csproj", "{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}"
 EndProject

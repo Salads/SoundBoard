@@ -16,5 +16,5 @@ Possible Names:
 
 - Sayuri
 - styrelse-board (styrelse is board in swedish)
-- Makahiya
 - Hanami
+- Tori

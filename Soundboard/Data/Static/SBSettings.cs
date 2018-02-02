@@ -48,7 +48,7 @@ namespace Soundboard
         private AudioDevice m_SelectedRecordingDevice;
         private AudioDevice m_SelectedPreviewDevice;
 
-		public const string _DEFAULT_FILENAME = "default.sbp";
+		public const string _DEFAULT_FILENAME = "Default.sbp";
 
 		public bool FirstRun { get; set; }
 
@@ -66,6 +66,7 @@ namespace Soundboard
 
         public CBindingList<Sound> Sounds { get; set; } = new CBindingList<Sound>();
 
+        // TODO: Can probably get rid of this
 		public CBindingList<AudioDevice> SelectedPlaybackDevices { get; set; } = new CBindingList<AudioDevice>();
 
 		public AudioDevice SelectedRecordingDevice 
@@ -164,15 +165,16 @@ namespace Soundboard
 			}
 		}
 
-        public string GetSaveFolder() 
+        public string GetProfilesFolder() 
         {
             if(IsPortable)
             {
-                return Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Saves"); // Portable version saves in the same directory
+                // Portable version saves in the same directory
+                return Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Saves");
             }
             else
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundboard.NET", "Saves");
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Tori", "Profiles");
             }
         }
 
@@ -180,7 +182,7 @@ namespace Soundboard
         {
             if (filename == null) throw new ArgumentNullException("filename cannot be null");
 
-            return Path.Combine(GetSaveFolder(), filename);
+            return Path.Combine(GetProfilesFolder(), filename);
         }
 
         public void ApplyMicSettings()
@@ -213,7 +215,7 @@ namespace Soundboard
 
 		public void LoadFromFile(string filename = _DEFAULT_FILENAME)
         {
-            Directory.CreateDirectory(GetSaveFolder());
+            Directory.CreateDirectory(GetProfilesFolder());
             ResetToDefault();
 
             string full_filename = Instance.GetSaveFilename(filename);
@@ -387,7 +389,7 @@ namespace Soundboard
 
 		public void SaveToFile(string filename = _DEFAULT_FILENAME) 
 		{
-            Directory.CreateDirectory(GetSaveFolder());
+            Directory.CreateDirectory(GetProfilesFolder());
 
             using (BinaryWriter writer = new BinaryWriter(File.Create(Instance.GetSaveFilename(filename))))
 			{

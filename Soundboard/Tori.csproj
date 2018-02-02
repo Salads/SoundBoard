@@ -7,7 +7,7 @@
     <ProjectGuid>{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Soundboard</RootNamespace>
-    <AssemblyName>Soundboard</AssemblyName>
+    <AssemblyName>Tori</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -124,6 +124,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CSCore, Version=1.2.1.2, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
