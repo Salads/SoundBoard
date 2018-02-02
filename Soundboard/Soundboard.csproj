@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\AudioDevice.cs" />
+    <Compile Include="Data\InvalidAction.cs" />
     <Compile Include="Data\Hotkey.cs" />
     <Compile Include="Data\Interfaces\ISoundPlayerUser.cs" />
     <Compile Include="Data\CBindingList.cs" />

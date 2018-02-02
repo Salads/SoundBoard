@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Newtonsoft.Json;
 
-namespace Soundboard
+namespace Soundboard.Data
 {
-	public class Sound
+    public class Sound
 	{
 		private string _FullFilepath;
 		
@@ -23,10 +18,8 @@ namespace Soundboard
 		public string FullFilepath
 		{
 			get { return _FullFilepath; }
-			set
+			private set
 			{
-				if(!File.Exists(value)) throw new FileNotFoundException();
-
 				_FullFilepath = value;
 				Filename = Path.GetFileName(_FullFilepath);
 				FilenameWithFolder = _ConstructFilenameWithFolder(_FullFilepath);
@@ -50,9 +43,13 @@ namespace Soundboard
 
         public string DisplayName { get { return string.IsNullOrWhiteSpace(Nickname) ? FilenameWithFolder : Nickname; } }
 
-		public Sound(string filepath)
+        public Sound(string filepath, string nickname = "")
 		{
-			FullFilepath = filepath;
+            if (!File.Exists(filepath))
+                throw new SoundInvalidException(filepath, nickname, HotKey, InvalidReason.FileNotFound);
+
+            FullFilepath = filepath;
+            Nickname = nickname;
 		}
 
 		private string _ConstructFilenameWithFolder(string filepath)
@@ -61,4 +58,29 @@ namespace Soundboard
 			return @"" + Split[Split.Length - 2] + Path.DirectorySeparatorChar + Split[Split.Length - 1];
 		}
 	}
+
+    public class SoundInvalidException : Exception
+    {
+        public string Filename { get; private set; }
+        public string Nickname { get; private set; }
+        public Hotkey Hotkey { get; private set; }
+
+        public InvalidReason InvalidReason { get; private set; }
+
+        public string DisplayName 
+        {
+            get { return string.IsNullOrWhiteSpace(Nickname) ? Filename : Nickname; }
+        }
+
+        /// <summary>
+        /// Construct based on a invalid sound.
+        /// </summary>
+        public SoundInvalidException(string filename, string nickname, Hotkey hotkey, InvalidReason conflictReason)
+        {
+            Filename = filename;
+            Nickname = nickname;
+            Hotkey = hotkey;
+            InvalidReason = conflictReason;
+        }
+    }
 }

@@ -2,6 +2,7 @@
 using CSCore.Codecs;
 using CSCore.CoreAudioAPI;
 using CSCore.SoundOut;
+using Soundboard.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
