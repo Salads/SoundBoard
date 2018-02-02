@@ -2,16 +2,8 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using CSCore;
-using CSCore.CoreAudioAPI;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.Collections.ObjectModel;
 using Soundboard.Data.Static;
 using Soundboard.Data;
 using System.ComponentModel;
@@ -19,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace Soundboard
 {
-	public enum SettingTags : int
+    public enum SettingTags : int
 	{
 		TAG_FirstRun,
 		TAG_MuteMicWhilePlaying,

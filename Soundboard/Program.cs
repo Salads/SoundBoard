@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Soundboard.GUI;
-using Soundboard.Data;
 
 namespace Soundboard
 {
-	static class Program
+    static class Program
 	{
 		/// <summary>
 		/// The main entry point for the application.
@@ -36,7 +31,7 @@ namespace Soundboard
                 SBSettings.Instance.FirstRun = false;
                 SBSettings.Instance.SaveToFile();
             }
-            
+
 			Application.Run(new MainForm());
 		}
 	}

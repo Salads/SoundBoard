@@ -257,7 +257,7 @@
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Soundboard";
+            this.Text = "Tori";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EV_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.GUI_MenuStrip.ResumeLayout(false);
