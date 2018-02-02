@@ -283,8 +283,15 @@ namespace Soundboard
                             for (int x = 0; x < soundsCount; ++x)
                             {
                                 string savedSoundPath = reader.ReadString();
-                                string rawStartTime = reader.ReadString();
-                                string nickname = reader.ReadString();
+                                string savedRawStartTime = reader.ReadString();
+                                string savedNickname = reader.ReadString();
+
+                                Hotkey savedHotkey = new Hotkey();
+                                int hotkeyKeysCount = reader.ReadInt32();
+                                for (int i = 0; i < hotkeyKeysCount; ++i)
+                                {
+                                    savedHotkey.Add((Keys)reader.ReadInt32());
+                                }
 
                                 Sound newSound = null;
 
@@ -292,15 +299,9 @@ namespace Soundboard
                                 {
                                     newSound = new Sound(savedSoundPath)
                                     {
-                                        StartTime = TimeSpan.Parse(rawStartTime),
-                                        Nickname = nickname
+                                        StartTime = TimeSpan.Parse(savedRawStartTime),
+                                        Nickname = savedNickname
                                     };
-
-                                    int hotkeyKeysCount = reader.ReadInt32();
-                                    for (int i = 0; i < hotkeyKeysCount; ++i)
-                                    {
-                                        newSound.HotKey.Add((Keys)reader.ReadInt32());
-                                    }
 
                                     if(Instance.HotkeyMap.ContainsKey(newSound.HotKey))
                                     {
@@ -315,18 +316,9 @@ namespace Soundboard
                                 {
                                     conflicts.Add(new InvalidAction(e));
 
-                                    if(e.InvalidReason == InvalidReason.FileNotFound)
+                                    if(e.InvalidReason == InvalidReason.HotkeyInUse)
                                     {
-                                        // Read the rest of the invalid sound to keep in sync
-                                        int hotkeyKeysCount = reader.ReadInt32();
-                                        for (int i = 0; i < hotkeyKeysCount; ++i)
-                                        {
-                                            reader.ReadInt32();
-                                        }
-                                    }
-                                    else if(e.InvalidReason == InvalidReason.HotkeyInUse)
-                                    {
-                                        newSound.HotKey.Clear();
+                                        savedHotkey.Clear();
                                     }
                                 }
                                 finally
@@ -334,6 +326,7 @@ namespace Soundboard
                                     if(newSound != null)
                                     {
                                         Debug.WriteLine("Loaded: " + newSound.Nickname + " : " + newSound.HotKey.ToString());
+                                        newSound.HotKey.CopyFrom(savedHotkey);
                                         Sounds.Add(newSound);
                                     }
                                 }
@@ -386,6 +379,7 @@ namespace Soundboard
                 if (foundInvalidSounds || foundDuplicateHotkeys)
                 {
                     MessageBox.Show(error, "Sanitized Invalid Actions", MessageBoxButtons.OK);
+                    // Instance.SaveToFile();
                 }
                 
             }

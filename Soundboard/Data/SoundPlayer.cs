@@ -7,9 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Soundboard
 {
@@ -50,6 +52,13 @@ namespace Soundboard
 			Debug.WriteLine("Playing new sound on devices: ");
 
 			string filename = sound.FullFilepath;
+
+            if(!File.Exists(filename))
+            {
+                SBSettings.Instance.Sounds.Remove(sound);
+                MessageBox.Show("File no longer exists! Removed.", sound.DisplayName, MessageBoxButtons.OK);
+            }
+
 			foreach(AudioDevice device in devices)
 			{
 				if(device == null) continue;
