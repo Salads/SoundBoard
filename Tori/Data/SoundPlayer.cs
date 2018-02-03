@@ -55,7 +55,7 @@ namespace Soundboard
             }
 
             Debug.WriteLine("Playing new sound on devices: ");
-            foreach (AudioDevice device in Devices.ActivePlaybackDevices)
+            foreach (AudioDevice device in Devices.Instance.ActivePlaybackDevices)
 			{
 				if (device == null) continue;
                 if (!device.Selected) continue;

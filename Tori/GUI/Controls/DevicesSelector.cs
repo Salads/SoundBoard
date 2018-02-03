@@ -27,7 +27,7 @@ namespace Soundboard.GUI
 				ui_RecordingDeviceSelector.Initialize(DeviceType.Recording);
 
                 ui_DataGridView.AutoGenerateColumns = false;
-                ui_DataGridView.DataSource = Devices.ActivePlaybackDevices;
+                ui_DataGridView.DataSource = Devices.Instance.ActivePlaybackDevices;
 
                 DataGridViewColumn colDeviceSelected = new DataGridViewCheckBoxColumn
                 {
@@ -43,7 +43,6 @@ namespace Soundboard.GUI
                 {
                     DataPropertyName = nameof(AudioDevice.FriendlyName),
                     Name = "Playback Devices",
-                    ReadOnly = true
                 };
                 ui_DataGridView.Columns.Add(colDeviceName);
             }

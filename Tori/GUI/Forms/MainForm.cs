@@ -5,6 +5,8 @@ using RawInput;
 using Soundboard.Data;
 using System.ComponentModel;
 using Soundboard.Data.Static;
+using CSCore.CoreAudioAPI;
+using System.Linq;
 
 namespace Soundboard
 {
@@ -32,7 +34,63 @@ namespace Soundboard
 
             SBSettings.Instance.RecordingDeviceChanged += EV_RecordingDeviceChanged;
             SBSettings.Instance.PropertyChanged += Settings_PropertyChanged;
-            Devices.ActivePlaybackDevices.RemovingItem += EV_ActivePlaybackDevices_RemovingItem;
+
+            Devices.Instance.DeviceStateChanged += Devices_DeviceStateChanged;
+            Devices.Instance.DeviceRemoved += Devices_DeviceRemoved;
+            Devices.Instance.DeviceAdded += Devices_DeviceAdded;
+        }
+
+        /// <summary>
+        /// Safely invokes a call to remove a device if needed.
+        /// </summary>
+        public void SafelyRemoveDevice(string deviceID)
+        {
+            var pdevice = Devices.Instance.ActivePlaybackDevices.Where(x => x.DeviceID == deviceID);
+            if (pdevice.Any())
+            {
+                if (InvokeRequired)
+                {
+                    Invoke((MethodInvoker)delegate { Devices.Instance.ActivePlaybackDevices.Remove(pdevice.First()); });
+                }
+                else
+                {
+                    Devices.Instance.ActivePlaybackDevices.Remove(pdevice.First());
+                }
+            }
+
+            var rDevice = Devices.Instance.ActiveRecordingDevices.Where(x => x.DeviceID == deviceID);
+            if (rDevice.Any())
+            {
+                if (InvokeRequired)
+                {
+                    Invoke((MethodInvoker)delegate { Devices.Instance.ActiveRecordingDevices.Remove(rDevice.First()); });
+                }
+                else
+                {
+                    Devices.Instance.ActiveRecordingDevices.Remove(rDevice.First());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Safely invokes a call to add a device if needed.
+        /// </summary>
+        public void SafelyAddDevice(MMDevice device)
+        {
+            CBindingList<AudioDevice> properList =
+                device.DataFlow == DataFlow.Render ?
+                Devices.Instance.ActivePlaybackDevices : Devices.Instance.ActiveRecordingDevices;
+
+            if (InvokeRequired)
+            {
+                Invoke(
+                    (MethodInvoker)delegate
+                    { properList.Add(new AudioDevice(device)); });
+            }
+            else
+            {
+                properList.Add(new AudioDevice(device));
+            }
         }
 
         #region Event Handlers
@@ -105,6 +163,60 @@ namespace Soundboard
 
         #endregion
 
+        /*  I handle MMDevice events here because DataGridView does events in a different thread (need invoke), and
+            since MainForm is the first to run it lessens the gap in time where the events aren't hooked up.
+        */
+        #region Devices Events
+
+        private void Devices_DeviceStateChanged(object sender, DeviceStateChangedEventArgs e)
+        {
+            Debug.WriteLine("Device State Changed");
+
+            if (!e.DeviceState.HasFlag(DeviceState.Active))
+            {
+                SafelyRemoveDevice(e.DeviceId);
+            }
+            else if (e.DeviceState.HasFlag(DeviceState.Active))
+            {
+                if ((!Devices.Instance.ActivePlaybackDevices.Where(x => x.DeviceID == e.DeviceId).Any() &&
+                 !Devices.Instance.ActiveRecordingDevices.Where(x => x.DeviceID == e.DeviceId).Any()) &&
+                  e.TryGetDevice(out MMDevice device))
+                {
+                    SafelyAddDevice(device);
+                }
+            }
+        }
+
+        private void Devices_DeviceRemoved(object sender, DeviceNotificationEventArgs e)
+        {
+            SafelyRemoveDevice(e.DeviceId);
+            if(SBSettings.Instance.SelectedPreviewDevice != null &&
+               SBSettings.Instance.SelectedPreviewDevice.DeviceID == e.DeviceId)
+            {
+                SBSettings.Instance.SelectedPreviewDevice = null;
+            }
+
+            if (SBSettings.Instance.SelectedRecordingDevice != null &&
+               SBSettings.Instance.SelectedRecordingDevice.DeviceID == e.DeviceId)
+            {
+                SBSettings.Instance.SelectedRecordingDevice = null;
+            }
+        }
+
+        private void Devices_DeviceAdded(object sender, DeviceNotificationEventArgs e)
+        {
+            Debug.WriteLine("Device Added");
+
+            if (e.TryGetDevice(out MMDevice newDevice))
+            {
+                if (newDevice.DeviceState != DeviceState.Active) return;
+
+                SafelyAddDevice(newDevice);
+            }
+        }
+
+        #endregion
+
         private void EV_SoundViewer_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             if (e.IsSelected)
@@ -113,6 +225,7 @@ namespace Soundboard
             }
         }
 
+        // TODO: Should this be a setting?
         private void EV_ActivePlaybackDevices_RemovingItem(object sender, ItemRemovedArgs<AudioDevice> e) 
 		{
             m_MainSoundPlayer.StopSoundsOnDevice(e.RemovedItem);

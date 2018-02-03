@@ -66,14 +66,14 @@ namespace Soundboard.GUI
             {
                 if (DeviceType == DeviceType.Preview)
                 {
-                    SBSettings.Instance.SelectedPreviewDevice = Devices.ActivePlaybackDevices[SelectedIndex - 1];
+                    SBSettings.Instance.SelectedPreviewDevice = Devices.Instance.ActivePlaybackDevices[SelectedIndex - 1];
                     Debug.WriteLine("Selected Preview Device: " + SBSettings.Instance.SelectedPreviewDevice);
                 }
                 else if (DeviceType == DeviceType.Recording)
                 {
                     AudioDevice recordingDevice = SBSettings.Instance.SelectedRecordingDevice;
                     SBSettings.Instance.MicMuted = recordingDevice?.OriginalMicMute ?? false;
-                    SBSettings.Instance.SelectedRecordingDevice = Devices.ActiveRecordingDevices[SelectedIndex - 1];
+                    SBSettings.Instance.SelectedRecordingDevice = Devices.Instance.ActiveRecordingDevices[SelectedIndex - 1];
                     Debug.WriteLine("Selected Recording Device: " + SBSettings.Instance.SelectedRecordingDevice);
                 }
             }
@@ -96,13 +96,13 @@ namespace Soundboard.GUI
 
 			if(DeviceType == DeviceType.Preview)
 			{
-				m_BindingListSource = Devices.ActivePlaybackDevices;
+				m_BindingListSource = Devices.Instance.ActivePlaybackDevices;
 				Items.Add("Select Playback Device (None)");
 				selectedDevice = SBSettings.Instance.SelectedPreviewDevice;
 			}
 			else if(DeviceType == DeviceType.Recording)
 			{
-				m_BindingListSource = Devices.ActiveRecordingDevices;
+				m_BindingListSource = Devices.Instance.ActiveRecordingDevices;
 				Items.Add("Select Recording Device (None)");
 				selectedDevice = SBSettings.Instance.SelectedRecordingDevice;
 			}

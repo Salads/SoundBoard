@@ -196,7 +196,7 @@ namespace Soundboard
 
 		public void ResetDevices()
 		{
-			foreach(AudioDevice device in Devices.ActivePlaybackDevices) { device.Selected = false; }
+			foreach(AudioDevice device in Devices.Instance.ActivePlaybackDevices) { device.Selected = false; }
 
 			SelectedRecordingDevice = null;
             SelectedPreviewDevice = null;
@@ -245,7 +245,7 @@ namespace Soundboard
                                 savedGUIDs.Add(reader.ReadString());
                             }
 
-                            foreach (AudioDevice device in Devices.ActivePlaybackDevices.Where(x => savedGUIDs.Contains(x.DeviceID)))
+                            foreach (AudioDevice device in Devices.Instance.ActivePlaybackDevices.Where(x => savedGUIDs.Contains(x.DeviceID)))
                             {
                                 device.Selected = true;
                             }
@@ -256,7 +256,7 @@ namespace Soundboard
                         {
                             string recordingDeviceGUID = reader.ReadString();
 
-                            var matchingRecordingDevices = Devices.ActiveRecordingDevices.Where(x => recordingDeviceGUID == x.DeviceID);
+                            var matchingRecordingDevices = Devices.Instance.ActiveRecordingDevices.Where(x => recordingDeviceGUID == x.DeviceID);
                             if (Guid.Empty.ToString() == recordingDeviceGUID || !matchingRecordingDevices.Any())
                             {
                                 SelectedRecordingDevice = null;
@@ -328,7 +328,7 @@ namespace Soundboard
                         {
                             string previewDeviceGUID = reader.ReadString();
 
-                            var matchingPlaybackDevices = Devices.ActivePlaybackDevices.Where(x => previewDeviceGUID == x.DeviceID);
+                            var matchingPlaybackDevices = Devices.Instance.ActivePlaybackDevices.Where(x => previewDeviceGUID == x.DeviceID);
                             if (Guid.Empty.ToString() == previewDeviceGUID || !matchingPlaybackDevices.Any())
                             {
                                 SelectedPreviewDevice = null;
@@ -392,7 +392,7 @@ namespace Soundboard
 				writer.Write(GlobalVolume);
 
 				writer.Write((int)SettingTags.TAG_PlaybackDeviceGUIDs);
-                var selectedPlaybackDevices = Devices.ActivePlaybackDevices.Where(x => x.Selected);
+                var selectedPlaybackDevices = Devices.Instance.ActivePlaybackDevices.Where(x => x.Selected);
                 writer.Write(selectedPlaybackDevices.Count());
 				foreach(AudioDevice device in selectedPlaybackDevices)
 				{
