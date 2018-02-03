@@ -36,6 +36,8 @@
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <AssemblyVersionSettings>None.IncrementOnDemand.IncrementWithResetOnIncrease.DateStamp</AssemblyVersionSettings>
     <AssemblyInfoVersionSettings>None.IncrementOnDemand.IncrementWithResetOnIncrease.DateStamp</AssemblyInfoVersionSettings>
+    <AssemblyInfoVersionSemVerSettings>
+    </AssemblyInfoVersionSemVerSettings>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>

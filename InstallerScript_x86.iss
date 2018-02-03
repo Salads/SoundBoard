@@ -2,10 +2,11 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Tori Soundboard"
-#define MyAppVersion "0.0.1"
-#define MyAppPublisher "Salads"
-#define MyAppURL "https://github.com/Salads/Soundboard.NET"
 #define MyAppExeName "Tori.exe"
+#define MyAppPublisher "Salads"
+#define BaseDirectory "D:\Git Repositories\Tori Soundboard\Tori\bin\x86\Release\build"
+#define MyAppURL "https://github.com/Salads/Soundboard.NET"
+#define MyAppVersion GetFileVersion(BaseDirectory + '\' + MyAppExeName)
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -14,15 +15,14 @@
 AppId={{B428C963-EE5B-4CB7-BBF6-162316B6E541}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputDir=D:\Git Repositories\Soundboard.NET\Soundboard\bin\x86\Release\build
-OutputBaseFilename=Tori_x86
+OutputDir=D:\Git Repositories\Tori Soundboard\Tori\bin\x86\Release\build\
+OutputBaseFilename=Tori_Installer_x86 v{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 
@@ -34,9 +34,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "D:\Git Repositories\Soundboard.NET\Soundboard\bin\x86\Release\build\Tori.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git Repositories\Soundboard.NET\Soundboard\bin\x86\Release\build\CSCore.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git Repositories\Soundboard.NET\Soundboard\bin\x86\Release\build\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseDirectory}\Tori.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseDirectory}\CSCore.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BaseDirectory}\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

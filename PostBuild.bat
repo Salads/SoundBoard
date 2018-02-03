@@ -32,7 +32,7 @@ IF !release! EQU 1 (
 	:: If not portable, try copying msi files
 	IF !portable! EQU 0 (
 		!iscc_path! /Q "!solution_dir!InstallerScript_x86.iss"
-		IF !ERRORLEVEL! EQU 0 (echo Successfully created .msi installer! ;]]]])
+		IF !ERRORLEVEL! EQU 0 (echo.&echo Created .msi installer.)
 	)
 )
 
