@@ -1,42 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CSCore.CoreAudioAPI;
-using Newtonsoft.Json;
-using System.Diagnostics;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Soundboard
 {
-	// TODO: Better interface for AudioDevice, like device volume, etc.
+    // TODO: Better interface for AudioDevice, like device volume, etc.
 
-	public class AudioDevice : IDisposable
-	{
+    public class AudioDevice : INotifyPropertyChanged, IDisposable
+    {
+        private bool _selected = false;
+
 		public AudioDevice(MMDevice NewDevice)
 		{
-			Info = NewDevice ?? throw new ArgumentNullException("NewDevice", "Device cannot be null.");
-			Volume = AudioEndpointVolume.FromDevice(NewDevice);
-            OriginalMicMute = Volume.IsMuted;
+			MMDevice = NewDevice ?? throw new ArgumentNullException("NewDevice", "Device cannot be null.");
+			MMDeviceVolume = AudioEndpointVolume.FromDevice(NewDevice);
+            OriginalMicMute = MMDeviceVolume.IsMuted;
 		}
 
-		public string FriendlyName { get { return Info.FriendlyName; } }
+        #region Properties
+
+        public string FriendlyName { get { return MMDevice.FriendlyName; } }
 
 		public string DeviceID 
 		{
-			get { return Info.DeviceID; }
+			get { return MMDevice.DeviceID; }
 		}
 
-		public MMDevice Info { get; private set; }
+		public MMDevice MMDevice { get; private set; }
 
-		public AudioEndpointVolume Volume { get; private set; }
+		public AudioEndpointVolume MMDeviceVolume { get; private set; }
 
         public bool OriginalMicMute { get; private set; }
 
-		public void Dispose() 
+        public bool Selected 
+        {
+            get { return _selected; }
+            set
+            {
+                if(value != _selected)
+                {
+                    _selected = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Dispose() 
 		{
-			Info.Dispose();
-			Volume.Dispose();
+			MMDevice.Dispose();
+			MMDeviceVolume.Dispose();
 		}
 
 		public override string ToString() 

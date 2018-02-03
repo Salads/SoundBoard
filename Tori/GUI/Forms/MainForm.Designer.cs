@@ -211,6 +211,7 @@
             this.ui_split_container.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ui_split_container.Cursor = System.Windows.Forms.Cursors.Default;
             this.ui_split_container.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ui_split_container.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.ui_split_container.Location = new System.Drawing.Point(0, 24);
             this.ui_split_container.Name = "ui_split_container";
             this.ui_split_container.Orientation = System.Windows.Forms.Orientation.Horizontal;

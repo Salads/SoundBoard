@@ -78,15 +78,11 @@ namespace Soundboard
             
             if(UsePreviewDevice)
             {
-                List<AudioDevice> devices = new List<AudioDevice>()
-                {
-                    SBSettings.Instance.SelectedPreviewDevice
-                };
-                SoundPlayer?.Play(m_selectedSound, devices, TimeSpan.FromSeconds(ui_trackBar.Value));
+                SoundPlayer?.PlayPreview(m_selectedSound.FullFilepath, TimeSpan.FromSeconds(ui_trackBar.Value));
             }
             else
             {
-                SoundPlayer?.Play(m_selectedSound, SBSettings.Instance.SelectedPlaybackDevices, TimeSpan.FromSeconds(ui_trackBar.Value));
+                SoundPlayer?.Play(m_selectedSound, TimeSpan.FromSeconds(ui_trackBar.Value));
             }
 		}
 

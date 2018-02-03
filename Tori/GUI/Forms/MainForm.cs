@@ -32,7 +32,7 @@ namespace Soundboard
 
             SBSettings.Instance.RecordingDeviceChanged += EV_RecordingDeviceChanged;
             SBSettings.Instance.PropertyChanged += Settings_PropertyChanged;
-            SBSettings.Instance.SelectedPlaybackDevices.RemovingItem += EV_SelectedPlaybackDevices_ItemRemoved;
+            Devices.ActivePlaybackDevices.RemovingItem += EV_ActivePlaybackDevices_RemovingItem;
         }
 
         #region Event Handlers
@@ -113,7 +113,7 @@ namespace Soundboard
             }
         }
 
-        private void EV_SelectedPlaybackDevices_ItemRemoved(object sender, ItemRemovedArgs<AudioDevice> e) 
+        private void EV_ActivePlaybackDevices_RemovingItem(object sender, ItemRemovedArgs<AudioDevice> e) 
 		{
             m_MainSoundPlayer.StopSoundsOnDevice(e.RemovedItem);
         }
@@ -125,7 +125,7 @@ namespace Soundboard
                 SBSettings.Instance.ApplyMicSettings();
             }
            
-			m_MainSoundPlayer.Play(e.Sound, SBSettings.Instance.SelectedPlaybackDevices);
+			m_MainSoundPlayer.Play(e.Sound);
 		}
 
 		private void EV_TabControl_KeyDown(object sender, KeyEventArgs e) 
@@ -142,7 +142,7 @@ namespace Soundboard
         {
             if (ui_soundViewer.SelectedItems[0] != null)
             {
-                m_MainSoundPlayer.Play(ui_soundViewer.SelectedItems[0].Tag as Sound, SBSettings.Instance.SelectedPlaybackDevices);
+                m_MainSoundPlayer.Play(ui_soundViewer.SelectedItems[0].Tag as Sound);
             }
         }
 

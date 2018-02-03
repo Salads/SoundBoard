@@ -25,7 +25,35 @@ namespace Soundboard.GUI
 			if(!DesignMode)
 			{
 				ui_RecordingDeviceSelector.Initialize(DeviceType.Recording);
-			}
-		}
-	}
+
+                ui_DataGridView.AutoGenerateColumns = false;
+                ui_DataGridView.DataSource = Devices.ActivePlaybackDevices;
+
+                DataGridViewColumn colDeviceSelected = new DataGridViewCheckBoxColumn
+                {
+                    DataPropertyName = nameof(AudioDevice.Selected),
+                    Name = "✔",
+                    MinimumWidth = 25,
+                    Width = 25,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+                };
+                ui_DataGridView.Columns.Add(colDeviceSelected);
+
+                DataGridViewTextBoxColumn colDeviceName = new DataGridViewTextBoxColumn
+                {
+                    DataPropertyName = nameof(AudioDevice.FriendlyName),
+                    Name = "Playback Devices",
+                    ReadOnly = true
+                };
+                ui_DataGridView.Columns.Add(colDeviceName);
+            }
+
+            ui_DataGridView.SelectionChanged += EV_PlaybackDevices_SelectionChanged;
+        }
+
+        private void EV_PlaybackDevices_SelectionChanged(object sender, EventArgs e)
+        {
+            ui_DataGridView.ClearSelection();
+        }
+    }
 }

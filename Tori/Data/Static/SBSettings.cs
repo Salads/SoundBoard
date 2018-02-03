@@ -58,9 +58,6 @@ namespace Soundboard
 
         public CBindingList<Sound> Sounds { get; set; } = new CBindingList<Sound>();
 
-        // TODO: Can probably get rid of this
-		public CBindingList<AudioDevice> SelectedPlaybackDevices { get; set; } = new CBindingList<AudioDevice>();
-
 		public AudioDevice SelectedRecordingDevice 
         {
             get { return m_SelectedRecordingDevice; }
@@ -91,7 +88,7 @@ namespace Soundboard
 			{
 				if(SelectedRecordingDevice != null)
 				{
-					SelectedRecordingDevice.Volume.IsMuted = value;
+					SelectedRecordingDevice.MMDeviceVolume.IsMuted = value;
                     Debug.WriteLine(value ? "Muted Microphone" : "Un-Muted Microphone");
 				}
 			}
@@ -199,11 +196,10 @@ namespace Soundboard
 
 		public void ResetDevices()
 		{
-			foreach(AudioDevice device in SelectedPlaybackDevices) { device.Dispose(); }
-			SelectedPlaybackDevices.Clear();
+			foreach(AudioDevice device in Devices.ActivePlaybackDevices) { device.Selected = false; }
 
-			SelectedRecordingDevice?.Dispose();
 			SelectedRecordingDevice = null;
+            SelectedPreviewDevice = null;
 		}
 
 		public void LoadFromFile(string filename = _DEFAULT_FILENAME)
@@ -251,7 +247,7 @@ namespace Soundboard
 
                             foreach (AudioDevice device in Devices.ActivePlaybackDevices.Where(x => savedGUIDs.Contains(x.DeviceID)))
                             {
-                                SelectedPlaybackDevices.Add(device);
+                                device.Selected = true;
                             }
                         }
                         break;
@@ -396,8 +392,9 @@ namespace Soundboard
 				writer.Write(GlobalVolume);
 
 				writer.Write((int)SettingTags.TAG_PlaybackDeviceGUIDs);
-				writer.Write(SelectedPlaybackDevices.Count);
-				foreach(AudioDevice device in SelectedPlaybackDevices)
+                var selectedPlaybackDevices = Devices.ActivePlaybackDevices.Where(x => x.Selected);
+                writer.Write(selectedPlaybackDevices.Count());
+				foreach(AudioDevice device in selectedPlaybackDevices)
 				{
 					writer.Write(device.DeviceID);
 				}

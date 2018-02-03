@@ -3,6 +3,7 @@ using CSCore.Codecs;
 using CSCore.CoreAudioAPI;
 using CSCore.SoundOut;
 using Soundboard.Data;
+using Soundboard.Data.Static;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,42 +46,54 @@ namespace Soundboard
 			VolumeNormalized = SBSettings.Instance.VolumeNormalized;
 		}
 
-		public void Play(Sound sound, IEnumerable<AudioDevice> devices, TimeSpan? startTime = null)
+		public void Play(Sound sound, TimeSpan? startTime = null)
 		{
-			TimeSpan soundStartTime = ((startTime == null) ? sound.StartTime : startTime.Value);
-
-			Debug.WriteLine("Playing new sound on devices: ");
-
-			string filename = sound.FullFilepath;
-
-            if(!File.Exists(filename))
+            if(!File.Exists(sound.FullFilepath))
             {
                 SBSettings.Instance.Sounds.Remove(sound);
                 MessageBox.Show("File no longer exists! Removed.", sound.DisplayName, MessageBoxButtons.OK);
             }
 
-			foreach(AudioDevice device in devices)
+            Debug.WriteLine("Playing new sound on devices: ");
+            foreach (AudioDevice device in Devices.ActivePlaybackDevices)
 			{
-				if(device == null) continue;
+				if (device == null) continue;
+                if (!device.Selected) continue;
 
 				Debug.WriteLine("\t" + device.FriendlyName);
 
-                //	Need to create one for every output because the stream is handled in WaveSource.
-                //	This means multiple outputs will advance stream position if we don't seperate them.
-                var soundSource = CodecFactory.Instance.GetCodec(filename); // TODO: OGG Vorbis
-				soundSource.SetPosition(soundStartTime);
-
-				ISoundOut newSoundOut = new WasapiOut() { Latency = 20, Device = device.Info };
-				newSoundOut.Initialize(soundSource);
-				newSoundOut.Stopped += EV_OnSoundStopped;
-				newSoundOut.Volume = VolumeNormalized;
-				newSoundOut.Play();
-
-				m_PlayingSounds.Add(newSoundOut);
+                _PlayInternal(sound.FullFilepath, device, ((startTime == null) ? sound.StartTime : startTime.Value));
 			}
 
 			Debug.WriteLine("");
             SoundStarted?.BeginInvoke(this, new EventArgs(), null, null);
+        }
+
+        public void PlayPreview(string filename, TimeSpan? startTime)
+        {
+            if (SBSettings.Instance.SelectedPreviewDevice == null) return;
+            if (startTime == null)
+            {
+                startTime = TimeSpan.Zero;
+            }
+
+            _PlayInternal(filename, SBSettings.Instance.SelectedPreviewDevice, startTime.Value);
+        }
+
+        private void _PlayInternal(string filename, AudioDevice device, TimeSpan startTime)
+        {
+            //	Need to create one for every output because the stream is handled in WaveSource.
+            //	This means multiple outputs will advance stream position if we don't seperate them.
+            var soundSource = CodecFactory.Instance.GetCodec(filename); // TODO: OGG Vorbis
+            soundSource.SetPosition(startTime);
+
+            ISoundOut newSoundOut = new WasapiOut() { Latency = 20, Device = device.MMDevice };
+            newSoundOut.Initialize(soundSource);
+            newSoundOut.Stopped += EV_OnSoundStopped;
+            newSoundOut.Volume = VolumeNormalized;
+            newSoundOut.Play();
+
+            m_PlayingSounds.Add(newSoundOut);
         }
 
 		public void StopSoundsOnDevice(AudioDevice device)

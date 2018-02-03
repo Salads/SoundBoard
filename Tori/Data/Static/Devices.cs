@@ -43,9 +43,8 @@ namespace Soundboard.Data.Static
 			{
 				ActivePlaybackDevices.Remove(pDevice);
 
-				// Remove the device from other existing collections
-				SBSettings.Instance.SelectedPlaybackDevices.Remove(pDevice);
-				if(pDevice.DeviceID == SBSettings.Instance.SelectedPreviewDevice.DeviceID)
+				// Set preview device to null if it was the removed device
+				if(ReferenceEquals(pDevice, SBSettings.Instance.SelectedPreviewDevice))
 				{
 					SBSettings.Instance.SelectedPreviewDevice = null;
 				}
@@ -57,7 +56,7 @@ namespace Soundboard.Data.Static
 			foreach(AudioDevice rDevice in ActiveRecordingDevices.Where(x => x.DeviceID == e.DeviceId))
 			{
 				ActiveRecordingDevices.Remove(rDevice);
-				if(rDevice.DeviceID == SBSettings.Instance.SelectedRecordingDevice.DeviceID)
+				if(ReferenceEquals(rDevice, SBSettings.Instance.SelectedRecordingDevice))
 				{
 					SBSettings.Instance.SelectedRecordingDevice = null;
 				}

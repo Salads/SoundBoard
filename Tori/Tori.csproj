@@ -160,10 +160,13 @@
     <Compile Include="Data\Static\NativeMethods.cs" />
     <Compile Include="Data\Static\RawInputHandler.cs" />
     <Compile Include="Data\Static\RawInputTypes.cs" />
-    <Compile Include="GUI\Controls\Components\CTextBox.cs">
+    <Compile Include="GUI\Controls\Components\CDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\Components\PlaybackDevicesSelector.cs">
+    <Compile Include="GUI\Controls\Components\CDataGridView.Designer.cs">
+      <DependentUpon>CDataGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Controls\Components\CTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GUI\Controls\Components\SingleDeviceSelector.cs">
