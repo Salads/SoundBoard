@@ -97,7 +97,7 @@ namespace Soundboard.GUI
 			if(DeviceType == DeviceType.Preview)
 			{
 				m_BindingListSource = Devices.Instance.ActivePlaybackDevices;
-				Items.Add("Select Playback Device (None)");
+				Items.Add("Select Preview Device (None)");
 				selectedDevice = SBSettings.Instance.SelectedPreviewDevice;
 			}
 			else if(DeviceType == DeviceType.Recording)

@@ -78,7 +78,7 @@ namespace Soundboard.GUI
                 error_result += "Hotkey is already in use!";
             }
 
-            if(!nickname_valid) // Since nickname isn't needed, just trim down the whitespace.
+            if(!nickname_valid) // Trim down the whitespace to save space
             {
                 ResultNickname = " ";
             }
