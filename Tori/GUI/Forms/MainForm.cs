@@ -225,12 +225,6 @@ namespace Soundboard
             }
         }
 
-        // TODO: Should this be a setting?
-        private void EV_ActivePlaybackDevices_RemovingItem(object sender, ItemRemovedArgs<AudioDevice> e) 
-		{
-            m_MainSoundPlayer.StopSoundsOnDevice(e.RemovedItem);
-        }
-
 		private void EV_HotkeyPressed(object sender, HotkeyPressedArgs e) 
 		{
             if(m_MainSoundPlayer.IsPlaying)
