@@ -12,32 +12,57 @@ namespace Soundboard
 {
     public partial class MainForm : Form
 	{
-		private SoundPlayer m_MainSoundPlayer = new SoundPlayer()
+		private SoundPlayer m_mainSoundPlayer = new SoundPlayer()
 		{
 			VolumeNormalized = SBSettings.Instance.VolumeNormalized
 		};
 
         public MainForm()
         {
+            // Make sure we're hooked up as soon as possible to not potentially miss any devices changing.
+            Devices.Instance.DeviceStateChanged += Devices_DeviceStateChanged;
+            Devices.Instance.DeviceRemoved += Devices_DeviceRemoved;
+            Devices.Instance.DeviceAdded += Devices_DeviceAdded;
+
+            SBSettings.Instance.LoadFromFile();
+            OpenFirstRunPrompt();
+
             InitializeComponent();
 
             RI.RegisterDevices(Handle);
-            ui_mediaControl.SoundPlayer = m_MainSoundPlayer;
+            ui_mediaControl.SoundPlayer = m_mainSoundPlayer;
 
             RawInputHandler.HotkeyPressed += EV_HotkeyPressed;
 
-            m_MainSoundPlayer.SoundStarted += EV_MainSoundPlayer_SoundStarted;
-            m_MainSoundPlayer.SoundStopped += EV_MainSoundPlayer_SoundStopped;
+            m_mainSoundPlayer.SoundStarted += EV_MainSoundPlayer_SoundStarted;
+            m_mainSoundPlayer.SoundStopped += EV_MainSoundPlayer_SoundStopped;
             ui_soundViewer.ItemSelectionChanged += EV_SoundViewer_SelectionChanged;
             ui_soundViewer.BeforeAddSoundClicked += EV_SoundViewer_BeforeAddSound;
             ui_soundViewer.SoundDoubleClicked += EV_SoundViewer_SoundDoubleClicked;
 
             SBSettings.Instance.RecordingDeviceChanged += EV_RecordingDeviceChanged;
             SBSettings.Instance.PropertyChanged += Settings_PropertyChanged;
+        }
 
-            Devices.Instance.DeviceStateChanged += Devices_DeviceStateChanged;
-            Devices.Instance.DeviceRemoved += Devices_DeviceRemoved;
-            Devices.Instance.DeviceAdded += Devices_DeviceAdded;
+        private void OpenFirstRunPrompt()
+        {
+            if (SBSettings.Instance.FirstRun)
+            {
+                DialogResult FirstResult =
+                MessageBox.Show("Would you like to visit the \"How to\" webpage?",
+                                "Welcome!",
+                                MessageBoxButtons.YesNo);
+
+                if (FirstResult == DialogResult.Yes)
+                {
+                    Process.Start("https://salads.github.io/Tori");
+                }
+
+                SBSettings.Instance.FirstRun = false;
+
+                // It'd be annoying if the app crashes and everytime the prompt shows up.
+                SBSettings.Instance.SaveToFile();
+            }
         }
 
         /// <summary>
@@ -130,7 +155,7 @@ namespace Soundboard
             // Apply mic settings if changed while playing.
             if (e.PropertyName == nameof(SBSettings.Instance.MuteMicrophoneWhilePlaying))
             {
-                if (m_MainSoundPlayer.IsPlaying)
+                if (m_mainSoundPlayer.IsPlaying)
                 {
                     SBSettings.Instance.ApplyMicSettings();
                 }
@@ -139,7 +164,7 @@ namespace Soundboard
 
         private void EV_RecordingDeviceChanged(object sender, EventArgs e)
         {
-            if (m_MainSoundPlayer.IsPlaying)
+            if (m_mainSoundPlayer.IsPlaying)
             {
                 SBSettings.Instance.ApplyMicSettings();
             }
@@ -147,7 +172,7 @@ namespace Soundboard
 
         private void EV_MainSoundPlayer_SoundStopped(object sender, EventArgs e)
         {
-            if(!m_MainSoundPlayer.IsPlaying)
+            if(!m_mainSoundPlayer.IsPlaying)
             {
                 SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
             }
@@ -155,7 +180,7 @@ namespace Soundboard
 
         private void EV_MainSoundPlayer_SoundStarted(object sender, EventArgs e)
         {
-            if(m_MainSoundPlayer.IsPlaying)
+            if(m_mainSoundPlayer.IsPlaying)
             {
                 SBSettings.Instance.ApplyMicSettings();
             }
@@ -217,6 +242,20 @@ namespace Soundboard
 
         #endregion
 
+        #region SoundViewer Events
+        private void EV_SoundViewer_SoundDoubleClicked(object sender, MouseEventArgs e)
+        {
+            if (ui_soundViewer.SelectedItems[0] != null)
+            {
+                m_mainSoundPlayer.Play(ui_soundViewer.SelectedItems[0].Tag as Sound);
+            }
+        }
+
+        private void EV_SoundViewer_BeforeAddSound(object sender, EventArgs e)
+        {
+            m_mainSoundPlayer.StopAllSounds();
+        }
+
         private void EV_SoundViewer_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             if (e.IsSelected)
@@ -224,15 +263,34 @@ namespace Soundboard
                 ui_mediaControl.SetSelectedSound(e.Item.Tag as Sound);
             }
         }
+        #endregion
 
-		private void EV_HotkeyPressed(object sender, HotkeyPressedArgs e) 
+        #region MainForm Events
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            // This is needed to force the tab control to initialize it's containing controls. 
+            // It was causing an event to fire which would stop playing sounds when a device is unselected.
+            ui_tabControl.SelectedIndex = 1;
+            ui_tabControl.SelectedIndex = 2;
+            ui_tabControl.SelectedIndex = 0;
+        }
+
+        private void EV_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            m_mainSoundPlayer.StopAllSounds();
+            SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
+            SBSettings.Instance.SaveToFile();
+        }
+        #endregion
+
+        private void EV_HotkeyPressed(object sender, HotkeyPressedArgs e) 
 		{
-            if(m_MainSoundPlayer.IsPlaying)
+            if(m_mainSoundPlayer.IsPlaying)
             {
                 SBSettings.Instance.ApplyMicSettings();
             }
            
-			m_MainSoundPlayer.Play(e.Sound);
+			m_mainSoundPlayer.Play(e.Sound);
 		}
 
 		private void EV_TabControl_KeyDown(object sender, KeyEventArgs e) 
@@ -245,34 +303,6 @@ namespace Soundboard
 			}
 		}
 
-        private void EV_SoundViewer_SoundDoubleClicked(object sender, MouseEventArgs e)
-        {
-            if (ui_soundViewer.SelectedItems[0] != null)
-            {
-                m_MainSoundPlayer.Play(ui_soundViewer.SelectedItems[0].Tag as Sound);
-            }
-        }
-
-        private void EV_SoundViewer_BeforeAddSound(object sender, EventArgs e)
-        {
-            m_MainSoundPlayer.StopAllSounds();
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            // This is needed to force the tab control to initialize it's containing controls. 
-            // It was causing an event to fire which would stop playing sounds when a device is unselected.
-            ui_tabControl.SelectedIndex = 1;
-            ui_tabControl.SelectedIndex = 2;
-            ui_tabControl.SelectedIndex = 0;
-        }
-
-        private void EV_FormClosing(object sender, FormClosingEventArgs e) 
-        {
-            m_MainSoundPlayer.StopAllSounds();
-            SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
-            SBSettings.Instance.SaveToFile();
-        }
         #endregion
 
         protected override void WndProc(ref Message m)

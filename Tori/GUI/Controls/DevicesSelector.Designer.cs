@@ -46,6 +46,7 @@ namespace Soundboard.GUI
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ui_DataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.ui_DataGridView.BackgroundColor = System.Drawing.SystemColors.ScrollBar;
             this.ui_DataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.ui_DataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.ui_DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -54,8 +55,9 @@ namespace Soundboard.GUI
             this.ui_DataGridView.MultiSelect = false;
             this.ui_DataGridView.Name = "ui_DataGridView";
             this.ui_DataGridView.RowHeadersVisible = false;
-            this.ui_DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.ui_DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.ui_DataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.ui_DataGridView.ShowCellErrors = false;
             this.ui_DataGridView.ShowEditingIcon = false;
             this.ui_DataGridView.ShowRowErrors = false;
             this.ui_DataGridView.Size = new System.Drawing.Size(398, 213);

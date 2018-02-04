@@ -1,19 +1,14 @@
 ﻿using RawInput;
 using Soundboard.Data.Static;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Soundboard.Data
 {
-	public static class RawInputHandler
+    public static class RawInputHandler
 	{
 		public static bool HasKeysPressed 
 		{

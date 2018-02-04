@@ -29,6 +29,7 @@ namespace Soundboard.GUI
                 ui_DataGridView.AutoGenerateColumns = false;
                 ui_DataGridView.DataSource = Devices.Instance.ActivePlaybackDevices;
 
+                // TODO: column for device volume, editable
                 DataGridViewColumn colDeviceSelected = new DataGridViewCheckBoxColumn
                 {
                     DataPropertyName = nameof(AudioDevice.Selected),
