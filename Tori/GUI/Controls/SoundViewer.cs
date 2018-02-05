@@ -11,7 +11,6 @@ using CSCore.Codecs;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Soundboard.Data.Interfaces;
-using static System.Windows.Forms.ListView;
 using Soundboard.Data.Static;
 using Soundboard.Data;
 
@@ -39,7 +38,7 @@ namespace Soundboard.GUI
 
         public event EventHandler BeforeAddSoundClicked;
 
-        public SelectedListViewItemCollection SelectedItems 
+        public ListView.SelectedListViewItemCollection SelectedItems 
         {
             get { return ui_listview_Sounds.SelectedItems; }
         }
