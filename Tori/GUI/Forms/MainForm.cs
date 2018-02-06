@@ -7,6 +7,7 @@ using System.ComponentModel;
 using Soundboard.Data.Static;
 using CSCore.CoreAudioAPI;
 using System.Linq;
+using Equin.ApplicationFramework;
 
 namespace Soundboard
 {
@@ -36,12 +37,31 @@ namespace Soundboard
 
             m_mainSoundPlayer.SoundStarted += EV_MainSoundPlayer_SoundStarted;
             m_mainSoundPlayer.SoundStopped += EV_MainSoundPlayer_SoundStopped;
-            ui_soundViewer.ItemSelectionChanged += EV_SoundViewer_SelectionChanged;
-            ui_soundViewer.BeforeAddSoundClicked += EV_SoundViewer_BeforeAddSound;
-            ui_soundViewer.SoundDoubleClicked += EV_SoundViewer_SoundDoubleClicked;
 
             SBSettings.Instance.RecordingDeviceChanged += EV_RecordingDeviceChanged;
             SBSettings.Instance.PropertyChanged += Settings_PropertyChanged;
+
+            ui_soundViewer.CellDoubleClick += EV_SoundViewer_CellDoubleClicked;
+            ui_soundViewer.CellMouseDown += EV_SoundViewer_CellMouseDown;
+        }
+
+        private void EV_SoundViewer_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            Sound item = (ui_soundViewer.SoundRows[e.RowIndex].DataBoundItem as ObjectView<Sound>).Object;
+            if(e.Button == MouseButtons.Left)
+            {
+                ui_mediaControl.SetSelectedSound(item);
+            }
+        }
+
+        private void EV_SoundViewer_CellDoubleClicked(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            Sound item = (ui_soundViewer.SoundRows[e.RowIndex].DataBoundItem as ObjectView<Sound>).Object;
+            m_mainSoundPlayer.Play(item);
         }
 
         private void OpenFirstRunPrompt()
@@ -137,14 +157,12 @@ namespace Soundboard
 		{
 			SBSettings.Instance.ResetSounds();
 			SBSettings.Instance.SaveToFile();
-			ui_soundViewer.RefreshSoundsInList();
 		}
 
 		private void EV_Menu_ResetAllSettings_Clicked(object sender, EventArgs e)
 		{
 			SBSettings.Instance.ResetToDefault();
 			SBSettings.Instance.SaveToFile();
-			ui_soundViewer.RefreshSoundsInList();
 		}
         #endregion
 
@@ -243,13 +261,6 @@ namespace Soundboard
         #endregion
 
         #region SoundViewer Events
-        private void EV_SoundViewer_SoundDoubleClicked(object sender, MouseEventArgs e)
-        {
-            if (ui_soundViewer.SelectedItems[0] != null)
-            {
-                m_mainSoundPlayer.Play(ui_soundViewer.SelectedItems[0].Tag as Sound);
-            }
-        }
 
         private void EV_SoundViewer_BeforeAddSound(object sender, EventArgs e)
         {

@@ -36,7 +36,6 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "{#BaseDirectory}\Tori.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BaseDirectory}\CSCore.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseDirectory}\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
