@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{80C047B4-BF28-492E-82B0-0B18EEAE9E39}"
 	ProjectSection(SolutionItems) = preProject
 		InstallerScript_x86.iss = InstallerScript_x86.iss
+		LICENSE.md = LICENSE.md
 		PostBuild.bat = PostBuild.bat
 	EndProjectSection
 EndProject
