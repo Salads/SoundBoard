@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Registry Tester", "RegistryTester\Registry Tester\Registry Tester.csproj", "{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{41672180-256E-4DAE-B12D-D68E7B50D189}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{80C047B4-BF28-492E-82B0-0B18EEAE9E39}"
 	ProjectSection(SolutionItems) = preProject
 		InstallerScript_x86.iss = InstallerScript_x86.iss
@@ -14,7 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		PostBuild.bat = PostBuild.bat
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tori", "Tori\Tori.csproj", "{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tori", "source\Tori\Tori.csproj", "{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Property Store Tester", "source\Property Store Tester\Property Store Tester.csproj", "{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,22 +26,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug Portable|x64.ActiveCfg = Debug Portable|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug Portable|x64.Build.0 = Debug Portable|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug Portable|x86.ActiveCfg = Debug Portable|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug Portable|x86.Build.0 = Debug Portable|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug|x64.Build.0 = Debug|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug|x86.Build.0 = Debug|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release Portable|x64.ActiveCfg = Release Portable|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release Portable|x64.Build.0 = Release Portable|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release Portable|x86.ActiveCfg = Release Portable|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release Portable|x86.Build.0 = Release Portable|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release|x64.ActiveCfg = Release|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release|x64.Build.0 = Release|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release|x86.ActiveCfg = Release|Any CPU
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release|x86.Build.0 = Release|Any CPU
 		{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}.Debug Portable|x64.ActiveCfg = Debug Portable|x64
 		{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}.Debug Portable|x64.Build.0 = Debug Portable|x64
 		{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}.Debug Portable|x86.ActiveCfg = Debug Portable|x86
@@ -60,12 +42,25 @@ Global
 		{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}.Release|x64.Build.0 = Release|x64
 		{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}.Release|x86.ActiveCfg = Release|x86
 		{6B0A5DFC-25F8-4AA5-8B47-FBA01785250C}.Release|x86.Build.0 = Release|x86
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug Portable|x64.ActiveCfg = Debug Portable|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug Portable|x64.Build.0 = Debug Portable|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug Portable|x86.ActiveCfg = Debug Portable|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug Portable|x86.Build.0 = Debug Portable|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug|x64.Build.0 = Debug|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Debug|x86.Build.0 = Debug|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release Portable|x64.ActiveCfg = Release Portable|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release Portable|x64.Build.0 = Release Portable|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release Portable|x86.ActiveCfg = Release Portable|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release Portable|x86.Build.0 = Release Portable|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release|x64.Build.0 = Release|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{AD13E5BB-3BD8-4113-8FDB-C5207FDFAAAE} = {41672180-256E-4DAE-B12D-D68E7B50D189}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8F690B61-0612-4C19-8C7B-538D13FB4CB3}

@@ -48,10 +48,10 @@ namespace Soundboard.Data
 				NativeMethods.GetRawInputData(message.LParam, RI.RID_INPUT, lpData, ref dataSize, Marshal.SizeOf<RAWINPUTHEADER>());
 
 				RAWINPUT* input = (RAWINPUT*)lpData;
-				if(input->header.dwType == RI.RIM_TYPEKEYBOARD)
+				if(input->header.dwType == RawInputDeviceType.RIM_TYPEKEYBOARD)
 				{
-					RKeyboardFlags flags = (RKeyboardFlags)input->keyboard.Flags;
-					Keys key = (Keys)input->keyboard.VKey;
+					RKeyboardFlags flags = (RKeyboardFlags)input->data.keyboard.Flags;
+					Keys key = (Keys)input->data.keyboard.VKey;
 
 					if(flags.HasFlag(RKeyboardFlags.RI_KEY_MAKE) && !m_pressedKeys.Contains(key))
 					{
@@ -68,9 +68,9 @@ namespace Soundboard.Data
 						KeysChanged?.Invoke(null, new KeysChangedArgs(key, KeysChangedAction.Removed));
 					}
 				}
-				else if(input->header.dwType == RI.RIM_TYPEMOUSE)
+				else if(input->header.dwType == RawInputDeviceType.RIM_TYPEMOUSE)
 				{
-					ProcessMouseEvents(input->mouse.usButtonFlags);
+					ProcessMouseEvents(input->data.mouse.usButtonFlags);
 				}
 				else
 				{
