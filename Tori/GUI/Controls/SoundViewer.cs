@@ -1,95 +1,81 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using CSCore.Codecs;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Soundboard.Data.Interfaces;
-using Soundboard.Data.Static;
 using Soundboard.Data;
+using Equin.ApplicationFramework;
 
 namespace Soundboard.GUI
 {
-	// TODO: Use DataGridView instead for built-in filtering and data binding.
+    /// <summary>
+    /// Handles adding/deleting/editing sounds. <para/>
+    /// Contains ListView (Sounds), Textbox (Search), and Button(Add Sound)
+    /// </summary>
+    public partial class SoundViewer : UserControl
+    {
+        private BindingListView<Sound> m_soundsSource;
 
-	/// <summary>
-	/// Handles adding/deleting/editing sounds. <para/>
-	/// Contains ListView (Sounds), Textbox (Search), and Button(Add Sound)
-	/// </summary>
-	public partial class SoundViewer : UserControl
-	{
-		public event ListViewItemSelectionChangedEventHandler ItemSelectionChanged
-		{
-			add { ui_listview_Sounds.ItemSelectionChanged += value; }
-			remove { ui_listview_Sounds.ItemSelectionChanged -= value; }
-		}
-
-        public event MouseEventHandler SoundDoubleClicked
+        public event DataGridViewCellEventHandler CellDoubleClick
         {
-            add { ui_listview_Sounds.MouseDoubleClick += value; }
-            remove { ui_listview_Sounds.MouseDoubleClick -= value; }
+            add { ui_DataGridView_Sounds.CellDoubleClick += value; }
+            remove { ui_DataGridView_Sounds.CellDoubleClick -= value; }
         }
 
-        public event EventHandler BeforeAddSoundClicked;
-
-        public ListView.SelectedListViewItemCollection SelectedItems 
+        public event DataGridViewCellMouseEventHandler CellMouseDown
         {
-            get { return ui_listview_Sounds.SelectedItems; }
+            add { ui_DataGridView_Sounds.CellMouseDown += value; }
+            remove { ui_DataGridView_Sounds.CellMouseDown -= value; }
         }
 
-		public SoundViewer()
+        public DataGridViewRowCollection SoundRows
+        {
+            get { return ui_DataGridView_Sounds.Rows; }
+        }
+
+        public SoundViewer()
 		{
 			InitializeComponent();
-			RefreshSoundsInList();
+            ConstructDataGridColumns();
+            if (!DesignMode)
+            {
+                m_soundsSource = new BindingListView<Sound>(SBSettings.Instance.Sounds);
+                ui_DataGridView_Sounds.DataSource = m_soundsSource;
+                ui_DataGridView_Sounds.CellMouseClick += EV_DataGridViewSounds_CellMouseClick;
+            }
         }
 
-		public void RefreshSoundsInList(string filter = "")
-		{
-			ui_listview_Sounds.Items.Clear();
-			var sounds = SBSettings.Instance.Sounds.Where(x => x.DisplayName.ToLower().Contains(filter.ToLower()));
-
-			foreach(Sound sound in sounds)
-			{
-				ListViewItem newItem = new ListViewItem
-				{
-					// TODO: Add options for default text.
-					Text = sound.DisplayName,
-					Tag = sound
-				};
-
-				newItem.SubItems.Add(sound.HotKey.ToString());
-
-                ui_listview_Sounds.Items.Add(newItem);
-			}
-
-            ResizeColumns();
-		}
-
-        private void ResizeColumns()
+        private void EV_DataGridViewSounds_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if(ui_listview_Sounds.Items.Count <= 0 || !SBSettings.Instance.Sounds.Where(x => x.HotKey.Any() == true).Any())
+            if(e.Button == MouseButtons.Right && e.RowIndex >= 0)
             {
-                ui_listview_Sounds.Columns[1].Width = (int)(0.30f * ui_listview_Sounds.Width);
-                ui_listview_Sounds.Columns[0].Width = (int)(0.70f * ui_listview_Sounds.Width) - SystemInformation.VerticalScrollBarWidth - 4;
-            }
-            else
-            {
-                ui_listview_Sounds.AutoResizeColumn(1, ColumnHeaderAutoResizeStyle.ColumnContent);
-                ui_listview_Sounds.Columns[0].Width = ui_listview_Sounds.Width - (ui_listview_Sounds.Columns[1].Width) - SystemInformation.VerticalScrollBarWidth - 4;
+                ui_DataGridView_Sounds.Rows[e.RowIndex].Selected = true;
+                ui_contextStrip.Show(Cursor.Position);
             }
         }
 
-#region Event Handlers
+        private void ConstructDataGridColumns()
+        {
+            ui_DataGridView_Sounds.AutoGenerateColumns = false;
+
+            DataGridViewTextBoxColumn colSoundName = new DataGridViewTextBoxColumn()
+            {
+                Name = "Sound",
+                DataPropertyName = nameof(Sound.DisplayName),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                SortMode = DataGridViewColumnSortMode.Programmatic
+            }; ui_DataGridView_Sounds.Columns.Add(colSoundName);
+
+            DataGridViewTextBoxColumn colHotkey = new DataGridViewTextBoxColumn()
+            {
+                Name = "Hotkey",
+                DataPropertyName = nameof(Sound.HotKey),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            }; ui_DataGridView_Sounds.Columns.Add(colHotkey);
+        }
+
+        #region Event Handlers
 
         private void EV_Button_AddSound_MouseClick(object sender, MouseEventArgs e)
         {
-            BeforeAddSoundClicked?.Invoke(this, new EventArgs());
             SBSettings.Instance.MicMuted = SBSettings.Instance.SelectedRecordingDevice?.OriginalMicMute ?? false;
 
             using (NewSoundForm form = new NewSoundForm())
@@ -97,67 +83,41 @@ namespace Soundboard.GUI
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     SBSettings.Instance.Sounds.Add(form.SoundResult);
-                    RefreshSoundsInList();
                 }
             }
-        }
-
-#region Toolstrip Handlers
-        private void EV_ToolStrip_Edit_Click(object sender, EventArgs e)
-        {
-            Sound selectedSound = ui_listview_Sounds.SelectedItems[0]?.Tag as Sound;
-            if (selectedSound == null) return;
-
-            // Remove the selectedSound here to make sure the hotkey map doesnt conflict.
-            SBSettings.Instance.Sounds.Remove(selectedSound);
-
-            using (NewSoundForm form = new NewSoundForm(selectedSound))
-            {
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    SBSettings.Instance.Sounds.Add(form.SoundResult);
-                }
-                else // If we cancel just add back the previous sound.
-                {
-                    SBSettings.Instance.Sounds.Add(selectedSound);
-                }
-
-                RefreshSoundsInList();
-            }
-        }
-
-        private void EV_ToolStrip_Delete_Click(object sender, EventArgs e)
-        {
-            if (ui_listview_Sounds.SelectedItems.Count < 1) return;
-            SBSettings.Instance.Sounds.Remove(ui_listview_Sounds.SelectedItems[0].Tag as Sound);
-            RefreshSoundsInList();
-        }
-#endregion
-
-        private void EV_Searchbox_TextChanged(object sender, EventArgs e)
-        {
-            RefreshSoundsInList(ui_textboxSearch.Text);
-        }
-
-        private void EV_SoundList_Resize(object sender, EventArgs e)
-        {
-            ResizeColumns();
-        }
-
-        private void EV_SoundList_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                ui_contextStrip.Show(Cursor.Position);
-            }
-        }
-
-        private void EV_ListView_ColumnWidthChanging(object sender, ColumnWidthChangingEventArgs e)
-        {
-            e.NewWidth = ui_listview_Sounds.Columns[e.ColumnIndex].Width;
-            e.Cancel = true;
         }
 
         #endregion
+
+        private void EV_TextboxSearch_TextChanged(object sender, EventArgs e)
+        {
+            m_soundsSource.ApplyFilter(x => x.DisplayName.ToLower().Contains(ui_textboxSearch.Text.ToLower()));
+        }
+
+        private void EV_ToolStripDelete_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (ui_DataGridView_Sounds.SelectedRows.Count < 0) return;
+
+            ui_DataGridView_Sounds.Rows.Remove(ui_DataGridView_Sounds.SelectedRows[0]);
+        }
+
+        private void EV_ToolStripEdit_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (ui_DataGridView_Sounds.SelectedRows.Count < 0) return;
+
+            Sound item = (ui_DataGridView_Sounds.SelectedRows[0].DataBoundItem as ObjectView<Sound>).Object;
+            using (NewSoundForm editSoundForm = new NewSoundForm(item))
+            {
+                SBSettings.Instance.Sounds.Remove(item);
+                if(editSoundForm.ShowDialog() == DialogResult.OK)
+                {
+                    SBSettings.Instance.Sounds.Add(editSoundForm.SoundResult);
+                }
+                else
+                {
+                    SBSettings.Instance.Sounds.Add(item);
+                }
+            }
+        }
     }
 }
