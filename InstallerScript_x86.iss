@@ -4,9 +4,10 @@
 #define MyAppName "Tori Soundboard"
 #define MyAppExeName "Tori.exe"
 #define MyAppPublisher "Salads"
-#define BaseDirectory "D:\Git Repositories\Tori Soundboard\Tori\bin\x86\Release\build"
+#define SolutionDirectory "D:\Git Repositories\Tori Soundboard"
+#define OutputDirectory "D:\Git Repositories\Tori Soundboard\source\Tori\bin\x86\Release"
 #define MyAppURL "https://github.com/Salads/Soundboard.NET"
-#define MyAppVersion GetFileVersion(BaseDirectory + '\' + MyAppExeName)
+#define MyAppVersion GetFileVersion(OutputDirectory + '\' + MyAppExeName)
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -21,8 +22,8 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputDir=D:\Git Repositories\Tori Soundboard\Tori\bin\x86\Release\build\
-OutputBaseFilename=Tori_Installer_x86 v{#MyAppVersion}
+OutputDir={#OutputDirectory}
+OutputBaseFilename=Tori Installer x86 v{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 
@@ -34,8 +35,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "{#BaseDirectory}\Tori.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#BaseDirectory}\CSCore.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OutputDirectory}\Tori.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OutputDirectory}\CSCore.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#OutputDirectory}\Equin.ApplicationFramework.BindingListView.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SolutionDirectory}\LICENSE.md"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
