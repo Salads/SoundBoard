@@ -5,7 +5,7 @@
 #define MyAppExeName "Tori.exe"
 #define MyAppPublisher "Salads"
 #define SolutionDirectory "D:\Git Repositories\Tori Soundboard"
-#define OutputDirectory "D:\Git Repositories\Tori Soundboard\Tori\bin\x86\Release\build\"
+#define OutputDirectory "D:\Git Repositories\Tori Soundboard\source\Tori\bin\x86\Release"
 #define MyAppURL "https://github.com/Salads/Soundboard.NET"
 #define MyAppVersion GetFileVersion(OutputDirectory + '\' + MyAppExeName)
 
@@ -23,7 +23,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir={#OutputDirectory}
-OutputBaseFilename=Tori_Installer_x86 v{#MyAppVersion}
+OutputBaseFilename=Tori Installer x86 v{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 

@@ -160,53 +160,53 @@
     <Compile Include="Data\Static\NativeMethods.cs" />
     <Compile Include="Data\Static\RawInputHandler.cs" />
     <Compile Include="Data\Static\RawInputTypes.cs" />
-    <Compile Include="GUI\Controls\Components\CDataGridView.cs">
+    <Compile Include="Components\CDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\Components\CDataGridView.Designer.cs">
+    <Compile Include="Components\CDataGridView.Designer.cs">
       <DependentUpon>CDataGridView.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Controls\Components\CTextBox.cs">
+    <Compile Include="Components\CTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\Components\SingleDeviceSelector.cs">
+    <Compile Include="Components\SingleDeviceSelector.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\MediaControl.cs">
+    <Compile Include="Controls\MediaControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\MediaControl.Designer.cs">
+    <Compile Include="Controls\MediaControl.Designer.cs">
       <DependentUpon>MediaControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Controls\PlaybackOptionsControl.cs">
+    <Compile Include="Controls\PlaybackOptionsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\PlaybackOptionsControl.Designer.cs">
+    <Compile Include="Controls\PlaybackOptionsControl.Designer.cs">
       <DependentUpon>PlaybackOptionsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Forms\NewSoundForm.cs">
+    <Compile Include="Forms\NewSoundForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\Forms\NewSoundForm.Designer.cs">
+    <Compile Include="Forms\NewSoundForm.Designer.cs">
       <DependentUpon>NewSoundForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Controls\DevicesSelector.cs">
+    <Compile Include="Controls\DevicesSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\DevicesSelector.Designer.cs">
+    <Compile Include="Controls\DevicesSelector.Designer.cs">
       <DependentUpon>DevicesSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Forms\MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\Forms\MainForm.Designer.cs">
+    <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Static\RawInput.cs" />
-    <Compile Include="GUI\Controls\SoundViewer.cs">
+    <Compile Include="Controls\SoundViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\SoundViewer.Designer.cs">
+    <Compile Include="Controls\SoundViewer.Designer.cs">
       <DependentUpon>SoundViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -214,28 +214,28 @@
     <Compile Include="Data\Sound.cs" />
     <Compile Include="Data\Static\SBSettings.cs" />
     <Compile Include="Data\SoundPlayer.cs" />
-    <Compile Include="GUI\Controls\Components\VolumeBar.cs">
+    <Compile Include="Components\VolumeBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\Controls\Components\VolumeBar.Designer.cs">
+    <Compile Include="Components\VolumeBar.Designer.cs">
       <DependentUpon>VolumeBar.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="GUI\Controls\DevicesSelector.resx">
+    <EmbeddedResource Include="Controls\DevicesSelector.resx">
       <DependentUpon>DevicesSelector.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Controls\MediaControl.resx">
+    <EmbeddedResource Include="Controls\MediaControl.resx">
       <DependentUpon>MediaControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Controls\PlaybackOptionsControl.resx">
+    <EmbeddedResource Include="Controls\PlaybackOptionsControl.resx">
       <DependentUpon>PlaybackOptionsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Forms\NewSoundForm.resx">
+    <EmbeddedResource Include="Forms\NewSoundForm.resx">
       <DependentUpon>NewSoundForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Forms\MainForm.resx">
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\Controls\SoundViewer.resx">
+    <EmbeddedResource Include="Controls\SoundViewer.resx">
       <DependentUpon>SoundViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -248,7 +248,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="GUI\Controls\Components\VolumeBar.resx">
+    <EmbeddedResource Include="Components\VolumeBar.resx">
       <DependentUpon>VolumeBar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -258,6 +258,7 @@
     <None Include="assets\__Volume Medium.png" />
     <None Include="assets\__Volume Mute.png" />
     <None Include="packages.config" />
+    <None Include="Tori_PostBuild.ps1" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -277,6 +278,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)PostBuild.bat" "$(ConfigurationName)" "$(TargetDir)" "$(SolutionDir)"</PostBuildEvent>
+    <PostBuildEvent>"C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe" -file "$(ProjectDir)Tori_PostBuild.ps1" -configname "$(ConfigurationName)" -targetdir "$(TargetDir) " -solutiondir "$(SolutionDir) "</PostBuildEvent>
   </PropertyGroup>
 </Project>
